@@ -24,7 +24,7 @@ export function Settings() {
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `aurajournal-backup-${new Date().toISOString().split('T')[0]}.json`;
+      a.download = `aurajournal-backup-${new Date().toISOString().slice(0, 10)}.json`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);

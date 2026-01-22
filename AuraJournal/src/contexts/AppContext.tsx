@@ -199,8 +199,9 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       } : null
     };
     
-    const jsonString = JSON.stringify(backup, null, 2);
-    const checksum = await CryptoService.generateChecksum(jsonString);
+    // Use stable JSON serialization (sorted keys) for checksum
+    const stableJson = JSON.stringify(backup, Object.keys(backup).sort());
+    const checksum = await CryptoService.generateChecksum(stableJson);
     
     return JSON.stringify({
       ...backup,
@@ -213,9 +214,10 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     try {
       const backup = JSON.parse(data);
       
-      // Verify checksum
+      // Verify checksum using same stable serialization as export
       const { checksum, ...restBackup } = backup;
-      const expectedChecksum = await CryptoService.generateChecksum(JSON.stringify(restBackup, null, 2));
+      const stableJson = JSON.stringify(restBackup, Object.keys(restBackup).sort());
+      const expectedChecksum = await CryptoService.generateChecksum(stableJson);
       
       if (checksum !== expectedChecksum) {
         console.error('Backup checksum mismatch');
