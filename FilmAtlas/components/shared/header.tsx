@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useAuthStore } from '@/store/auth';
+import { SearchModal } from '@/components/ui/search-modal';
 
 export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -30,7 +31,7 @@ export function Header() {
       <div className="flex items-center justify-between px-4 md:px-8 py-4">
         <div className="flex items-center gap-8">
           <Link href="/" className="flex items-center">
-            <h1 className="text-netflix-red text-2xl md:text-3xl font-bold tracking-wider">
+            <h1 className="text-netflix-red text-2xl md:text-3xl font-bold tracking-wider hover:opacity-80 transition-opacity">
               FILMATLAS
             </h1>
           </Link>
@@ -56,26 +57,12 @@ export function Header() {
         </div>
 
         <div className="flex items-center gap-4">
-          <button className="p-2 hover:text-gray-300 transition-colors">
-            <svg
-              className="w-5 h-5"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-              />
-            </svg>
-          </button>
+          <SearchModal />
 
           {isAuthenticated ? (
             <Link
               href="/account"
-              className="w-8 h-8 rounded-full bg-netflix-red flex items-center justify-center font-bold"
+              className="w-8 h-8 rounded-full bg-netflix-red flex items-center justify-center font-bold hover:opacity-80 transition-opacity"
             >
               A
             </Link>
