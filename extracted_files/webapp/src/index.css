@@ -1,0 +1,247 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@300;400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* BeatLogic.ai Design System - Cyan to Purple Gradient Theme */
+
+@layer base {
+  :root {
+    --background: 0 0% 0%;
+    --foreground: 0 0% 98%;
+    --card: 240 20% 7%;
+    --card-foreground: 0 0% 98%;
+    --popover: 240 20% 7%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 195 100% 50%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 0 0% 100%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 240 15% 15%;
+    --muted-foreground: 240 10% 55%;
+    --accent: 280 80% 60%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 15% 16%;
+    --input: 240 15% 16%;
+    --ring: 195 100% 50%;
+    --gradient-start: 195 100% 50%;
+    --gradient-end: 280 80% 60%;
+    --success: 142 76% 45%;
+    --success-foreground: 0 0% 100%;
+    --sidebar-background: 240 20% 5%;
+    --sidebar-foreground: 0 0% 98%;
+    --sidebar-primary: 195 100% 50%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 20% 10%;
+    --sidebar-accent-foreground: 0 0% 98%;
+    --sidebar-border: 240 15% 16%;
+    --sidebar-ring: 195 100% 50%;
+    --secondary: 240 21.3% 12%;
+    --destructive: 0 62.4% 50%;
+    --radius: 0.625rem;
+  }
+
+  .dark {
+    --background: 240 20% 4%;
+    --foreground: 0 0% 98%;
+    --card: 240 20% 7%;
+    --card-foreground: 0 0% 98%;
+    --popover: 240 20% 7%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 195 100% 50%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 240 20% 12%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 240 15% 15%;
+    --muted-foreground: 240 10% 55%;
+    --accent: 280 80% 60%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 62% 50%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 15% 16%;
+    --input: 240 15% 16%;
+    --ring: 195 100% 50%;
+    --sidebar-background: 240 20% 5%;
+    --sidebar-foreground: 0 0% 98%;
+    --sidebar-primary: 195 100% 50%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 20% 10%;
+    --sidebar-accent-foreground: 0 0% 98%;
+    --sidebar-border: 240 15% 16%;
+    --sidebar-ring: 195 100% 50%;
+    --secondary: 240 21.3% 12%;
+    --destructive: 0 62.4% 50%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-family: 'Outfit', 'Inter', system-ui, sans-serif;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Outfit', system-ui, sans-serif;
+    font-weight: 600;
+  }
+}
+
+@layer utilities {
+  /* Glass morphism effect */
+  .glass {
+    @apply bg-card/80 backdrop-blur-xl border border-white/5;
+  }
+
+  .glass-strong {
+    @apply bg-card/90 backdrop-blur-2xl border border-white/10;
+  }
+
+  /* Gradient text */
+  .gradient-text {
+    background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--accent)) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* Gradient background */
+  .gradient-bg {
+    background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--accent)) 100%);
+  }
+
+  /* Subtle gradient overlay */
+  .gradient-overlay {
+    background: linear-gradient(180deg, transparent 0%, hsl(var(--background)) 100%);
+  }
+
+  /* Playing indicator animation - 3 bars */
+  .playing-bars {
+    display: flex;
+    align-items: flex-end;
+    gap: 2px;
+    height: 14px;
+  }
+
+  .playing-bars span {
+    width: 3px;
+    background: hsl(var(--primary));
+    border-radius: 1px;
+    animation: playing-bar 0.8s ease-in-out infinite;
+  }
+
+  .playing-bars span:nth-child(1) {
+    animation-delay: 0s;
+  }
+
+  .playing-bars span:nth-child(2) {
+    animation-delay: 0.2s;
+  }
+
+  .playing-bars span:nth-child(3) {
+    animation-delay: 0.4s;
+  }
+
+  /* Vinyl spin animation */
+  .vinyl-spin {
+    animation: vinyl-rotate 3s linear infinite;
+  }
+
+  .vinyl-spin-paused {
+    animation-play-state: paused;
+  }
+
+  /* Pulse glow effect for playing track */
+  .pulse-glow {
+    animation: pulse-glow 2s ease-in-out infinite;
+  }
+
+  /* Progress bar glow */
+  .progress-glow {
+    box-shadow: 0 0 10px hsl(var(--primary) / 0.5), 0 0 20px hsl(var(--primary) / 0.3);
+  }
+}
+
+@keyframes playing-bar {
+  0%, 100% {
+    height: 4px;
+  }
+  50% {
+    height: 14px;
+  }
+}
+
+@keyframes vinyl-rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 5px hsl(var(--primary) / 0.3);
+  }
+  50% {
+    box-shadow: 0 0 20px hsl(var(--primary) / 0.6), 0 0 40px hsl(var(--primary) / 0.3);
+  }
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: hsl(var(--background));
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--muted));
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted-foreground));
+}
+
+/* Hide YouTube iframe but keep it functional */
+.youtube-player-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
