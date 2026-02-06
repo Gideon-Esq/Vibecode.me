@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#c9a959"/>
+      <stop offset="100%" style="stop-color:#d4a373"/>
+    </linearGradient>
+  </defs>
+  <!-- Book/Journal Shape -->
+  <rect x="15" y="10" width="70" height="80" rx="4" fill="#fdfbf7" stroke="url(#goldGradient)" stroke-width="3"/>
+  <!-- Book spine -->
+  <rect x="15" y="10" width="10" height="80" rx="2" fill="url(#goldGradient)"/>
+  <!-- Pages lines -->
+  <line x1="35" y1="30" x2="75" y2="30" stroke="#c9a959" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
+  <line x1="35" y1="45" x2="75" y2="45" stroke="#c9a959" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
+  <line x1="35" y1="60" x2="65" y2="60" stroke="#c9a959" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
+  <!-- Lock symbol -->
+  <circle cx="55" cy="75" r="8" fill="url(#goldGradient)" opacity="0.3"/>
+</svg>
