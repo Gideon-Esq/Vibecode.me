@@ -1,0 +1,1376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IEPS 3.0 | Ife Education Parliamentary Summit</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Inter:wght@400;500;600&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
+
+    <!-- JSZip for batch download -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+    <style>
+        :root {
+            --primary-green: #008751;
+            --dark-green: #005a36;
+            --light-green: #e6f3ed;
+            --accent-blue: #0A1F44;
+            --accent-gold: #C9A84C;
+            --bg-light: #F5F7FA;
+            --text-dark: #1A1A2E;
+            --text-white: #FFFFFF;
+            --border-color: #e2e8f0;
+
+            --font-heading: 'Playfair Display', serif;
+            --font-body: 'Inter', sans-serif;
+            --font-script: 'Dancing Script', cursive;
+
+            --nav-height: 80px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-body);
+            color: var(--text-dark);
+            background-color: var(--bg-light);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--font-heading);
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            color: var(--accent-blue);
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        section {
+            padding: 80px 0;
+        }
+
+        section:nth-child(even) {
+            background-color: var(--text-white);
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 14px 28px;
+            font-weight: 600;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            border: none;
+            font-family: var(--font-body);
+        }
+
+        .btn-primary {
+            background-color: var(--primary-green);
+            color: var(--text-white);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--dark-green);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 135, 81, 0.2);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            color: var(--text-white);
+            border: 2px solid var(--text-white);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--text-white);
+            color: var(--primary-green);
+        }
+
+        .btn-blue {
+            background-color: var(--accent-blue);
+            color: var(--text-white);
+        }
+
+        .btn-blue:hover {
+            background-color: #06122c;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-title h2 {
+            font-size: 2.5rem;
+            color: var(--primary-green);
+            margin-bottom: 16px;
+        }
+
+        .section-title p {
+            color: #64748b;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Nav */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: var(--text-white);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            z-index: 1000;
+            height: var(--nav-height);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 100%;
+        }
+
+        .logo {
+            font-family: var(--font-heading);
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary-green);
+        }
+
+        .logo span {
+            color: var(--accent-blue);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            font-weight: 500;
+            color: var(--text-dark);
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-green);
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--accent-blue);
+        }
+
+        /* Hero */
+        .hero {
+            height: 100vh;
+            min-height: 600px;
+            display: flex;
+            align-items: center;
+            background: linear-gradient(135deg, rgba(0,135,81,0.9) 0%, rgba(10,31,68,0.95) 100%), url('data:image/svg+xml;utf8,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="100" fill="%23ffffff" fill-opacity="0.05"/></svg>');
+            color: var(--text-white);
+            text-align: center;
+            padding-top: var(--nav-height);
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            color: var(--text-white);
+            margin-bottom: 24px;
+            line-height: 1.2;
+        }
+
+        .hero .theme {
+            font-size: 1.5rem;
+            font-style: italic;
+            margin-bottom: 40px;
+            color: var(--accent-gold);
+            font-family: var(--font-heading);
+        }
+
+        .hero-details {
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+            margin-bottom: 48px;
+            flex-wrap: wrap;
+        }
+
+        .hero-details p {
+            font-size: 1.125rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .countdown {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-bottom: 48px;
+        }
+
+        .countdown-item {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 16px;
+            border-radius: 8px;
+            min-width: 100px;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .countdown-value {
+            display: block;
+            font-size: 2.5rem;
+            font-weight: 700;
+            font-family: var(--font-heading);
+            color: var(--text-white);
+            line-height: 1;
+        }
+
+        .countdown-label {
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--accent-gold);
+        }
+
+        .hero-cta {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+        }
+
+        /* Grid */
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 32px;
+        }
+
+        /* Speakers */
+        .speaker-card {
+            background: var(--bg-light);
+            border-radius: 8px;
+            padding: 32px 24px;
+            text-align: center;
+            transition: transform 0.3s ease;
+            border: 1px solid var(--border-color);
+        }
+
+        .speaker-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+        }
+
+        .speaker-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background-color: var(--light-green);
+            color: var(--primary-green);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-family: var(--font-heading);
+            margin: 0 auto 20px;
+            border: 3px solid var(--text-white);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .speaker-card h3 {
+            font-size: 1.25rem;
+            margin-bottom: 8px;
+            color: var(--accent-blue);
+        }
+
+        .speaker-title {
+            color: var(--primary-green);
+            font-weight: 600;
+            font-size: 0.875rem;
+            margin-bottom: 4px;
+        }
+
+        .speaker-org {
+            font-size: 0.875rem;
+            color: #64748b;
+            margin-bottom: 16px;
+        }
+
+        .speaker-bio {
+            font-size: 0.875rem;
+            color: #475569;
+        }
+
+        /* Schedule */
+        .timeline {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 120px;
+            width: 2px;
+            background-color: var(--primary-green);
+            opacity: 0.2;
+        }
+
+        .timeline-item {
+            display: flex;
+            margin-bottom: 32px;
+            position: relative;
+        }
+
+        .timeline-time {
+            width: 120px;
+            font-weight: 600;
+            color: var(--primary-green);
+            padding-right: 24px;
+            text-align: right;
+            flex-shrink: 0;
+        }
+
+        .timeline-content {
+            background-color: var(--bg-light);
+            padding: 24px;
+            border-radius: 8px;
+            flex-grow: 1;
+            position: relative;
+            border: 1px solid var(--border-color);
+        }
+
+        .timeline-content::before {
+            content: '';
+            position: absolute;
+            top: 24px;
+            left: -32px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: var(--primary-green);
+            border: 4px solid var(--text-white);
+            box-shadow: 0 0 0 2px var(--primary-green);
+        }
+
+        .timeline-content h3 {
+            margin-bottom: 8px;
+            font-size: 1.125rem;
+        }
+
+        /* Registration */
+        .form-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: var(--text-white);
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            border: 1px solid var(--border-color);
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--accent-blue);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-family: var(--font-body);
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-green);
+            box-shadow: 0 0 0 3px rgba(0,135,81,0.1);
+        }
+
+        .error-message {
+            color: #ef4444;
+            font-size: 0.875rem;
+            margin-top: 4px;
+            display: none;
+        }
+
+        .success-message {
+            display: none;
+            background-color: var(--light-green);
+            color: var(--dark-green);
+            padding: 24px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid var(--primary-green);
+        }
+
+        /* Sponsors */
+        .sponsor-tier {
+            margin-bottom: 48px;
+            text-align: center;
+        }
+
+        .sponsor-tier h3 {
+            margin-bottom: 24px;
+            color: var(--accent-blue);
+        }
+
+        .sponsor-grid {
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+            flex-wrap: wrap;
+        }
+
+        .sponsor-box {
+            background-color: var(--text-white);
+            border: 1px dashed #cbd5e1;
+            border-radius: 8px;
+            width: 200px;
+            height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #94a3b8;
+            font-weight: 500;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--accent-blue);
+            color: var(--text-white);
+            padding: 60px 0 20px;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 48px;
+            margin-bottom: 48px;
+        }
+
+        .footer-info h3 {
+            color: var(--text-white);
+            margin-bottom: 24px;
+        }
+
+        .footer-info p {
+            margin-bottom: 16px;
+            color: #cbd5e1;
+        }
+
+        .map-container {
+            height: 250px;
+            background-color: #1e293b;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #94a3b8;
+            font-size: 0.875rem;
+        }
+
+        .admin-trigger {
+            background: none;
+            border: none;
+            color: #475569;
+            cursor: pointer;
+            font-size: 0.875rem;
+        }
+
+        .admin-trigger:hover {
+            color: var(--text-white);
+        }
+
+        /* Admin Panel */
+        #admin-panel {
+            display: none;
+            padding: 80px 0;
+            background-color: var(--bg-light);
+            min-height: 100vh;
+        }
+
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            background: var(--text-white);
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            border: 1px solid var(--border-color);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            background-color: var(--bg-light);
+            font-weight: 600;
+            color: var(--accent-blue);
+        }
+
+        canvas {
+            display: none; /* Keep hidden, just for generation */
+        }
+
+        /* Animations */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: var(--nav-height);
+                left: 0;
+                width: 100%;
+                background-color: var(--text-white);
+                flex-direction: column;
+                padding: 24px;
+                box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .countdown {
+                flex-wrap: wrap;
+            }
+
+            .grid-3 {
+                grid-template-columns: 1fr;
+            }
+
+            .timeline::before {
+                left: 20px;
+            }
+
+            .timeline-item {
+                flex-direction: column;
+            }
+
+            .timeline-time {
+                width: auto;
+                text-align: left;
+                padding-left: 48px;
+                margin-bottom: 8px;
+            }
+
+            .timeline-content {
+                margin-left: 48px;
+            }
+
+            .timeline-content::before {
+                left: -32px;
+                top: 50%;
+                transform: translateY(-50%);
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-cta {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <header>
+        <div class="container nav-container">
+            <a href="#" class="logo">IEPS <span>3.0</span></a>
+            <button class="mobile-menu-btn" aria-label="Toggle menu">☰</button>
+            <ul class="nav-links">
+                <li><a href="#about">About</a></li>
+                <li><a href="#speakers">Speakers</a></li>
+                <li><a href="#schedule">Programme</a></li>
+                <li><a href="#sponsors">Sponsors</a></li>
+                <li><a href="#register" class="btn btn-primary" style="padding: 8px 16px;">Register</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <!-- Public Facing Content -->
+    <main id="main-content">
+        <!-- Hero Section -->
+        <section class="hero" id="home">
+            <div class="container">
+                <h2 class="theme">"Nigerian Parliamentarian: A Strategic Panacea for Nation-Building and Educational Reforms"</h2>
+                <h1>Ife Education Parliamentary Summit 3.0</h1>
+
+                <div class="hero-details">
+                    <p>📅 Tuesday, 22 July 2026</p>
+                    <p>⏰ 10:00 AM WAT</p>
+                    <p>📍 ACE Conference Centre, OAU Ile-Ife</p>
+                </div>
+
+                <div class="countdown" id="countdown">
+                    <div class="countdown-item">
+                        <span class="countdown-value" id="days">00</span>
+                        <span class="countdown-label">Days</span>
+                    </div>
+                    <div class="countdown-item">
+                        <span class="countdown-value" id="hours">00</span>
+                        <span class="countdown-label">Hours</span>
+                    </div>
+                    <div class="countdown-item">
+                        <span class="countdown-value" id="minutes">00</span>
+                        <span class="countdown-label">Mins</span>
+                    </div>
+                    <div class="countdown-item">
+                        <span class="countdown-value" id="seconds">00</span>
+                        <span class="countdown-label">Secs</span>
+                    </div>
+                </div>
+
+                <div class="hero-cta">
+                    <a href="#register" class="btn btn-primary">Register Now</a>
+                    <a href="#" class="btn btn-outline">Download Programme</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="fade-in">
+            <div class="container">
+                <div class="section-title">
+                    <h2>About IEPS 3.0</h2>
+                    <p>A flagship academic summit organized by the Education Students' Representative Council (ESRC) of Obafemi Awolowo University.</p>
+                </div>
+                <div style="max-width: 800px; margin: 0 auto; text-align: center;">
+                    <p style="margin-bottom: 24px;">Welcome to the 3rd edition of the Ife Education Parliamentary Summit. This gathering serves as a critical nexus where academic brilliance meets legislative foresight. By bringing together students, academics, policymakers, and legislators, we aim to forge actionable pathways for educational development in Nigeria.</p>
+                    <p>This year's theme focuses on the pivotal role of Nigerian Parliamentarians in driving educational reforms, addressing funding gaps, and ultimately contributing to holistic nation-building.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Speakers Section -->
+        <section id="speakers" class="fade-in">
+            <div class="container">
+                <div class="section-title">
+                    <h2>Distinguished Speakers</h2>
+                    <p>Learn from leading voices in education, policy-making, and legislation.</p>
+                </div>
+                <div class="grid-3">
+                    <!-- Speaker 1 -->
+                    <div class="speaker-card">
+                        <div class="speaker-avatar">AO</div>
+                        <h3>Prof. Adebayo Okunola</h3>
+                        <p class="speaker-title">Professor of Educational Policy</p>
+                        <p class="speaker-org">Obafemi Awolowo University</p>
+                        <p class="speaker-bio">A renowned expert in educational frameworks and institutional structuring in West Africa.</p>
+                    </div>
+                    <!-- Speaker 2 -->
+                    <div class="speaker-card">
+                        <div class="speaker-avatar">CN</div>
+                        <h3>Hon. Chioma Nwachukwu</h3>
+                        <p class="speaker-title">Member, House of Representatives</p>
+                        <p class="speaker-org">Education Committee</p>
+                        <p class="speaker-bio">Championing legislative bills focused on increasing basic and tertiary education funding.</p>
+                    </div>
+                    <!-- Speaker 3 -->
+                    <div class="speaker-card">
+                        <div class="speaker-avatar">EE</div>
+                        <h3>Dr. Emeka Eze</h3>
+                        <p class="speaker-title">Director</p>
+                        <p class="speaker-org">National Education Research Council</p>
+                        <p class="speaker-bio">Leading national research initiatives to align Nigerian curricula with global standards.</p>
+                    </div>
+                    <!-- Speaker 4 -->
+                    <div class="speaker-card">
+                        <div class="speaker-avatar">FA</div>
+                        <h3>Prof. Funmilayo Adeyemi</h3>
+                        <p class="speaker-title">Dean, Faculty of Education</p>
+                        <p class="speaker-org">University of Lagos</p>
+                        <p class="speaker-bio">Advocate for pedagogical innovations and the integration of technology in classrooms.</p>
+                    </div>
+                    <!-- Speaker 5 -->
+                    <div class="speaker-card">
+                        <div class="speaker-avatar">MG</div>
+                        <h3>Sen. Musa Garba</h3>
+                        <p class="speaker-title">Chairman, Senate Committee</p>
+                        <p class="speaker-org">Tertiary Education</p>
+                        <p class="speaker-bio">Instrumental in the recent reforms addressing university autonomy and staff welfare.</p>
+                    </div>
+                    <!-- Speaker 6 -->
+                    <div class="speaker-card">
+                        <div class="speaker-avatar">TF</div>
+                        <h3>Mr. Tunde Fashola</h3>
+                        <p class="speaker-title">Executive Director</p>
+                        <p class="speaker-org">EdTech Nigeria Initiative</p>
+                        <p class="speaker-bio">Bridging the gap between traditional policy and modern educational technology.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Schedule Section -->
+        <section id="schedule" class="fade-in">
+            <div class="container">
+                <div class="section-title">
+                    <h2>Summit Programme</h2>
+                    <p>A comprehensive schedule of events for Tuesday, 22 July 2026.</p>
+                </div>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-time">9:00 AM</div>
+                        <div class="timeline-content">
+                            <h3>Registration & Accreditation</h3>
+                            <p>Arrival of guests, verification of registration, and distribution of summit materials.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-time">10:00 AM</div>
+                        <div class="timeline-content">
+                            <h3>Opening Ceremony & Welcome Address</h3>
+                            <p>National Anthem, OAU Anthem, and welcome remarks by the ESRC President.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-time">10:45 AM</div>
+                        <div class="timeline-content">
+                            <h3>Keynote Address</h3>
+                            <p>Delivered by the distinguished guest speaker on the summit's core theme.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-time">11:30 AM</div>
+                        <div class="timeline-content">
+                            <h3>Panel Session I: Parliamentary Frameworks for Educational Funding</h3>
+                            <p>Interactive discussion with lawmakers and academics.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-time">1:00 PM</div>
+                        <div class="timeline-content">
+                            <h3>Lunch Break</h3>
+                            <p>Networking and refreshments.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-time">2:00 PM</div>
+                        <div class="timeline-content">
+                            <h3>Panel Session II: Legislative Reforms and Curriculum Development</h3>
+                            <p>Exploring how laws can shape modern, relevant curricula.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-time">3:30 PM</div>
+                        <div class="timeline-content">
+                            <h3>Open Floor Debate</h3>
+                            <p>Parliamentary format debate featuring selected student representatives.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-time">4:30 PM</div>
+                        <div class="timeline-content">
+                            <h3>Award & Certificate Presentation</h3>
+                            <p>Honoring distinguished guests and active participants.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-time">5:00 PM</div>
+                        <div class="timeline-content">
+                            <h3>Closing Remarks & Group Photograph</h3>
+                            <p>Official end of the summit.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Registration Section -->
+        <section id="register" class="fade-in">
+            <div class="container">
+                <div class="section-title">
+                    <h2>Secure Your Seat</h2>
+                    <p>Join 500+ participants for this transformative summit. Registration is free but mandatory.</p>
+                </div>
+
+                <div class="form-container">
+                    <div id="success-msg" class="success-message">
+                        <h3>Registration Successful!</h3>
+                        <p id="success-text">Thank you! Your registration for IEPS 3.0 has been received. Check your email for confirmation.</p>
+                    </div>
+
+                    <form id="registration-form" novalidate>
+                        <div class="form-group">
+                            <label class="form-label" for="fullName">Full Name</label>
+                            <input type="text" id="fullName" class="form-control" required placeholder="e.g. Jane Doe">
+                            <div class="error-message" id="err-fullName">Please enter your full name.</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="email">Email Address</label>
+                            <input type="email" id="email" class="form-control" required placeholder="e.g. jane@example.com">
+                            <div class="error-message" id="err-email">Please enter a valid email address.</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="phone">Phone Number</label>
+                            <input type="tel" id="phone" class="form-control" required placeholder="e.g. +234 800 000 0000">
+                            <div class="error-message" id="err-phone">Please enter your phone number.</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="institution">Institution / Organization</label>
+                            <input type="text" id="institution" class="form-control" required placeholder="e.g. Obafemi Awolowo University">
+                            <div class="error-message" id="err-institution">Please enter your institution.</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="role">Role</label>
+                            <select id="role" class="form-control" required>
+                                <option value="" disabled selected>Select your role...</option>
+                                <option value="Student">Student</option>
+                                <option value="Academic Staff">Academic Staff</option>
+                                <option value="Legislator">Legislator</option>
+                                <option value="Media">Media</option>
+                                <option value="General Public">General Public</option>
+                            </select>
+                            <div class="error-message" id="err-role">Please select a role.</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="source">How did you hear about this event?</label>
+                            <select id="source" class="form-control" required>
+                                <option value="" disabled selected>Select an option...</option>
+                                <option value="Social Media">Social Media</option>
+                                <option value="Friend/Colleague">Friend or Colleague</option>
+                                <option value="Faculty Notice">Faculty Notice/Board</option>
+                                <option value="Email Newsletter">Email Newsletter</option>
+                                <option value="Other">Other</option>
+                            </select>
+                            <div class="error-message" id="err-source">Please select an option.</div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">Complete Registration</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sponsors Section -->
+        <section id="sponsors" class="fade-in">
+            <div class="container">
+                <div class="section-title">
+                    <h2>Our Sponsors</h2>
+                    <p>Supporting the vision of educational advancement.</p>
+                </div>
+
+                <div class="sponsor-tier">
+                    <h3>Gold Sponsors</h3>
+                    <div class="sponsor-grid">
+                        <div class="sponsor-box">Your Logo Here</div>
+                        <div class="sponsor-box">Your Logo Here</div>
+                    </div>
+                </div>
+
+                <div class="sponsor-tier">
+                    <h3>Silver & Bronze</h3>
+                    <div class="sponsor-grid">
+                        <div class="sponsor-box" style="height: 80px; width: 160px;">Your Logo Here</div>
+                        <div class="sponsor-box" style="height: 80px; width: 160px;">Your Logo Here</div>
+                        <div class="sponsor-box" style="height: 80px; width: 160px;">Your Logo Here</div>
+                    </div>
+                </div>
+
+                <p style="text-align: center; margin-top: 40px;">
+                    <em>Interested in sponsoring IEPS 3.0? Contact us at <a href="mailto:esrc.oau@example.com" style="color: var(--primary-green); font-weight: 500;">esrc.oau@example.com</a></em>
+                </p>
+            </div>
+        </section>
+    </main>
+
+    <!-- Admin Panel (Hidden by default) -->
+
+    <!-- Admin Panel (Hidden by default) -->
+    <main id="admin-panel">
+        <div class="container">
+            <div class="admin-header">
+                <div>
+                    <h2>Admin Dashboard</h2>
+                    <p style="color: #64748b;">Manage registrations and generate certificates</p>
+                </div>
+                <div>
+                    <button id="download-all-btn" class="btn btn-primary" style="margin-right: 12px;">Download All as ZIP</button>
+                    <button id="exit-admin-btn" class="btn btn-outline" style="border-color: var(--accent-blue); color: var(--accent-blue);">Exit Admin</button>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <table id="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                            <th>Institution</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="admin-table-body">
+                        <!-- Rows will be injected here -->
+                    </tbody>
+                </table>
+                <div id="no-data-msg" style="padding: 32px; text-align: center; color: #64748b; display: none;">
+                    No registrations found.
+                </div>
+            </div>
+        </div>
+    </main>
+
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-info">
+                    <h3>IEPS 3.0</h3>
+                    <p><strong>Organizer:</strong> Education Students' Representative Council (ESRC), Faculty of Education, OAU Ile-Ife</p>
+                    <p><strong>Email:</strong> esrc.oau@example.com</p>
+                    <p><strong>Phone:</strong> +234 800 000 0000</p>
+                    <p><strong>Instagram:</strong> @esrc_oau</p>
+                </div>
+                <div class="footer-map">
+                    <!-- Map Placeholder: OAU Coordinates -->
+                    <div class="map-container">
+                        <iframe
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3955.5188616118475!2d4.516524314776495!3d7.518206994576366!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x10383120b666a7cb%3A0xc6c7d3d2e97a3a30!2sObafemi%20Awolowo%20University!5e0!3m2!1sen!2sng!4v1689255621453!5m2!1sen!2sng"
+                            width="100%"
+                            height="100%"
+                            style="border:0;"
+                            allowfullscreen=""
+                            loading="lazy"
+                            referrerpolicy="no-referrer-when-downgrade">
+                        </iframe>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 ESRC, Obafemi Awolowo University. All rights reserved.</p>
+                <button class="admin-trigger" id="admin-login-btn">Admin</button>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Canvas for generating certificates -->
+    <canvas id="certCanvas" width="900" height="636"></canvas>
+
+    <script>
+        // JS Logic setup
+        document.addEventListener('DOMContentLoaded', () => {
+            // Mobile Menu
+            const mobileBtn = document.querySelector('.mobile-menu-btn');
+            const navLinks = document.querySelector('.nav-links');
+
+            mobileBtn.addEventListener('click', () => {
+                navLinks.classList.toggle('active');
+            });
+
+            // Smooth Scroll
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    navLinks.classList.remove('active'); // close menu on click
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        const offset = 80;
+                        const bodyRect = document.body.getBoundingClientRect().top;
+                        const elementRect = target.getBoundingClientRect().top;
+                        const elementPosition = elementRect - bodyRect;
+                        const offsetPosition = elementPosition - offset;
+
+                        window.scrollTo({
+                            top: offsetPosition,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+
+            // Intersection Observer for fade-in animations
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.1
+            };
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.fade-in').forEach(el => {
+                observer.observe(el);
+            });
+
+            // Countdown Timer (Target: 22 July 2026 10:00 AM WAT / UTC+1)
+            const targetDate = new Date('2026-07-22T10:00:00+01:00').getTime();
+
+            function updateCountdown() {
+                const now = new Date().getTime();
+                const distance = targetDate - now;
+
+                if (distance < 0) {
+                    document.getElementById('countdown').innerHTML = "<h3>The Summit Has Begun!</h3>";
+                    return;
+                }
+
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                document.getElementById('days').innerText = days.toString().padStart(2, '0');
+                document.getElementById('hours').innerText = hours.toString().padStart(2, '0');
+                document.getElementById('minutes').innerText = minutes.toString().padStart(2, '0');
+                document.getElementById('seconds').innerText = seconds.toString().padStart(2, '0');
+            }
+
+            setInterval(updateCountdown, 1000);
+            updateCountdown();
+
+
+            // Admin Panel & Certificate Generation
+            const adminPanel = document.getElementById('admin-panel');
+            const mainContent = document.getElementById('main-content');
+            const adminLoginBtn = document.getElementById('admin-login-btn');
+            const exitAdminBtn = document.getElementById('exit-admin-btn');
+            const downloadAllBtn = document.getElementById('download-all-btn');
+            const tableBody = document.getElementById('admin-table-body');
+            const noDataMsg = document.getElementById('no-data-msg');
+            const canvas = document.getElementById('certCanvas');
+            const ctx = canvas.getContext('2d');
+
+            adminLoginBtn.addEventListener('click', () => {
+                const passcode = prompt("Enter Admin Passcode:");
+                if (passcode === "ieps3admin") {
+                    mainContent.style.display = 'none';
+                    adminPanel.style.display = 'block';
+                    window.scrollTo(0, 0);
+                    renderAdminTable();
+                } else if (passcode !== null) {
+                    alert("Incorrect passcode.");
+                }
+            });
+
+            exitAdminBtn.addEventListener('click', () => {
+                adminPanel.style.display = 'none';
+                mainContent.style.display = 'block';
+            });
+
+            window.renderAdminTable = function() {
+                const registrations = JSON.parse(localStorage.getItem('ieps3_registrations') || '[]');
+                tableBody.innerHTML = '';
+
+                if (registrations.length === 0) {
+                    noDataMsg.style.display = 'block';
+                    document.getElementById('admin-table').style.display = 'none';
+                    return;
+                }
+
+                noDataMsg.style.display = 'none';
+                document.getElementById('admin-table').style.display = 'table';
+
+                registrations.forEach((reg, index) => {
+                    const row = document.createElement('tr');
+
+                    const serialNo = `IEPS3/2026/${String(index + 1).padStart(3, '0')}`;
+
+                    row.innerHTML = `
+                        <td style="font-weight: 500;">${reg.fullName}</td>
+                        <td>${reg.email}</td>
+                        <td><span style="background: var(--light-green); color: var(--dark-green); padding: 4px 8px; border-radius: 4px; font-size: 0.875rem;">${reg.role}</span></td>
+                        <td>${reg.institution}</td>
+                        <td>
+                            <button class="btn btn-blue cert-btn" style="padding: 6px 12px; font-size: 0.875rem;" data-name="${reg.fullName.replace(/"/g, '&quot;')}" data-serial="${serialNo}">Generate Certificate</button>
+                        </td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+
+                // Attach event listeners to buttons
+                document.querySelectorAll('.cert-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        generateAndDownloadCert(this.getAttribute('data-name'), this.getAttribute('data-serial'));
+                    });
+                });
+            };
+
+            // Certificate Generator function
+            window.generateCertificateImage = function(name, serial) {
+                return new Promise((resolve) => {
+                    // Make sure fonts are loaded before drawing
+                    document.fonts.ready.then(() => {
+                        // Clear canvas
+                        ctx.fillStyle = '#FFFFFF';
+                        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                        // Decorative Border - Outer
+                        ctx.strokeStyle = '#008751'; // Primary green
+                        ctx.lineWidth = 15;
+                        ctx.strokeRect(20, 20, canvas.width - 40, canvas.height - 40);
+
+                        // Decorative Border - Inner
+                        ctx.strokeStyle = '#C9A84C'; // Gold
+                        ctx.lineWidth = 3;
+                        ctx.strokeRect(45, 45, canvas.width - 90, canvas.height - 90);
+
+                        // Top Header / Branding
+                        ctx.fillStyle = '#0A1F44'; // Navy Blue
+                        ctx.font = "bold 28px 'Playfair Display'";
+                        ctx.textAlign = 'center';
+                        ctx.fillText("EDUCATION STUDENTS' REPRESENTATIVE COUNCIL (ESRC)", canvas.width/2, 110);
+
+                        ctx.font = "600 20px 'Inter'";
+                        ctx.fillStyle = '#008751';
+                        ctx.fillText("Obafemi Awolowo University, Ile-Ife", canvas.width/2, 140);
+
+                        // Cert of participation
+                        ctx.fillStyle = '#C9A84C';
+                        ctx.font = "bold 36px 'Playfair Display'";
+                        ctx.fillText("CERTIFICATE OF PARTICIPATION", canvas.width/2, 210);
+
+                        ctx.fillStyle = '#1A1A2E';
+                        ctx.font = "32px 'Dancing Script'";
+                        ctx.fillText("This is to certify that", canvas.width/2, 260);
+
+                        // Participant Name
+                        ctx.fillStyle = '#0A1F44';
+                        ctx.font = "bold 46px 'Playfair Display'";
+                        ctx.fillText(name.toUpperCase(), canvas.width/2, 320);
+
+                        // Body text
+                        ctx.fillStyle = '#1A1A2E';
+                        ctx.font = "18px 'Inter'";
+                        ctx.fillText("attended the Ife Education Parliamentary Summit 3.0 (IEPS 3.0)", canvas.width/2, 370);
+
+                        ctx.font = "italic 16px 'Inter'";
+                        ctx.fillStyle = '#475569';
+                        ctx.fillText('Theme: "Nigerian Parliamentarian: A Strategic Panacea for Nation-Building and Educational Reforms"', canvas.width/2, 400);
+
+                        ctx.font = "16px 'Inter'";
+                        ctx.fillStyle = '#1A1A2E';
+                        ctx.fillText("Date: 22 July 2026  |  Venue: ACE Conference Centre, OAU", canvas.width/2, 430);
+
+                        // Signatures
+                        ctx.fillStyle = '#0A1F44';
+                        ctx.font = "32px 'Dancing Script'";
+
+                        // Sig 1
+                        ctx.fillText("O. Emmanuel", 250, 520);
+                        ctx.beginPath();
+                        ctx.moveTo(150, 530);
+                        ctx.lineTo(350, 530);
+                        ctx.lineWidth = 1;
+                        ctx.strokeStyle = '#64748b';
+                        ctx.stroke();
+                        ctx.font = "14px 'Inter'";
+                        ctx.fillStyle = '#1A1A2E';
+                        ctx.fillText("General Secretary, ESRC", 250, 550);
+
+                        // Sig 2
+                        ctx.fillStyle = '#0A1F44';
+                        ctx.font = "32px 'Dancing Script'";
+                        ctx.fillText("A. Samuel", 650, 520);
+                        ctx.beginPath();
+                        ctx.moveTo(550, 530);
+                        ctx.lineTo(750, 530);
+                        ctx.stroke();
+                        ctx.font = "14px 'Inter'";
+                        ctx.fillStyle = '#1A1A2E';
+                        ctx.fillText("President, ESRC", 650, 550);
+
+                        // Serial Number
+                        ctx.font = "12px 'Inter'";
+                        ctx.fillStyle = '#94a3b8';
+                        ctx.textAlign = 'right';
+                        ctx.fillText(serial, canvas.width - 60, canvas.height - 60);
+
+                        resolve(canvas.toDataURL('image/png'));
+                    });
+                });
+            };
+
+            window.generateAndDownloadCert = async function(name, serial) {
+                const dataUrl = await generateCertificateImage(name, serial);
+                const link = document.createElement('a');
+                link.download = `IEPS3_Certificate_${name.replace(/\s+/g, '_')}.png`;
+                link.href = dataUrl;
+                link.click();
+            };
+
+            // JSZip batch download
+            downloadAllBtn.addEventListener('click', async () => {
+                const registrations = JSON.parse(localStorage.getItem('ieps3_registrations') || '[]');
+                if (registrations.length === 0) {
+                    alert("No registrations to download.");
+                    return;
+                }
+
+                if (typeof JSZip === 'undefined') {
+                    alert("JSZip library is still loading. Please try again in a moment.");
+                    return;
+                }
+
+                downloadAllBtn.innerText = "Generating ZIP...";
+                downloadAllBtn.disabled = true;
+
+                const zip = new JSZip();
+                const folder = zip.folder("IEPS3_Certificates");
+
+                for (let i = 0; i < registrations.length; i++) {
+                    const reg = registrations[i];
+                    const serialNo = `IEPS3/2026/${String(i + 1).padStart(3, '0')}`;
+                    const dataUrl = await generateCertificateImage(reg.fullName, serialNo);
+
+                    // Remove "data:image/png;base64," to get pure base64
+                    const base64Data = dataUrl.split(',')[1];
+                    folder.file(`IEPS3_Certificate_${reg.fullName.replace(/\s+/g, '_')}.png`, base64Data, {base64: true});
+                }
+
+                zip.generateAsync({type:"blob"}).then(function(content) {
+                    const link = document.createElement('a');
+                    link.href = URL.createObjectURL(content);
+                    link.download = "IEPS3_Certificates.zip";
+                    link.click();
+
+                    downloadAllBtn.innerText = "Download All as ZIP";
+                    downloadAllBtn.disabled = false;
+                });
+            });
+
+
+            // Registration Form Handling
+            const form = document.getElementById('registration-form');
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+
+                // Clear errors
+                document.querySelectorAll('.error-message').forEach(el => el.style.display = 'none');
+
+                const formData = {
+                    id: Date.now().toString(),
+                    date: new Date().toISOString(),
+                    fullName: document.getElementById('fullName').value.trim(),
+                    email: document.getElementById('email').value.trim(),
+                    phone: document.getElementById('phone').value.trim(),
+                    institution: document.getElementById('institution').value.trim(),
+                    role: document.getElementById('role').value,
+                    source: document.getElementById('source').value
+                };
+
+                let isValid = true;
+
+                if (!formData.fullName) { document.getElementById('err-fullName').style.display = 'block'; isValid = false; }
+                if (!formData.email || !/^\S+@\S+\.\S+$/.test(formData.email)) { document.getElementById('err-email').style.display = 'block'; isValid = false; }
+                if (!formData.phone) { document.getElementById('err-phone').style.display = 'block'; isValid = false; }
+                if (!formData.institution) { document.getElementById('err-institution').style.display = 'block'; isValid = false; }
+                if (!formData.role) { document.getElementById('err-role').style.display = 'block'; isValid = false; }
+                if (!formData.source) { document.getElementById('err-source').style.display = 'block'; isValid = false; }
+
+                if (isValid) {
+                    // Save to localStorage
+                    const registrations = JSON.parse(localStorage.getItem('ieps3_registrations') || '[]');
+                    registrations.push(formData);
+                    localStorage.setItem('ieps3_registrations', JSON.stringify(registrations));
+
+                    // Show success
+                    form.style.display = 'none';
+                    const successMsg = document.getElementById('success-msg');
+                    document.getElementById('success-text').innerText = `Thank you, ${formData.fullName}! Your registration for IEPS 3.0 has been received. Check your email for confirmation.`;
+                    successMsg.style.display = 'block';
+
+                    // Trigger refesh of admin table if open
+                    if(typeof renderAdminTable === 'function') renderAdminTable();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
