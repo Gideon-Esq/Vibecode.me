@@ -1,0 +1,6 @@
+<svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="OAU crest placeholder">
+  <circle cx="60" cy="60" r="58" fill="#0D1B5E"/>
+  <path d="M28 44 Q60 28 92 44 L92 50 Q60 36 28 50 Z" fill="#F5C400"/>
+  <circle cx="60" cy="66" r="18" fill="#F5C400"/>
+  <text x="60" y="100" font-family="'Space Grotesk', system-ui, sans-serif" font-weight="700" font-size="16" text-anchor="middle" fill="#FFFFFF">OAU</text>
+</svg>

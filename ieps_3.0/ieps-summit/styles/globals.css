@@ -1,0 +1,235 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Brand color custom properties */
+    --navy: #0d1b5e;
+    --navy-light: #1a2d8a;
+    --navy-dark: #080f3a;
+    --gold: #f5c400;
+    --gold-light: #ffd740;
+    --gold-dark: #c49b00;
+    --green: #1a7a3c;
+    --green-light: #22a050;
+    --green-dark: #115228;
+    --offwhite: #f8f8f4;
+    --ink: #1a1a2e;
+    --white: #ffffff;
+  }
+
+  * {
+    @apply border-navy/10;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 5rem; /* offset for sticky navbar on anchor jumps */
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-offwhite font-body text-ink antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    @apply bg-gold text-navy;
+  }
+
+  /* Custom scrollbar in navy/gold */
+  ::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--navy);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--gold);
+    border: 3px solid var(--navy);
+    border-radius: 999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--gold-light);
+  }
+  /* Firefox */
+  html {
+    scrollbar-color: var(--gold) var(--navy);
+    scrollbar-width: thin;
+  }
+
+  /* Visible focus rings for keyboard users (a11y) */
+  :focus-visible {
+    @apply outline-none ring-2 ring-gold ring-offset-2 ring-offset-white;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+    }
+  }
+}
+
+@layer components {
+  .container-section {
+    @apply container mx-auto px-5 sm:px-6 lg:px-8;
+  }
+
+  .eyebrow {
+    @apply font-label text-sm font-semibold uppercase tracking-[0.2em] text-green;
+  }
+
+  .heading-display {
+    @apply font-display font-bold tracking-tight;
+  }
+
+  /* Brand gradient surfaces */
+  .gradient-navy {
+    background: linear-gradient(135deg, #0d1b5e 0%, #1a2d8a 100%);
+  }
+
+  .gradient-gold {
+    background: linear-gradient(135deg, #f5c400 0%, #ffd740 100%);
+  }
+
+  /* Gold gradient text via background-clip */
+  .text-gradient-gold {
+    background: linear-gradient(120deg, #ffd740 0%, #f5c400 45%, #c49b00 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+  }
+
+  /* Decorative dotted/grid backdrop for dark sections */
+  .bg-dots {
+    background-image: radial-gradient(
+      rgba(255, 255, 255, 0.08) 1px,
+      transparent 1px
+    );
+    background-size: 22px 22px;
+  }
+
+  /* Subtle diagonal-line pattern for the hero overlay (white @ ~3%) */
+  .bg-diagonal {
+    background-image: repeating-linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.03) 0px,
+      rgba(255, 255, 255, 0.03) 1px,
+      transparent 1px,
+      transparent 12px
+    );
+  }
+
+  /* Reusable premium card hover: lift + subtle scale + gold left border.
+     Uses transform/opacity only (no layout shift). */
+  .card-hover {
+    @apply relative transition-all duration-200 ease-out;
+  }
+  .card-hover::before {
+    content: "";
+    @apply pointer-events-none absolute inset-y-0 left-0 w-1 origin-top scale-y-0 rounded-l-2xl bg-gold transition-transform duration-200;
+  }
+  .card-hover:hover {
+    @apply -translate-y-0.5 shadow-lg;
+    transform: translateY(-2px) scale(1.02);
+  }
+  .card-hover:hover::before {
+    @apply scale-y-100;
+  }
+
+  /* CSS-only ripple from the centre on click (uses the element's text colour). */
+  .btn-ripple {
+    position: relative;
+    overflow: hidden;
+  }
+  .btn-ripple::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 6px;
+    height: 6px;
+    border-radius: 9999px;
+    background: currentColor;
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1);
+    pointer-events: none;
+  }
+  .btn-ripple:active::after {
+    animation: ripple 0.55s ease-out;
+  }
+}
+
+@keyframes ripple {
+  0% {
+    opacity: 0.3;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(48);
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  .text-pretty {
+    text-wrap: pretty;
+  }
+  .gold-underline {
+    background-image: linear-gradient(transparent 62%, rgba(245, 196, 0, 0.5) 62%);
+    background-repeat: no-repeat;
+  }
+}
+
+/* Named keyframes (also registered in tailwind.config animations) */
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes slideInLeft {
+  0% {
+    opacity: 0;
+    transform: translateX(-32px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+@keyframes pulseGlow {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(245, 196, 0, 0.45);
+  }
+  50% {
+    box-shadow: 0 0 28px 6px rgba(245, 196, 0, 0);
+  }
+}
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-18px) rotate(6deg);
+  }
+}

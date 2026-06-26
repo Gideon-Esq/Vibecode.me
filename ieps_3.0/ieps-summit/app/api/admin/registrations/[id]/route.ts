@@ -1,0 +1,92 @@
+import { NextResponse } from "next/server";
+import { z } from "zod";
+import { Prisma } from "@prisma/client";
+import { prisma } from "@/lib/db";
+import {
+  requireAdmin,
+  unauthorized,
+  serializeRegistration,
+  registrationSelect,
+} from "@/lib/admin";
+
+export const runtime = "nodejs";
+
+type Ctx = { params: { id: string } };
+
+/** GET /api/admin/registrations/[id] */
+export async function GET(_request: Request, { params }: Ctx) {
+  if (!(await requireAdmin())) return unauthorized();
+
+  const registration = await prisma.registration.findUnique({
+    where: { id: params.id },
+    select: registrationSelect,
+  });
+  if (!registration) {
+    return NextResponse.json({ error: "Not found" }, { status: 404 });
+  }
+  return NextResponse.json(serializeRegistration(registration));
+}
+
+const patchSchema = z.object({
+  status: z.enum(["PENDING", "CONFIRMED", "CANCELLED"]).optional(),
+  attended: z.boolean().optional(),
+});
+
+/** PATCH /api/admin/registrations/[id] — update status / attendance. */
+export async function PATCH(request: Request, { params }: Ctx) {
+  if (!(await requireAdmin())) return unauthorized();
+
+  let body: unknown;
+  try {
+    body = await request.json();
+  } catch {
+    return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
+  }
+
+  const parsed = patchSchema.safeParse(body);
+  if (!parsed.success) {
+    return NextResponse.json(
+      { error: "Validation failed", fieldErrors: parsed.error.flatten().fieldErrors },
+      { status: 422 }
+    );
+  }
+
+  if (Object.keys(parsed.data).length === 0) {
+    return NextResponse.json({ error: "No fields to update" }, { status: 400 });
+  }
+
+  try {
+    const updated = await prisma.registration.update({
+      where: { id: params.id },
+      data: parsed.data,
+      select: registrationSelect,
+    });
+    return NextResponse.json(serializeRegistration(updated));
+  } catch (err) {
+    if (
+      err instanceof Prisma.PrismaClientKnownRequestError &&
+      err.code === "P2025"
+    ) {
+      return NextResponse.json({ error: "Not found" }, { status: 404 });
+    }
+    throw err;
+  }
+}
+
+/** DELETE /api/admin/registrations/[id] */
+export async function DELETE(_request: Request, { params }: Ctx) {
+  if (!(await requireAdmin())) return unauthorized();
+
+  try {
+    await prisma.registration.delete({ where: { id: params.id } });
+    return NextResponse.json({ ok: true });
+  } catch (err) {
+    if (
+      err instanceof Prisma.PrismaClientKnownRequestError &&
+      err.code === "P2025"
+    ) {
+      return NextResponse.json({ error: "Not found" }, { status: 404 });
+    }
+    throw err;
+  }
+}
