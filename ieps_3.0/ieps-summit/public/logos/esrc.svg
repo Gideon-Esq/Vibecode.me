@@ -1,0 +1,6 @@
+<svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="ESRC logo placeholder">
+  <circle cx="60" cy="60" r="58" fill="#FFFFFF" stroke="#1A7A3C" stroke-width="3"/>
+  <path d="M60 24 L92 60 L60 96 L28 60 Z" fill="#1A7A3C"/>
+  <path d="M60 38 L80 60 L60 82 L40 60 Z" fill="#FFFFFF"/>
+  <text x="60" y="67" font-family="'Space Grotesk', system-ui, sans-serif" font-weight="700" font-size="20" text-anchor="middle" fill="#1A7A3C">ESRC</text>
+</svg>

@@ -1,0 +1,332 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Brand color custom properties — chamber navy + parliamentary gold */
+    --navy: #0d1b5e;
+    --navy-light: #1a2d8a;
+    --navy-dark: #080f3a;
+    --gold: #f5c400;
+    --gold-light: #ffd740;
+    --gold-dark: #c49b00;
+    --bronze: #806600;
+    --green: #017e33; /* brand green — sampled from the logo's SUMMIT mark */
+    --green-light: #14a24a;
+    --green-dark: #01602a;
+    --offwhite: #f7f4ec;
+    --ink: #141824;
+    --white: #ffffff;
+  }
+
+  * {
+    @apply border-navy/10;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 5rem; /* offset for sticky navbar on anchor jumps */
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    /* White is the primary surface; warm parchment (offwhite) is the
+       alternating band so sections read like bound committee papers. */
+    @apply bg-white font-body text-ink antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    @apply bg-navy text-gold;
+  }
+
+  /* Custom scrollbar in navy/gold */
+  ::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--navy);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--gold);
+    border: 3px solid var(--navy);
+    border-radius: 999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--gold-light);
+  }
+  /* Firefox */
+  html {
+    scrollbar-color: var(--gold) var(--navy);
+    scrollbar-width: thin;
+  }
+
+  /* Visible focus rings for keyboard users (a11y) */
+  :focus-visible {
+    @apply outline-none ring-2 ring-gold-600 ring-offset-2 ring-offset-white;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+    }
+  }
+}
+
+@layer components {
+  .container-section {
+    @apply container mx-auto px-5 sm:px-6 lg:px-8;
+  }
+
+  /* Small-caps kicker line — order-paper style */
+  .eyebrow {
+    @apply font-label text-xs font-semibold uppercase tracking-[0.28em] text-gold-600;
+  }
+
+  .heading-display {
+    @apply font-display font-bold tracking-tight;
+  }
+
+  /* Short gold rule used under eyebrows/headings — a gavel-strike accent */
+  .gold-rule {
+    @apply inline-block h-0.5 w-12 bg-gold;
+  }
+
+  /* Brand gradient surfaces */
+  .gradient-navy {
+    background: linear-gradient(135deg, #142370 0%, #080f3a 100%);
+  }
+
+  /* Chamber backdrop — deep navy with a faint gold glow rising from the
+     dais and cold light falling from above. */
+  .bg-hero-aurora {
+    background-color: #080f3a;
+    background-image:
+      radial-gradient(
+        110% 90% at 50% -20%,
+        rgba(26, 45, 138, 0.55) 0%,
+        rgba(13, 27, 94, 0) 55%
+      ),
+      radial-gradient(
+        70% 55% at 50% 108%,
+        rgba(245, 196, 0, 0.16) 0%,
+        rgba(13, 27, 94, 0) 60%
+      ),
+      radial-gradient(
+        60% 60% at 92% 8%,
+        rgba(26, 45, 138, 0.5) 0%,
+        rgba(13, 27, 94, 0) 55%
+      ),
+      linear-gradient(168deg, #142370 0%, #0d1b5e 46%, #05082b 100%);
+  }
+
+  /* Faint top-light sheen used over the chamber backdrop. */
+  .hero-sheen {
+    background: radial-gradient(
+      60% 50% at 50% 0%,
+      rgba(255, 255, 255, 0.08) 0%,
+      rgba(255, 255, 255, 0) 70%
+    );
+  }
+
+  /* Gold accent surface — used for hairline bands and seals */
+  .gradient-gold {
+    background: linear-gradient(135deg, #ffd740 0%, #f5c400 55%, #c49b00 100%);
+  }
+
+  /* Gold gradient text via background-clip — for headline keywords on navy */
+  .text-gradient-gold {
+    background: linear-gradient(118deg, #fff0b0 0%, #ffd740 40%, #f5c400 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+  }
+
+  /* Decorative dotted grid for dark sections */
+  .bg-dots {
+    background-image: radial-gradient(
+      rgba(255, 255, 255, 0.07) 1px,
+      transparent 1px
+    );
+    background-size: 22px 22px;
+  }
+
+  /* Subtle diagonal-line pattern for dark overlays (white @ ~3%) */
+  .bg-diagonal {
+    background-image: repeating-linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.03) 0px,
+      rgba(255, 255, 255, 0.03) 1px,
+      transparent 1px,
+      transparent 12px
+    );
+  }
+
+  /* === LIGHT surfaces (white/parchment primary, navy text, gold accent) === */
+
+  /* Light backdrop: barely-there navy wash at the top corners. */
+  .bg-mesh-light {
+    background-color: #ffffff;
+    background-image:
+      radial-gradient(
+        58% 55% at 10% 6%,
+        rgba(13, 27, 94, 0.06) 0%,
+        rgba(255, 255, 255, 0) 60%
+      ),
+      radial-gradient(
+        52% 48% at 94% -2%,
+        rgba(245, 196, 0, 0.08) 0%,
+        rgba(255, 255, 255, 0) 55%
+      );
+  }
+
+  /* Deep navy band (name kept from the old ribbon band). */
+  .stripe-band {
+    background: linear-gradient(112deg, #1a2d8a 0%, #0d1b5e 52%, #05082b 100%);
+  }
+
+  /* Fine vertical hairlines (navy @ ~4%) — columned-portico texture. */
+  .bg-stripes-light {
+    background-image: repeating-linear-gradient(
+      to right,
+      rgba(13, 27, 94, 0.04) 0px,
+      rgba(13, 27, 94, 0.04) 1px,
+      transparent 1px,
+      transparent 96px
+    );
+  }
+
+  /* Dotted navy grid for light sections. */
+  .bg-dots-light {
+    background-image: radial-gradient(
+      rgba(13, 27, 94, 0.08) 1px,
+      transparent 1px
+    );
+    background-size: 22px 22px;
+  }
+
+  /* Brand-green gradient heading text for light/white backgrounds —
+     echoes the green "SUMMIT" wordmark in the logo. */
+  .text-gradient-green {
+    background: linear-gradient(118deg, #14a24a 0%, #017e33 55%, #01602a 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+  }
+
+  /* Reusable card hover: lift + gold left border. Transform/opacity only. */
+  .card-hover {
+    @apply relative transition-all duration-200 ease-out;
+  }
+  .card-hover::before {
+    content: "";
+    @apply pointer-events-none absolute inset-y-0 left-0 w-1 origin-top scale-y-0 rounded-l-2xl bg-gold transition-transform duration-200;
+  }
+  .card-hover:hover {
+    @apply -translate-y-0.5 shadow-lg;
+    transform: translateY(-2px) scale(1.02);
+  }
+  .card-hover:hover::before {
+    @apply scale-y-100;
+  }
+
+  /* CSS-only ripple from the centre on click (uses the element's text colour). */
+  .btn-ripple {
+    position: relative;
+    overflow: hidden;
+  }
+  .btn-ripple::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 6px;
+    height: 6px;
+    border-radius: 9999px;
+    background: currentColor;
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1);
+    pointer-events: none;
+  }
+  .btn-ripple:active::after {
+    animation: ripple 0.55s ease-out;
+  }
+}
+
+@keyframes ripple {
+  0% {
+    opacity: 0.3;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(48);
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  .text-pretty {
+    text-wrap: pretty;
+  }
+  .gold-underline {
+    background-image: linear-gradient(
+      transparent 62%,
+      rgba(245, 196, 0, 0.4) 62%
+    );
+    background-repeat: no-repeat;
+  }
+}
+
+/* Named keyframes (also registered in tailwind.config animations) */
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes slideInLeft {
+  0% {
+    opacity: 0;
+    transform: translateX(-32px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+@keyframes pulseGlow {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(245, 196, 0, 0.45);
+  }
+  50% {
+    box-shadow: 0 0 28px 6px rgba(245, 196, 0, 0);
+  }
+}
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-18px) rotate(6deg);
+  }
+}
