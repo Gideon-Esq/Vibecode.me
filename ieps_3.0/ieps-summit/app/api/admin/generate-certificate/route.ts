@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/db";
-import { getBaseUrl } from "@/lib/utils";
 import { issueCertificate } from "@/lib/certificate-service";
 
 export const runtime = "nodejs";
@@ -45,7 +44,7 @@ export async function POST(request: Request) {
   }
 
   try {
-    const result = await issueCertificate(registration, getBaseUrl(request));
+    const result = await issueCertificate(registration);
     return NextResponse.json(result, { status: 200 });
   } catch (err) {
     console.error("[generate-certificate] failed:", err);

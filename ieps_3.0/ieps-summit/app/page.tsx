@@ -21,7 +21,7 @@ const eventJsonLd = {
   endDate: "2026-07-22T18:00:00+01:00",
   eventStatus: "https://schema.org/EventScheduled",
   eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
-  image: [`${SITE_URL}/opengraph-image.png`],
+  image: [`${SITE_URL}/opengraph-image`],
   location: {
     "@type": "Place",
     name: EVENT.venue.name,
