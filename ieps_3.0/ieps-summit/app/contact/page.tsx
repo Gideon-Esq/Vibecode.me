@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
-import { Mail, Phone, MapPin, User, ArrowRight } from "lucide-react";
+import { Mail, Phone, MapPin, User, ArrowRight, Instagram, Facebook } from "lucide-react";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { ContactForm } from "@/components/contact/ContactForm";
-import { EVENT, CONTACT } from "@/lib/constants";
+import { EVENT, CONTACT, SOCIALS } from "@/lib/constants";
 
 export const metadata: Metadata = {
   title: "Contact",
@@ -20,7 +20,7 @@ export default function ContactPage() {
     <>
       {/* Hero */}
       <section className="relative overflow-hidden bg-navy pb-20 pt-28 text-white lg:pb-24 lg:pt-36">
-        <div className="absolute inset-0 gradient-navy" aria-hidden />
+        <div className="absolute inset-0 bg-hero-aurora" aria-hidden />
         <div className="absolute inset-0 bg-dots opacity-40" aria-hidden />
         <div className="container-section relative text-center">
           <Badge tone="light" className="mb-5">
@@ -58,12 +58,21 @@ export default function ContactPage() {
                 </li>
                 <li className="flex items-start gap-3">
                   <Mail className="mt-0.5 h-5 w-5 shrink-0 text-green-400" />
-                  <a
-                    href={`mailto:${CONTACT.email}`}
-                    className="break-all transition-colors hover:text-gold"
-                  >
-                    {CONTACT.email}
-                  </a>
+                  <span>
+                    <a
+                      href={`mailto:${SOCIALS.email}`}
+                      className="break-all transition-colors hover:text-gold"
+                    >
+                      {SOCIALS.email}
+                    </a>
+                    <br />
+                    <a
+                      href={`mailto:${CONTACT.email}`}
+                      className="break-all text-white/60 transition-colors hover:text-gold"
+                    >
+                      {CONTACT.email}
+                    </a>
+                  </span>
                 </li>
                 <li className="flex items-start gap-3">
                   <Phone className="mt-0.5 h-5 w-5 shrink-0 text-green-400" />
@@ -72,6 +81,28 @@ export default function ContactPage() {
                     className="transition-colors hover:text-gold"
                   >
                     {CONTACT.phone}
+                  </a>
+                </li>
+                <li className="flex items-start gap-3">
+                  <Instagram className="mt-0.5 h-5 w-5 shrink-0 text-green-400" />
+                  <a
+                    href={SOCIALS.instagram.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="transition-colors hover:text-gold"
+                  >
+                    {SOCIALS.instagram.handle}
+                  </a>
+                </li>
+                <li className="flex items-start gap-3">
+                  <Facebook className="mt-0.5 h-5 w-5 shrink-0 text-green-400" />
+                  <a
+                    href={SOCIALS.facebook.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="transition-colors hover:text-gold"
+                  >
+                    {SOCIALS.facebook.handle}
                   </a>
                 </li>
                 <li className="flex items-start gap-3">

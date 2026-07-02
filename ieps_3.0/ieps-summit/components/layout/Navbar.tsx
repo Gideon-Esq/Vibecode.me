@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -7,16 +8,6 @@ import { Menu, X } from "lucide-react";
 import { NAV_LINKS } from "@/lib/constants";
 import { Button } from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
-
-/** Text-based IEPS 3.0 wordmark — "IEPS" white, "3.0" gold superscript. */
-function Wordmark() {
-  return (
-    <span className="flex items-baseline font-display font-bold leading-none">
-      <span className="text-xl tracking-tight text-white sm:text-2xl">IEPS</span>
-      <span className="ml-1 text-sm font-bold text-gold sm:text-base">3.0</span>
-    </span>
-  );
-}
 
 export function Navbar() {
   const pathname = usePathname();
@@ -50,12 +41,14 @@ export function Navbar() {
   return (
     <header
       className={cn(
-        "fixed inset-x-0 top-0 z-50 transition-all duration-300",
+        "fixed inset-x-0 top-0 z-50 border-b bg-white/95 backdrop-blur-md transition-all duration-300",
         scrolled || open
-          ? "bg-navy shadow-[0_8px_30px_-12px_rgba(8,15,58,0.8)]"
-          : "bg-transparent"
+          ? "border-navy/10 shadow-[0_8px_30px_-18px_rgba(7,20,39,0.5)]"
+          : "border-navy/5"
       )}
     >
+      {/* gold hairline across the very top — chamber trim */}
+      <div className="h-0.5 w-full gradient-gold" aria-hidden />
       <nav
         className={cn(
           "container mx-auto flex h-16 items-center justify-between px-5 transition-[height] duration-300 ease-out sm:px-6 lg:px-8",
@@ -65,10 +58,17 @@ export function Navbar() {
       >
         <Link
           href="/"
-          className="flex items-center gap-3"
+          className="flex items-center"
           aria-label="IEPS 3.0 — home"
         >
-          <Wordmark />
+          <Image
+            src="/logos/ieps.png"
+            alt="IEPS 3.0 — Ife Education Parliamentary Summit"
+            width={416}
+            height={81}
+            priority
+            className="h-9 w-auto sm:h-11"
+          />
         </Link>
 
         {/* Desktop nav */}
@@ -81,22 +81,22 @@ export function Navbar() {
                 href={link.href}
                 aria-current={active ? "page" : undefined}
                 className={cn(
-                  "group relative rounded-full px-4 py-2 font-body text-sm font-medium transition-colors duration-200",
-                  active ? "text-gold" : "text-white/80 hover:text-white"
+                  "group relative px-4 py-2 font-label text-xs font-semibold uppercase tracking-[0.16em] transition-colors duration-200",
+                  active ? "text-navy" : "text-ink/60 hover:text-navy"
                 )}
               >
                 {link.label}
                 {/* gold active/hover underline */}
                 <span
                   className={cn(
-                    "pointer-events-none absolute inset-x-4 -bottom-0.5 h-0.5 origin-left rounded-full bg-gold transition-transform duration-200",
+                    "pointer-events-none absolute inset-x-4 -bottom-0.5 h-0.5 origin-left bg-gold transition-transform duration-200",
                     active ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"
                   )}
                 />
               </Link>
             );
           })}
-          <Button href="/register" size="sm" className="ml-3">
+          <Button href="/register" size="sm" className="ml-4">
             Register
           </Button>
         </div>
@@ -105,7 +105,7 @@ export function Navbar() {
         <button
           type="button"
           onClick={() => setOpen((v) => !v)}
-          className="inline-flex h-11 w-11 items-center justify-center rounded-full text-white transition-colors hover:bg-white/10 lg:hidden"
+          className="inline-flex h-11 w-11 items-center justify-center text-navy transition-colors hover:bg-navy/5 lg:hidden"
           aria-expanded={open}
           aria-controls="mobile-menu"
           aria-label={open ? "Close menu" : "Open menu"}
@@ -114,11 +114,11 @@ export function Navbar() {
         </button>
       </nav>
 
-      {/* Mobile full-screen slide-down menu (navy) */}
+      {/* Mobile full-screen slide-down menu */}
       <div
         id="mobile-menu"
         className={cn(
-          "fixed inset-x-0 top-16 z-40 origin-top gradient-navy lg:hidden",
+          "fixed inset-x-0 top-16 z-40 origin-top bg-white lg:hidden",
           open
             ? "pointer-events-auto h-[calc(100dvh-4rem)] opacity-100"
             : "pointer-events-none h-0 opacity-0"
@@ -126,19 +126,19 @@ export function Navbar() {
         style={{ transition: "height 320ms ease, opacity 240ms ease" }}
       >
         <div className="container mx-auto flex h-full flex-col px-5 pb-10 pt-6">
-          <ul className="flex flex-col gap-1">
+          <ul className="flex flex-col">
             {NAV_LINKS.map((link, i) => {
               const active = isActive(link.href);
               return (
-                <li key={link.href}>
+                <li key={link.href} className="border-b border-navy/10">
                   <Link
                     href={link.href}
                     aria-current={active ? "page" : undefined}
                     className={cn(
-                      "block rounded-xl px-4 py-4 font-display text-2xl font-semibold transition-colors",
+                      "flex items-center justify-between px-2 py-5 font-display text-2xl font-semibold transition-colors",
                       active
-                        ? "text-gold"
-                        : "text-white/90 hover:bg-white/5 hover:text-gold"
+                        ? "text-gold-600"
+                        : "text-navy hover:text-gold-600"
                     )}
                     style={
                       open
@@ -147,6 +147,10 @@ export function Navbar() {
                     }
                   >
                     {link.label}
+                    <span
+                      className={cn("h-0.5 w-6 bg-gold", !active && "opacity-0")}
+                      aria-hidden
+                    />
                   </Link>
                 </li>
               );

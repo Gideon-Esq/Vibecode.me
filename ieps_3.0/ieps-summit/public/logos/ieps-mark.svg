@@ -1,8 +1,0 @@
-<svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="IEPS 3.0 mark">
-  <rect width="120" height="120" rx="24" fill="#0D1B5E" />
-  <text x="60" y="62" font-family="'Space Grotesk', system-ui, sans-serif" font-weight="700" font-size="34" letter-spacing="-1" text-anchor="middle" fill="#FFFFFF">IEPS</text>
-  <g transform="translate(38,72)">
-    <rect width="44" height="22" rx="11" fill="#F5C400" />
-    <text x="22" y="16" font-family="'Space Grotesk', system-ui, sans-serif" font-weight="700" font-size="13" text-anchor="middle" fill="#0D1B5E">3.0</text>
-  </g>
-</svg>

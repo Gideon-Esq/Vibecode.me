@@ -204,7 +204,7 @@ export default function RegisterPage() {
     <div className="bg-offwhite">
       {/* Navy header */}
       <section className="relative overflow-hidden bg-navy pb-24 pt-28 text-white lg:pt-32">
-        <div className="absolute inset-0 gradient-navy" aria-hidden />
+        <div className="absolute inset-0 bg-hero-aurora" aria-hidden />
         <div className="absolute inset-0 bg-dots opacity-40" aria-hidden />
         <div className="container-section relative text-center">
           <p className="eyebrow text-gold">Registration</p>
@@ -232,7 +232,7 @@ export default function RegisterPage() {
                       state === "done"
                         ? "border-green bg-green text-white"
                         : state === "current"
-                          ? "border-gold bg-gold text-navy"
+                          ? "border-green-light bg-green-light text-white"
                           : "border-navy/15 bg-white text-navy/40"
                     }`}
                     aria-current={state === "current" ? "step" : undefined}

@@ -1,5 +1,65 @@
 import nodemailer, { type Transporter } from "nodemailer";
+import fs from "fs";
+import path from "path";
 import { EVENT, CONTACT, ORGANIZERS } from "@/lib/constants";
+
+/* ────────────────────────────────────────────────────────────
+ * Brand logo — embedded as an inline CID attachment so it renders
+ * even in clients that block remote images.
+ * ──────────────────────────────────────────────────────────── */
+
+const LOGO_CID = "ieps-logo@ieps-summit";
+const LOGO_PATH = path.join(process.cwd(), "public", "logos", "ieps.png");
+const HAS_LOGO = fs.existsSync(LOGO_PATH);
+
+/** Inline logo attachment for sendMail; empty when the asset is missing. */
+function logoAttachments() {
+  return HAS_LOGO
+    ? [
+        {
+          filename: "ieps-logo.png",
+          path: LOGO_PATH,
+          cid: LOGO_CID,
+          contentDisposition: "inline" as const,
+        },
+      ]
+    : [];
+}
+
+/**
+ * Shared navy header. The logo's navy lettering would vanish on the navy
+ * band, so it sits on a white plate (same treatment as the site footer).
+ * Falls back to the old text wordmark if the PNG is ever missing.
+ */
+function emailHeaderHtml(navy: string, gold: string): string {
+  const mark = HAS_LOGO
+    ? `<span style="display:inline-block;background-color:#ffffff;padding:10px 18px;border-radius:12px;line-height:0;"><img src="cid:${LOGO_CID}" alt="IEPS 3.0 — Ife Education Parliamentary Summit" width="190" style="display:block;width:190px;max-width:100%;height:auto;border:0;" /></span>`
+    : `<span style="font-size:30px;font-weight:bold;color:#ffffff;letter-spacing:-0.5px;">IEPS</span><span style="display:inline-block;background-color:${gold};color:${navy};font-size:15px;font-weight:bold;padding:3px 12px;border-radius:999px;margin-left:6px;vertical-align:middle;">3.0</span>`;
+  return `${mark}
+              <div style="margin-top:10px;font-size:11px;letter-spacing:3px;color:${gold};text-transform:uppercase;">Ife Education Parliamentary Summit</div>`;
+}
+
+/**
+ * Shared navy footer — contact name/role + email only (no phone), with the
+ * convening bodies. OAU is the host institution, not an organiser, so it is
+ * omitted from the "Organised by" line.
+ */
+function emailFooterHtml(navy: string, gold: string): string {
+  const organisers = ORGANIZERS.filter((o) => o.abbr !== "OAU")
+    .map((o) => o.abbr)
+    .join(" &middot; ");
+  return `<tr>
+            <td style="background-color:${navy};padding:30px 40px;text-align:center;">
+              <p style="margin:0 0 3px;color:#ffffff;font-size:14px;font-weight:bold;">${CONTACT.name}</p>
+              <p style="margin:0 0 14px;color:rgba(255,255,255,0.55);font-size:11px;text-transform:uppercase;letter-spacing:2px;">${CONTACT.role}</p>
+              <p style="margin:0 0 16px;">
+                <a href="mailto:${CONTACT.email}" style="color:${gold};text-decoration:none;font-size:13px;">${CONTACT.email}</a>
+              </p>
+              <p style="margin:0;color:rgba(255,255,255,0.45);font-size:11px;letter-spacing:0.5px;">Organised by ${organisers}</p>
+            </td>
+          </tr>
+          <tr><td style="height:5px;background-color:${gold};font-size:0;line-height:0;">&nbsp;</td></tr>`;
+}
 
 /**
  * Lazily-built Nodemailer SMTP transport. Configure via env:
@@ -57,7 +117,7 @@ type ConfirmationData = {
 export function confirmationEmailHtml({ fullName }: ConfirmationData): string {
   const navy = "#0D1B5E";
   const gold = "#F5C400";
-  const green = "#1A7A3C";
+  const green = "#017E33"; // brand green — logo SUMMIT mark
   const firstName = fullName.split(" ")[0] || fullName;
 
   return `<!doctype html>
@@ -68,87 +128,73 @@ export function confirmationEmailHtml({ fullName }: ConfirmationData): string {
   <meta name="color-scheme" content="light only" />
   <title>${CONFIRMATION_SUBJECT}</title>
 </head>
-<body style="margin:0;padding:0;background-color:#f8f8f4;font-family:Arial,Helvetica,sans-serif;-webkit-font-smoothing:antialiased;">
+<body style="margin:0;padding:0;background-color:#eef1f8;font-family:Arial,Helvetica,sans-serif;-webkit-font-smoothing:antialiased;">
   <div style="display:none;max-height:0;overflow:hidden;opacity:0;">You're confirmed for IEPS 3.0 — ${EVENT.dateLabel} at ${EVENT.venue.shortName}.</div>
-  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#f8f8f4;padding:24px 0;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#eef1f8;padding:36px 12px;">
     <tr>
       <td align="center">
-        <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="width:600px;max-width:100%;background-color:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 8px 30px rgba(13,27,94,0.12);">
+        <table role="presentation" width="620" cellpadding="0" cellspacing="0" style="width:620px;max-width:100%;background-color:#ffffff;border-radius:20px;overflow:hidden;border:1px solid #e2e6f1;box-shadow:0 12px 36px rgba(13,27,94,0.10);">
 
-          <!-- Navy header -->
+          <!-- Navy header with logo -->
           <tr>
-            <td style="background-color:${navy};padding:32px 40px;text-align:center;">
-              <span style="font-size:30px;font-weight:bold;color:#ffffff;letter-spacing:-0.5px;">IEPS</span>
-              <span style="display:inline-block;background-color:${gold};color:${navy};font-size:15px;font-weight:bold;padding:3px 12px;border-radius:999px;margin-left:6px;vertical-align:middle;">3.0</span>
-              <div style="margin-top:8px;font-size:11px;letter-spacing:3px;color:${gold};text-transform:uppercase;">Ife Education Parliamentary Summit</div>
+            <td style="background-color:${navy};padding:36px 40px 30px;text-align:center;">
+              ${emailHeaderHtml(navy, gold)}
             </td>
           </tr>
+          <!-- gold hairline -->
+          <tr><td style="height:3px;background-color:${gold};font-size:0;line-height:0;">&nbsp;</td></tr>
 
           <!-- Body -->
           <tr>
-            <td style="padding:40px;">
-              <div style="text-align:center;margin-bottom:8px;">
-                <span style="display:inline-block;width:64px;height:64px;line-height:64px;border-radius:50%;background-color:${green};color:#ffffff;font-size:32px;">&#10003;</span>
+            <td style="padding:44px 44px 36px;">
+              <div style="text-align:center;">
+                <span style="display:inline-block;width:60px;height:60px;line-height:60px;border-radius:50%;background-color:${green};color:#ffffff;font-size:28px;box-shadow:0 0 0 8px rgba(1,126,51,0.10);">&#10003;</span>
               </div>
-              <h1 style="margin:16px 0 8px;text-align:center;color:${gold};font-size:26px;">Registration Confirmed!</h1>
+              <h1 style="margin:22px 0 6px;text-align:center;color:${navy};font-size:27px;letter-spacing:-0.3px;">Registration Confirmed</h1>
+              <p style="margin:0 0 26px;text-align:center;color:#6b7280;font-size:14px;">Your seat at the summit is secured, ${firstName}.</p>
 
-              <p style="color:#1a1a2e;font-size:16px;line-height:1.6;margin:20px 0 0;">Dear ${firstName},</p>
-              <p style="color:#3a3a4e;font-size:16px;line-height:1.6;margin:12px 0;">
-                Your registration for the <strong>Ife Education Parliamentary Summit 3.0</strong> has been confirmed. We're delighted to have you join student parliamentarians from across Nigeria for a day of dialogue, leadership and reform.
+              <p style="color:#3a3a4e;font-size:15px;line-height:1.7;margin:0 0 10px;">
+                We're delighted to have you join student parliamentarians from across
+                Nigeria at the <strong style="color:${navy};">Ife Education Parliamentary Summit 3.0</strong>
+                for a day of dialogue, leadership and reform.
               </p>
 
-              <!-- Event details block -->
-              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:28px 0;background-color:#f8f8f4;border-radius:12px;border:1px solid #e6e6dd;">
+              <!-- Event details docket -->
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:26px 0;background-color:#f9f7f0;border-left:4px solid ${gold};border-radius:0 12px 12px 0;">
                 <tr>
-                  <td style="padding:24px;">
+                  <td style="padding:6px 26px;">
                     <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
                       <tr>
-                        <td style="padding:8px 0;color:${green};font-size:12px;text-transform:uppercase;letter-spacing:1.5px;width:90px;vertical-align:top;">Date</td>
-                        <td style="padding:8px 0;color:${navy};font-size:15px;font-weight:bold;">${EVENT.dateLabel}, ${EVENT.timeLabel}</td>
+                        <td style="padding:15px 0;border-bottom:1px solid #ebe7da;color:#806600;font-size:11px;text-transform:uppercase;letter-spacing:2px;width:82px;vertical-align:top;">Date</td>
+                        <td style="padding:15px 0;border-bottom:1px solid #ebe7da;color:${navy};font-size:15px;font-weight:bold;">${EVENT.dateLabel}<br/><span style="font-weight:normal;color:#6b7280;font-size:13px;">${EVENT.timeLabel} (WAT)</span></td>
                       </tr>
                       <tr>
-                        <td style="padding:8px 0;color:${green};font-size:12px;text-transform:uppercase;letter-spacing:1.5px;vertical-align:top;">Venue</td>
-                        <td style="padding:8px 0;color:${navy};font-size:15px;font-weight:bold;">${EVENT.venue.name}, ${EVENT.venue.institution}, ${EVENT.venue.city}, ${EVENT.venue.state}</td>
+                        <td style="padding:15px 0;border-bottom:1px solid #ebe7da;color:#806600;font-size:11px;text-transform:uppercase;letter-spacing:2px;vertical-align:top;">Venue</td>
+                        <td style="padding:15px 0;border-bottom:1px solid #ebe7da;color:${navy};font-size:15px;font-weight:bold;">${EVENT.venue.name}<br/><span style="font-weight:normal;color:#6b7280;font-size:13px;">${EVENT.venue.institution}, ${EVENT.venue.city}, ${EVENT.venue.state}</span></td>
                       </tr>
                       <tr>
-                        <td style="padding:8px 0;color:${green};font-size:12px;text-transform:uppercase;letter-spacing:1.5px;vertical-align:top;">Theme</td>
-                        <td style="padding:8px 0;color:#1a1a2e;font-size:14px;line-height:1.5;font-style:italic;">${EVENT.theme}</td>
+                        <td style="padding:15px 0;color:#806600;font-size:11px;text-transform:uppercase;letter-spacing:2px;vertical-align:top;">Theme</td>
+                        <td style="padding:15px 0;color:#3a3a4e;font-size:13px;line-height:1.6;font-style:italic;">${EVENT.theme}</td>
                       </tr>
                     </table>
                   </td>
                 </tr>
               </table>
 
-              <p style="color:#3a3a4e;font-size:16px;line-height:1.6;margin:12px 0;">
-                Please keep this email as confirmation of your registration. We look forward to seeing you!
+              <p style="color:#3a3a4e;font-size:15px;line-height:1.7;margin:0;">
+                Please keep this email as your confirmation. We look forward to seeing you!
               </p>
-              <p style="color:#1a1a2e;font-size:16px;line-height:1.6;margin:24px 0 0;">
+              <p style="color:#1a1a2e;font-size:15px;line-height:1.7;margin:26px 0 0;">
                 Warm regards,<br/>
-                <strong>The IEPS 3.0 Organising Team</strong>
+                <strong style="color:${navy};">The IEPS 3.0 Organising Team</strong>
               </p>
             </td>
           </tr>
 
-          <!-- Footer -->
-          <tr>
-            <td style="background-color:${navy};padding:28px 40px;text-align:center;">
-              <p style="margin:0 0 6px;color:#ffffff;font-size:13px;">
-                ${CONTACT.name} &middot; ${CONTACT.role}
-              </p>
-              <p style="margin:0 0 10px;color:rgba(255,255,255,0.7);font-size:13px;">
-                <a href="mailto:${CONTACT.email}" style="color:${gold};text-decoration:none;">${CONTACT.email}</a>
-                &nbsp;&middot;&nbsp;
-                <a href="tel:${CONTACT.phoneIntl}" style="color:${gold};text-decoration:none;">${CONTACT.phone}</a>
-              </p>
-              <p style="margin:0;color:rgba(255,255,255,0.5);font-size:11px;">
-                Organised by ${ORGANIZERS.map((o) => o.abbr).join(" &middot; ")}
-              </p>
-            </td>
-          </tr>
-          <tr><td style="height:5px;background-color:${gold};"></td></tr>
+          ${emailFooterHtml(navy, gold)}
 
         </table>
-        <p style="color:#9a9a9a;font-size:11px;margin:18px 0 0;">&copy; 2026 IEPS 3.0 — Education Students' Representative Council, OAU</p>
+        <p style="color:#9aa1b5;font-size:11px;margin:20px 0 0;">&copy; 2026 IEPS 3.0 — Education Students' Representative Council, OAU</p>
       </td>
     </tr>
   </table>
@@ -173,7 +219,7 @@ export function confirmationEmailText({ fullName }: ConfirmationData): string {
     `We look forward to seeing you!`,
     ``,
     `— The IEPS 3.0 Organising Team`,
-    `${CONTACT.email} · ${CONTACT.phone}`,
+    CONTACT.email,
   ].join("\n");
 }
 
@@ -196,7 +242,6 @@ export function certificateEmailHtml({
 }: CertificateData): string {
   const navy = "#0D1B5E";
   const gold = "#F5C400";
-  const green = "#1A7A3C";
   const firstName = fullName.split(" ")[0] || fullName;
 
   return `<!doctype html>
@@ -207,68 +252,60 @@ export function certificateEmailHtml({
   <meta name="color-scheme" content="light only" />
   <title>${CERTIFICATE_SUBJECT}</title>
 </head>
-<body style="margin:0;padding:0;background-color:#f8f8f4;font-family:Arial,Helvetica,sans-serif;">
+<body style="margin:0;padding:0;background-color:#eef1f8;font-family:Arial,Helvetica,sans-serif;">
   <div style="display:none;max-height:0;overflow:hidden;opacity:0;">Your IEPS 3.0 certificate of participation is ready to download.</div>
-  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#f8f8f4;padding:24px 0;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#eef1f8;padding:36px 12px;">
     <tr>
       <td align="center">
-        <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="width:600px;max-width:100%;background-color:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 8px 30px rgba(13,27,94,0.12);">
+        <table role="presentation" width="620" cellpadding="0" cellspacing="0" style="width:620px;max-width:100%;background-color:#ffffff;border-radius:20px;overflow:hidden;border:1px solid #e2e6f1;box-shadow:0 12px 36px rgba(13,27,94,0.10);">
 
-          <!-- Navy header -->
+          <!-- Navy header with logo -->
           <tr>
-            <td style="background-color:${navy};padding:32px 40px;text-align:center;">
-              <span style="font-size:30px;font-weight:bold;color:#ffffff;letter-spacing:-0.5px;">IEPS</span>
-              <span style="display:inline-block;background-color:${gold};color:${navy};font-size:15px;font-weight:bold;padding:3px 12px;border-radius:999px;margin-left:6px;vertical-align:middle;">3.0</span>
-              <div style="margin-top:8px;font-size:11px;letter-spacing:3px;color:${gold};text-transform:uppercase;">Ife Education Parliamentary Summit</div>
+            <td style="background-color:${navy};padding:36px 40px 30px;text-align:center;">
+              ${emailHeaderHtml(navy, gold)}
             </td>
           </tr>
+          <!-- gold hairline -->
+          <tr><td style="height:3px;background-color:${gold};font-size:0;line-height:0;">&nbsp;</td></tr>
 
           <!-- Body -->
           <tr>
-            <td style="padding:40px;">
-              <h1 style="margin:0 0 8px;text-align:center;color:${gold};font-size:26px;">Your Certificate is Ready!</h1>
+            <td style="padding:44px 44px 36px;">
+              <h1 style="margin:0 0 6px;text-align:center;color:${navy};font-size:27px;letter-spacing:-0.3px;">Your Certificate is Ready</h1>
+              <p style="margin:0 0 26px;text-align:center;color:#6b7280;font-size:14px;">Thank you for being part of IEPS 3.0, ${firstName}.</p>
 
-              <p style="color:#1a1a2e;font-size:16px;line-height:1.6;margin:20px 0 0;">Dear ${firstName},</p>
-              <p style="color:#3a3a4e;font-size:16px;line-height:1.6;margin:12px 0;">
-                Thank you for participating in <strong>IEPS 3.0</strong>. Your certificate of participation is attached to this email, and you can also download it using the button below.
+              <p style="color:#3a3a4e;font-size:15px;line-height:1.7;margin:0 0 10px;">
+                Your <strong style="color:${navy};">Certificate of Participation</strong> is attached to
+                this email — you can also download it any time with the button below.
               </p>
 
-              <div style="text-align:center;margin:32px 0;">
-                <a href="${downloadUrl}" style="display:inline-block;background-color:${gold};color:${navy};font-size:16px;font-weight:bold;text-decoration:none;padding:14px 34px;border-radius:999px;">Download Certificate</a>
+              <div style="text-align:center;margin:30px 0;">
+                <a href="${downloadUrl}" style="display:inline-block;background-color:${gold};color:${navy};font-size:15px;font-weight:bold;text-decoration:none;padding:15px 38px;border-radius:999px;">Download Certificate</a>
               </div>
 
-              <!-- Event recap -->
-              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:24px 0;background-color:#f8f8f4;border-radius:12px;border:1px solid #e6e6dd;">
+              <!-- Event recap docket -->
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:26px 0;background-color:#f9f7f0;border-left:4px solid ${gold};border-radius:0 12px 12px 0;">
                 <tr>
-                  <td style="padding:20px 24px;">
-                    <p style="margin:0 0 6px;color:${green};font-size:12px;text-transform:uppercase;letter-spacing:1.5px;">Event recap</p>
+                  <td style="padding:20px 26px;">
+                    <p style="margin:0 0 6px;color:#806600;font-size:11px;text-transform:uppercase;letter-spacing:2px;">Event recap</p>
                     <p style="margin:0;color:${navy};font-size:15px;font-weight:bold;">${EVENT.dateLabel}</p>
-                    <p style="margin:6px 0 0;color:#1a1a2e;font-size:13px;font-style:italic;line-height:1.5;">${EVENT.theme}</p>
+                    <p style="margin:6px 0 0;color:#3a3a4e;font-size:13px;font-style:italic;line-height:1.6;">${EVENT.theme}</p>
                   </td>
                 </tr>
               </table>
 
-              <p style="color:#1a1a2e;font-size:16px;line-height:1.6;margin:24px 0 0;">
-                We hope to see you at <strong>IEPS 4.0</strong>!<br/><br/>
+              <p style="color:#1a1a2e;font-size:15px;line-height:1.7;margin:24px 0 0;">
+                We hope to see you at <strong style="color:${navy};">IEPS 4.0</strong>!<br/><br/>
                 Warm regards,<br/>
-                <strong>The IEPS 3.0 Organising Team</strong>
+                <strong style="color:${navy};">The IEPS 3.0 Organising Team</strong>
               </p>
             </td>
           </tr>
 
-          <!-- Footer -->
-          <tr>
-            <td style="background-color:${navy};padding:24px 40px;text-align:center;">
-              <p style="margin:0;color:rgba(255,255,255,0.7);font-size:13px;">
-                <a href="mailto:${CONTACT.email}" style="color:${gold};text-decoration:none;">${CONTACT.email}</a>
-                &nbsp;&middot;&nbsp;
-                <a href="tel:${CONTACT.phoneIntl}" style="color:${gold};text-decoration:none;">${CONTACT.phone}</a>
-              </p>
-            </td>
-          </tr>
-          <tr><td style="height:5px;background-color:${gold};"></td></tr>
+          ${emailFooterHtml(navy, gold)}
 
         </table>
+        <p style="color:#9aa1b5;font-size:11px;margin:20px 0 0;">&copy; 2026 IEPS 3.0 — Education Students' Representative Council, OAU</p>
       </td>
     </tr>
   </table>
@@ -322,6 +359,7 @@ export async function sendConfirmationEmail(
       subject: CONFIRMATION_SUBJECT,
       html: confirmationEmailHtml(data),
       text: confirmationEmailText(data),
+      attachments: logoAttachments(),
     });
     return { sent: true, id: info.messageId ?? null };
   } catch (err) {
@@ -349,9 +387,13 @@ function contactEmailHtml({ name, email, message }: ContactMessage): string {
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="padding:24px 0;">
     <tr><td align="center">
       <table role="presentation" width="560" cellpadding="0" cellspacing="0" style="width:560px;max-width:100%;background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 8px 30px rgba(13,27,94,0.12);">
-        <tr><td style="background:${navy};padding:22px 32px;">
-          <span style="color:#fff;font-size:20px;font-weight:bold;">IEPS</span><span style="background:${gold};color:${navy};font-size:12px;font-weight:bold;padding:2px 8px;border-radius:999px;margin-left:5px;">3.0</span>
-          <div style="color:${gold};font-size:11px;letter-spacing:2px;text-transform:uppercase;margin-top:4px;">New contact message</div>
+        <tr><td style="background:${navy};padding:22px 32px;text-align:center;">
+          ${
+            HAS_LOGO
+              ? `<span style="display:inline-block;background-color:#ffffff;padding:8px 14px;border-radius:10px;line-height:0;"><img src="cid:${LOGO_CID}" alt="IEPS 3.0" width="150" style="display:block;width:150px;max-width:100%;height:auto;border:0;" /></span>`
+              : `<span style="color:#fff;font-size:20px;font-weight:bold;">IEPS</span><span style="background:${gold};color:${navy};font-size:12px;font-weight:bold;padding:2px 8px;border-radius:999px;margin-left:5px;">3.0</span>`
+          }
+          <div style="color:${gold};font-size:11px;letter-spacing:2px;text-transform:uppercase;margin-top:6px;">New contact message</div>
         </td></tr>
         <tr><td style="padding:28px 32px;">
           <p style="margin:0 0 4px;color:#6b7280;font-size:12px;text-transform:uppercase;letter-spacing:1px;">From</p>
@@ -359,7 +401,7 @@ function contactEmailHtml({ name, email, message }: ContactMessage): string {
           <p style="margin:0 0 4px;color:#6b7280;font-size:12px;text-transform:uppercase;letter-spacing:1px;">Message</p>
           <p style="margin:0;color:#1a1a2e;font-size:15px;line-height:1.6;">${safe}</p>
         </td></tr>
-        <tr><td style="height:5px;background:${gold};"></td></tr>
+        <tr><td style="height:5px;background:#F5C400;"></td></tr>
       </table>
     </td></tr>
   </table></body></html>`;
@@ -384,6 +426,7 @@ export async function sendContactEmail(
       subject: `New IEPS 3.0 contact message from ${data.name}`,
       html: contactEmailHtml(data),
       text: `From: ${data.name} <${data.email}>\n\n${data.message}`,
+      attachments: logoAttachments(),
     });
     return { sent: true, id: info.messageId ?? null };
   } catch (err) {
@@ -420,8 +463,11 @@ export function broadcastEmailHtml(subject: string, message: string): string {
     <tr><td align="center">
       <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="width:600px;max-width:100%;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 8px 30px rgba(13,27,94,0.12);">
         <tr><td style="background:${navy};padding:28px 40px;text-align:center;">
-          <span style="font-size:26px;font-weight:bold;color:#fff;">IEPS</span>
-          <span style="display:inline-block;background:${gold};color:${navy};font-size:13px;font-weight:bold;padding:2px 10px;border-radius:999px;margin-left:6px;">3.0</span>
+          ${
+            HAS_LOGO
+              ? `<span style="display:inline-block;background-color:#ffffff;padding:10px 18px;border-radius:12px;line-height:0;"><img src="cid:${LOGO_CID}" alt="IEPS 3.0" width="180" style="display:block;width:180px;max-width:100%;height:auto;border:0;" /></span>`
+              : `<span style="font-size:26px;font-weight:bold;color:#fff;">IEPS</span><span style="display:inline-block;background:${gold};color:${navy};font-size:13px;font-weight:bold;padding:2px 10px;border-radius:999px;margin-left:6px;">3.0</span>`
+          }
         </td></tr>
         <tr><td style="padding:36px 40px;">
           <h1 style="margin:0 0 18px;color:${navy};font-size:22px;">${subject}</h1>
@@ -430,7 +476,7 @@ export function broadcastEmailHtml(subject: string, message: string): string {
         <tr><td style="background:${navy};padding:18px;text-align:center;">
           <a href="mailto:${CONTACT.email}" style="color:${gold};text-decoration:none;font-size:13px;">${CONTACT.email}</a>
         </td></tr>
-        <tr><td style="height:5px;background:${gold};"></td></tr>
+        <tr><td style="height:5px;background:#F5C400;"></td></tr>
       </table>
     </td></tr>
   </table>
@@ -460,7 +506,16 @@ export async function sendBulkEmail(
   for (let i = 0; i < recipients.length; i += BATCH) {
     const chunk = recipients.slice(i, i + BATCH);
     const results = await Promise.allSettled(
-      chunk.map((to) => tx.sendMail({ from: FROM, to, subject, html, text }))
+      chunk.map((to) =>
+        tx.sendMail({
+          from: FROM,
+          to,
+          subject,
+          html,
+          text,
+          attachments: logoAttachments(),
+        })
+      )
     );
     for (const r of results) {
       if (r.status === "fulfilled") sent += 1;
@@ -496,6 +551,7 @@ export async function sendCertificateEmail(
           filename: pdf.filename,
           content: pdf.buffer,
         },
+        ...logoAttachments(),
       ],
     });
     return { sent: true, id: info.messageId ?? null };

@@ -1,6 +1,6 @@
 import { startOfDay, subDays, eachDayOfInterval, format } from "date-fns";
 import { prisma } from "@/lib/db";
-import { roleLabel } from "@/lib/registration";
+import { roleLabel, LEVELS } from "@/lib/registration";
 
 export type ChartDatum = { name: string; value: number };
 
@@ -19,6 +19,7 @@ export type Analytics = {
   sessions: ChartDatum[];
   gender: ChartDatum[];
   heardAbout: ChartDatum[];
+  levels: ChartDatum[];
 };
 
 type GroupRow = Record<string, unknown> & { _count: number };
@@ -50,6 +51,7 @@ export async function getAnalytics(now: Date = new Date()): Promise<Analytics> {
     byGender,
     byHeard,
     bySession,
+    byLevel,
     recent,
   ] = await Promise.all([
     prisma.registration.count(),
@@ -65,6 +67,7 @@ export async function getAnalytics(now: Date = new Date()): Promise<Analytics> {
     prisma.registration.groupBy({ by: ["gender"], _count: true }),
     prisma.registration.groupBy({ by: ["heardAboutUs"], _count: true }),
     prisma.sessionInterest.groupBy({ by: ["sessionName"], _count: true }),
+    prisma.registration.groupBy({ by: ["level"], _count: true }),
     prisma.registration.findMany({
       where: { createdAt: { gte: windowStart } },
       select: { createdAt: true },
@@ -102,5 +105,11 @@ export async function getAnalytics(now: Date = new Date()): Promise<Analytics> {
     gender: tally(byGender as unknown as GroupRow[], "gender"),
     heardAbout: tally(byHeard as unknown as GroupRow[], "heardAboutUs"),
     sessions: tally(bySession as unknown as GroupRow[], "sessionName"),
+    // Levels (incl. Postgraduate) sorted by study progression, not by count.
+    levels: tally(byLevel as unknown as GroupRow[], "level").sort((a, b) => {
+      const ia = LEVELS.indexOf(a.name as (typeof LEVELS)[number]);
+      const ib = LEVELS.indexOf(b.name as (typeof LEVELS)[number]);
+      return (ia === -1 ? LEVELS.length : ia) - (ib === -1 ? LEVELS.length : ib);
+    }),
   };
 }

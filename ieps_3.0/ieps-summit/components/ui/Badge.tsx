@@ -4,8 +4,8 @@ import { cn } from "@/lib/utils";
 type Tone = "gold" | "emerald" | "navy" | "light" | "outline";
 
 const tones: Record<Tone, string> = {
-  gold: "bg-gold/15 text-gold-600 border-gold/30",
-  emerald: "bg-emerald/10 text-emerald border-emerald/25",
+  gold: "bg-gold/10 text-gold-600 border-gold/40",
+  emerald: "bg-gold/10 text-gold-600 border-gold/40",
   navy: "bg-navy/5 text-navy border-navy/15",
   light: "bg-white/10 text-white border-white/20",
   outline: "bg-transparent text-white border-white/30",
@@ -25,7 +25,7 @@ export function Badge({
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-2 rounded-full border px-3 py-1 font-accent text-xs font-semibold uppercase tracking-[0.18em]",
+        "inline-flex items-center gap-2 rounded-none border px-3 py-1 font-accent text-xs font-semibold uppercase tracking-[0.18em]",
         tones[tone],
         className
       )}

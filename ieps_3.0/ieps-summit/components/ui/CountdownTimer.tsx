@@ -47,7 +47,7 @@ export function CountdownTimer({ targetISO, className, tone = "dark" }: Props) {
         <p
           className={cn(
             "font-display text-xl font-bold",
-            isDark ? "text-gold" : "text-emerald"
+            isDark ? "text-gold" : "text-gold-600"
           )}
         >
           The summit is here. Welcome to IEPS 3.0!
@@ -57,7 +57,7 @@ export function CountdownTimer({ targetISO, className, tone = "dark" }: Props) {
           <div
             key={key}
             className={cn(
-              "flex min-w-[68px] flex-col items-center rounded-2xl border px-3 py-3 sm:min-w-[84px] sm:px-4 sm:py-4",
+              "flex min-w-[68px] flex-col items-center rounded-none border px-3 py-3 sm:min-w-[84px] sm:px-4 sm:py-4",
               isDark
                 ? "border-white/15 bg-white/5 backdrop-blur"
                 : "border-navy/10 bg-white shadow-card"
@@ -79,7 +79,7 @@ export function CountdownTimer({ targetISO, className, tone = "dark" }: Props) {
             <span
               className={cn(
                 "mt-1 font-accent text-[10px] font-semibold uppercase tracking-[0.18em] sm:text-xs",
-                isDark ? "text-gold" : "text-emerald"
+                isDark ? "text-gold" : "text-gold-600"
               )}
             >
               {label}

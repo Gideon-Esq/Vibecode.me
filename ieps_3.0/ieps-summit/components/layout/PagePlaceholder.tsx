@@ -26,7 +26,7 @@ export function PagePlaceholder({
     <>
       {/* Hero band */}
       <section className="relative overflow-hidden bg-navy pb-16 pt-28 text-white lg:pb-20 lg:pt-36">
-        <div className="absolute inset-0 bg-navy-radial" aria-hidden />
+        <div className="absolute inset-0 bg-hero-aurora" aria-hidden />
         <div className="absolute inset-0 bg-dots opacity-40" aria-hidden />
         <div className="container-section relative">
           <Badge tone="light" className="mb-5">
@@ -46,7 +46,7 @@ export function PagePlaceholder({
         <div className="container-section">
           {children ?? (
             <div className="mx-auto max-w-xl rounded-3xl border border-navy/10 bg-white p-10 text-center shadow-card">
-              <span className="mx-auto grid h-16 w-16 place-items-center rounded-2xl bg-gold/15 text-gold-600">
+              <span className="mx-auto grid h-16 w-16 place-items-center rounded-2xl bg-green/10 text-green-600">
                 <Construction className="h-8 w-8" />
               </span>
               <h2 className="mt-6 font-display text-2xl font-bold text-navy">

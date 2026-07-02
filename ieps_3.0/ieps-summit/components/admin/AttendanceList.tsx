@@ -129,7 +129,10 @@ export function AttendanceList() {
         ) : (
           <ul className="divide-y divide-navy/5">
             {filtered.map((r) => (
-              <li key={r.id} className="flex items-center justify-between gap-4 px-4 py-3 hover:bg-offwhite/60">
+              <li
+                key={r.id}
+                className="flex items-center justify-between gap-4 px-4 py-3 transition-colors odd:bg-white even:bg-navy/[0.035] hover:bg-gold/10"
+              >
                 <div className="min-w-0">
                   <p className="truncate font-medium text-navy">{r.fullName}</p>
                   <p className="truncate text-xs text-ink/55">

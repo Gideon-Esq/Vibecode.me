@@ -4,18 +4,19 @@
 
 @layer base {
   :root {
-    /* Brand color custom properties */
+    /* Brand color custom properties — chamber navy + parliamentary gold */
     --navy: #0d1b5e;
     --navy-light: #1a2d8a;
     --navy-dark: #080f3a;
     --gold: #f5c400;
     --gold-light: #ffd740;
     --gold-dark: #c49b00;
-    --green: #1a7a3c;
-    --green-light: #22a050;
-    --green-dark: #115228;
-    --offwhite: #f8f8f4;
-    --ink: #1a1a2e;
+    --bronze: #806600;
+    --green: #017e33; /* brand green — sampled from the logo's SUMMIT mark */
+    --green-light: #14a24a;
+    --green-dark: #01602a;
+    --offwhite: #f7f4ec;
+    --ink: #141824;
     --white: #ffffff;
   }
 
@@ -30,12 +31,14 @@
   }
 
   body {
-    @apply bg-offwhite font-body text-ink antialiased;
+    /* White is the primary surface; warm parchment (offwhite) is the
+       alternating band so sections read like bound committee papers. */
+    @apply bg-white font-body text-ink antialiased;
     text-rendering: optimizeLegibility;
   }
 
   ::selection {
-    @apply bg-gold text-navy;
+    @apply bg-navy text-gold;
   }
 
   /* Custom scrollbar in navy/gold */
@@ -62,7 +65,7 @@
 
   /* Visible focus rings for keyboard users (a11y) */
   :focus-visible {
-    @apply outline-none ring-2 ring-gold ring-offset-2 ring-offset-white;
+    @apply outline-none ring-2 ring-gold-600 ring-offset-2 ring-offset-white;
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -84,42 +87,81 @@
     @apply container mx-auto px-5 sm:px-6 lg:px-8;
   }
 
+  /* Small-caps kicker line — order-paper style */
   .eyebrow {
-    @apply font-label text-sm font-semibold uppercase tracking-[0.2em] text-green;
+    @apply font-label text-xs font-semibold uppercase tracking-[0.28em] text-gold-600;
   }
 
   .heading-display {
     @apply font-display font-bold tracking-tight;
   }
 
+  /* Short gold rule used under eyebrows/headings — a gavel-strike accent */
+  .gold-rule {
+    @apply inline-block h-0.5 w-12 bg-gold;
+  }
+
   /* Brand gradient surfaces */
   .gradient-navy {
-    background: linear-gradient(135deg, #0d1b5e 0%, #1a2d8a 100%);
+    background: linear-gradient(135deg, #142370 0%, #080f3a 100%);
   }
 
+  /* Chamber backdrop — deep navy with a faint gold glow rising from the
+     dais and cold light falling from above. */
+  .bg-hero-aurora {
+    background-color: #080f3a;
+    background-image:
+      radial-gradient(
+        110% 90% at 50% -20%,
+        rgba(26, 45, 138, 0.55) 0%,
+        rgba(13, 27, 94, 0) 55%
+      ),
+      radial-gradient(
+        70% 55% at 50% 108%,
+        rgba(245, 196, 0, 0.16) 0%,
+        rgba(13, 27, 94, 0) 60%
+      ),
+      radial-gradient(
+        60% 60% at 92% 8%,
+        rgba(26, 45, 138, 0.5) 0%,
+        rgba(13, 27, 94, 0) 55%
+      ),
+      linear-gradient(168deg, #142370 0%, #0d1b5e 46%, #05082b 100%);
+  }
+
+  /* Faint top-light sheen used over the chamber backdrop. */
+  .hero-sheen {
+    background: radial-gradient(
+      60% 50% at 50% 0%,
+      rgba(255, 255, 255, 0.08) 0%,
+      rgba(255, 255, 255, 0) 70%
+    );
+  }
+
+  /* Gold accent surface — used for hairline bands and seals */
   .gradient-gold {
-    background: linear-gradient(135deg, #f5c400 0%, #ffd740 100%);
+    background: linear-gradient(135deg, #ffd740 0%, #f5c400 55%, #c49b00 100%);
   }
 
-  /* Gold gradient text via background-clip */
+  /* Gold gradient text via background-clip — for headline keywords on navy */
   .text-gradient-gold {
-    background: linear-gradient(120deg, #ffd740 0%, #f5c400 45%, #c49b00 100%);
+    background: linear-gradient(118deg, #fff0b0 0%, #ffd740 40%, #f5c400 100%);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
     color: transparent;
   }
 
-  /* Decorative dotted/grid backdrop for dark sections */
+  /* Decorative dotted grid for dark sections */
   .bg-dots {
     background-image: radial-gradient(
-      rgba(255, 255, 255, 0.08) 1px,
+      rgba(255, 255, 255, 0.07) 1px,
       transparent 1px
     );
     background-size: 22px 22px;
   }
 
-  /* Subtle diagonal-line pattern for the hero overlay (white @ ~3%) */
+  /* Subtle diagonal-line pattern for dark overlays (white @ ~3%) */
   .bg-diagonal {
     background-image: repeating-linear-gradient(
       135deg,
@@ -130,8 +172,60 @@
     );
   }
 
-  /* Reusable premium card hover: lift + subtle scale + gold left border.
-     Uses transform/opacity only (no layout shift). */
+  /* === LIGHT surfaces (white/parchment primary, navy text, gold accent) === */
+
+  /* Light backdrop: barely-there navy wash at the top corners. */
+  .bg-mesh-light {
+    background-color: #ffffff;
+    background-image:
+      radial-gradient(
+        58% 55% at 10% 6%,
+        rgba(13, 27, 94, 0.06) 0%,
+        rgba(255, 255, 255, 0) 60%
+      ),
+      radial-gradient(
+        52% 48% at 94% -2%,
+        rgba(245, 196, 0, 0.08) 0%,
+        rgba(255, 255, 255, 0) 55%
+      );
+  }
+
+  /* Deep navy band (name kept from the old ribbon band). */
+  .stripe-band {
+    background: linear-gradient(112deg, #1a2d8a 0%, #0d1b5e 52%, #05082b 100%);
+  }
+
+  /* Fine vertical hairlines (navy @ ~4%) — columned-portico texture. */
+  .bg-stripes-light {
+    background-image: repeating-linear-gradient(
+      to right,
+      rgba(13, 27, 94, 0.04) 0px,
+      rgba(13, 27, 94, 0.04) 1px,
+      transparent 1px,
+      transparent 96px
+    );
+  }
+
+  /* Dotted navy grid for light sections. */
+  .bg-dots-light {
+    background-image: radial-gradient(
+      rgba(13, 27, 94, 0.08) 1px,
+      transparent 1px
+    );
+    background-size: 22px 22px;
+  }
+
+  /* Brand-green gradient heading text for light/white backgrounds —
+     echoes the green "SUMMIT" wordmark in the logo. */
+  .text-gradient-green {
+    background: linear-gradient(118deg, #14a24a 0%, #017e33 55%, #01602a 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+  }
+
+  /* Reusable card hover: lift + gold left border. Transform/opacity only. */
   .card-hover {
     @apply relative transition-all duration-200 ease-out;
   }
@@ -189,7 +283,10 @@
     text-wrap: pretty;
   }
   .gold-underline {
-    background-image: linear-gradient(transparent 62%, rgba(245, 196, 0, 0.5) 62%);
+    background-image: linear-gradient(
+      transparent 62%,
+      rgba(245, 196, 0, 0.4) 62%
+    );
     background-repeat: no-repeat;
   }
 }

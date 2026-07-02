@@ -18,7 +18,7 @@ export default function Error({
 
   return (
     <section className="relative flex min-h-[100svh] items-center justify-center overflow-hidden bg-navy px-5 py-28 text-center text-white">
-      <div className="absolute inset-0 gradient-navy" aria-hidden />
+      <div className="absolute inset-0 bg-hero-aurora" aria-hidden />
       <div className="absolute inset-0 bg-dots opacity-40" aria-hidden />
       <div
         className="absolute -right-24 top-10 h-80 w-80 rounded-full bg-gold/15 blur-3xl"

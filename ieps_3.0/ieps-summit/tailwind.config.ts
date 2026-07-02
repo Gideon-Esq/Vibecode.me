@@ -20,59 +20,65 @@ const config: Config = {
     },
     extend: {
       colors: {
+        // PRIMARY brand surface/text — deep chamber navy.
         navy: {
           DEFAULT: "#0D1B5E",
-          light: "#1a2d8a",
-          dark: "#080f3a",
-          50: "#E7E9F5",
-          100: "#C3C8E6",
-          900: "#0D1B5E",
-          950: "#080f3a",
+          light: "#1A2D8A",
+          dark: "#080F3A",
+          50: "#EEF2F8",
+          100: "#D9E1EC",
+          900: "#080F3A",
+          950: "#05082B",
         },
+        // ACCENT — parliamentary brass/gold. `gold-600` is a deep bronze that
+        // stays AA-readable as text on white surfaces.
         gold: {
           DEFAULT: "#F5C400",
           light: "#FFD740",
           dark: "#C49B00",
           400: "#FFD740",
           500: "#F5C400",
-          600: "#C49B00",
+          600: "#806600",
         },
+        // BRAND GREEN — sampled from the logo's "SUMMIT" wordmark (#017E33).
+        // Used for success/confirmation semantics and as the third brand
+        // accent alongside navy + gold. DEFAULT is AA-readable on white.
         green: {
-          DEFAULT: "#1A7A3C",
-          light: "#22A050",
-          dark: "#115228",
-          400: "#22A050",
-          500: "#1A7A3C",
-          600: "#115228",
+          DEFAULT: "#017E33",
+          light: "#14A24A",
+          dark: "#01602A",
+          400: "#14A24A",
+          500: "#017E33",
+          600: "#01602A",
         },
-        // alias retained for backward-compatible class names
         emerald: {
-          DEFAULT: "#1A7A3C",
-          400: "#22A050",
-          500: "#1A7A3C",
-          600: "#115228",
+          DEFAULT: "#017E33",
+          400: "#14A24A",
+          500: "#017E33",
+          600: "#01602A",
         },
-        offwhite: "#F8F8F4",
-        ink: "#1A1A2E",
+        // Warm parchment — institutional alternating band surface.
+        offwhite: "#F7F4EC",
+        ink: "#141824",
       },
       fontFamily: {
-        display: ["var(--font-space-grotesk)", "system-ui", "sans-serif"],
+        display: ["var(--font-playfair)", "Georgia", "serif"],
         body: ["var(--font-inter)", "system-ui", "sans-serif"],
-        label: ["var(--font-barlow-condensed)", "system-ui", "sans-serif"],
+        label: ["var(--font-inter)", "system-ui", "sans-serif"],
         // alias retained for backward-compatible class names
-        accent: ["var(--font-barlow-condensed)", "system-ui", "sans-serif"],
+        accent: ["var(--font-inter)", "system-ui", "sans-serif"],
       },
       maxWidth: {
         prose: "70ch",
       },
       boxShadow: {
-        card: "0 10px 40px -12px rgba(13, 27, 94, 0.18)",
-        gold: "0 10px 30px -8px rgba(245, 196, 0, 0.45)",
+        card: "0 10px 40px -12px rgba(13, 27, 94, 0.16)",
+        gold: "0 10px 30px -8px rgba(245, 196, 0, 0.35)",
         glow: "0 0 0 0 rgba(245, 196, 0, 0.5)",
       },
       backgroundImage: {
         "navy-radial":
-          "radial-gradient(circle at 20% 20%, rgba(245,196,0,0.10), transparent 40%), radial-gradient(circle at 85% 0%, rgba(26,122,60,0.16), transparent 45%)",
+          "radial-gradient(circle at 20% 20%, rgba(255,255,255,0.08), transparent 40%), radial-gradient(circle at 85% 0%, rgba(245,196,0,0.14), transparent 45%)",
         "grid-faint":
           "linear-gradient(to right, rgba(255,255,255,0.04) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.04) 1px, transparent 1px)",
       },

@@ -171,7 +171,7 @@ export function ContactForm() {
       <button
         type="submit"
         disabled={sending}
-        className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full bg-gold px-6 py-3.5 font-display font-semibold text-navy transition-colors hover:bg-gold-light disabled:opacity-60 sm:w-auto"
+        className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full bg-green px-6 py-3.5 font-display font-semibold text-white transition-colors hover:bg-green-light disabled:opacity-60 sm:w-auto"
       >
         {sending ? (
           <>

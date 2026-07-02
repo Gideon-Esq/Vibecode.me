@@ -1,27 +1,20 @@
 import type { Metadata, Viewport } from "next";
-import { Space_Grotesk, Inter, Barlow_Condensed } from "next/font/google";
+import { Playfair_Display, Inter } from "next/font/google";
 import "@/styles/globals.css";
 import { ConditionalNavbar, ConditionalFooter } from "@/components/layout/Chrome";
 import { TopProgressBar } from "@/components/ui/TopProgressBar";
 import { SITE_URL } from "@/lib/constants";
 
-const spaceGrotesk = Space_Grotesk({
+const playfair = Playfair_Display({
   subsets: ["latin"],
-  weight: ["500", "600", "700"],
-  variable: "--font-space-grotesk",
+  weight: ["500", "600", "700", "800"],
+  variable: "--font-playfair",
   display: "swap",
 });
 
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
-  display: "swap",
-});
-
-const barlowCondensed = Barlow_Condensed({
-  subsets: ["latin"],
-  weight: ["500", "600", "700"],
-  variable: "--font-barlow-condensed",
   display: "swap",
 });
 
@@ -74,13 +67,13 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${spaceGrotesk.variable} ${inter.variable} ${barlowCondensed.variable}`}
+      className={`${playfair.variable} ${inter.variable}`}
     >
       <body className="min-h-dvh font-body">
         {/* Skip link for keyboard / screen-reader users */}
         <a
           href="#main"
-          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-lg focus:bg-gold focus:px-4 focus:py-2 focus:font-semibold focus:text-navy"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-lg focus:bg-navy focus:px-4 focus:py-2 focus:font-semibold focus:text-gold"
         >
           Skip to content
         </a>

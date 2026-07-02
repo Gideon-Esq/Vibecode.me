@@ -13,7 +13,7 @@ export default function GalleryPage() {
     <>
       {/* Hero */}
       <section className="relative overflow-hidden bg-navy pb-20 pt-28 text-white lg:pb-24 lg:pt-36">
-        <div className="absolute inset-0 gradient-navy" aria-hidden />
+        <div className="absolute inset-0 bg-hero-aurora" aria-hidden />
         <div className="absolute inset-0 bg-dots opacity-40" aria-hidden />
         <div className="container-section relative text-center">
           <Badge tone="light" className="mb-5">

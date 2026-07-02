@@ -77,6 +77,10 @@ export function RegistrationsTable() {
   const [loading, setLoading] = useState(true);
   const [refreshKey, setRefreshKey] = useState(0);
   const [openMenu, setOpenMenu] = useState<string | null>(null);
+  // Viewport-fixed coordinates for the row-actions menu. Fixed positioning
+  // keeps the menu visible even when the table has only a row or two — an
+  // absolutely-positioned menu would be clipped by the overflow-x container.
+  const [menuPos, setMenuPos] = useState<React.CSSProperties>({});
   const [detail, setDetail] = useState<AdminRegistration | null>(null);
   const [busyId, setBusyId] = useState<string | null>(null);
   const [toast, setToast] = useState<string | null>(null);
@@ -259,11 +263,32 @@ export function RegistrationsTable() {
           const isBusy = busyId === row.id;
           const isOpen = openMenu === row.id;
           return (
-            <div className="relative flex justify-end">
+            <div className="flex justify-end">
               <button
                 type="button"
-                onClick={() => setOpenMenu(isOpen ? null : row.id)}
+                onClick={(e) => {
+                  if (isOpen) {
+                    setOpenMenu(null);
+                    return;
+                  }
+                  // Anchor the fixed menu to the trigger; open upward when
+                  // there isn't room below (e.g. last row of a short table).
+                  const r = e.currentTarget.getBoundingClientRect();
+                  const MENU_H = 264; // ~6 items + padding
+                  const openUp =
+                    r.bottom + MENU_H > window.innerHeight && r.top > MENU_H;
+                  setMenuPos(
+                    openUp
+                      ? {
+                          bottom: window.innerHeight - r.top + 6,
+                          right: window.innerWidth - r.right,
+                        }
+                      : { top: r.bottom + 6, right: window.innerWidth - r.right }
+                  );
+                  setOpenMenu(row.id);
+                }}
                 aria-label="Row actions"
+                aria-expanded={isOpen}
                 className="grid h-8 w-8 place-items-center rounded-lg text-ink/60 hover:bg-navy/5"
               >
                 {isBusy ? (
@@ -273,7 +298,17 @@ export function RegistrationsTable() {
                 )}
               </button>
               {isOpen && (
-                <div className="absolute right-0 top-9 z-20 w-52 overflow-hidden rounded-xl border border-navy/10 bg-white py-1 text-sm shadow-lg">
+                <>
+                  {/* click-outside backdrop */}
+                  <div
+                    className="fixed inset-0 z-20"
+                    onClick={() => setOpenMenu(null)}
+                    aria-hidden
+                  />
+                  <div
+                    style={menuPos}
+                    className="fixed z-30 w-52 overflow-hidden rounded-xl border border-navy/10 bg-white py-1 text-sm shadow-lg"
+                  >
                   <MenuItem icon={Eye} onClick={() => { setDetail(row); setOpenMenu(null); }}>
                     View details
                   </MenuItem>
@@ -309,7 +344,8 @@ export function RegistrationsTable() {
                   >
                     Delete
                   </MenuItem>
-                </div>
+                  </div>
+                </>
               )}
             </div>
           );
@@ -444,7 +480,10 @@ export function RegistrationsTable() {
               </tr>
             ) : (
               table.getRowModel().rows.map((row) => (
-                <tr key={row.id} className="border-b border-navy/5 last:border-0 hover:bg-offwhite/60">
+                <tr
+                  key={row.id}
+                  className="border-b border-navy/5 transition-colors last:border-0 odd:bg-white even:bg-navy/[0.035] hover:bg-gold/10"
+                >
                   {row.getVisibleCells().map((cell) => (
                     <td key={cell.id} className="whitespace-nowrap px-4 py-3 text-ink/80">
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}

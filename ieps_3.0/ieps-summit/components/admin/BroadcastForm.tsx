@@ -123,7 +123,7 @@ export function BroadcastForm() {
       <button
         type="submit"
         disabled={sending}
-        className="inline-flex items-center gap-2 rounded-full bg-gold px-6 py-3 font-display font-semibold text-navy hover:bg-gold-light disabled:opacity-60"
+        className="inline-flex items-center gap-2 rounded-full bg-green px-6 py-3 font-display font-semibold text-white hover:bg-green-light disabled:opacity-60"
       >
         {sending ? <Loader2 className="h-5 w-5 animate-spin" /> : <Send className="h-5 w-5" />}
         {sending ? "Sending…" : "Send broadcast"}

@@ -1,6 +1,7 @@
+import Image from "next/image";
 import Link from "next/link";
-import { Mail, Phone, MapPin, CalendarDays } from "lucide-react";
-import { EVENT, CONTACT, ORGANIZERS } from "@/lib/constants";
+import { Mail, MapPin, CalendarDays, Instagram, Facebook } from "lucide-react";
+import { EVENT, ORGANIZERS, SOCIALS } from "@/lib/constants";
 import { OrgLogo } from "@/components/ui/OrgLogo";
 
 const FOOTER_LINKS = [
@@ -10,21 +11,49 @@ const FOOTER_LINKS = [
   { label: "Contact", href: "/contact", external: false },
 ];
 
+const SOCIAL_LINKS = [
+  {
+    label: SOCIALS.instagram.label,
+    handle: SOCIALS.instagram.handle,
+    href: SOCIALS.instagram.url,
+    Icon: Instagram,
+    external: true,
+  },
+  {
+    label: SOCIALS.facebook.label,
+    handle: SOCIALS.facebook.handle,
+    href: SOCIALS.facebook.url,
+    Icon: Facebook,
+    external: true,
+  },
+  {
+    label: "Email",
+    handle: SOCIALS.email,
+    href: `mailto:${SOCIALS.email}`,
+    Icon: Mail,
+    external: false,
+  },
+];
+
 export function Footer() {
   return (
     <footer className="relative overflow-hidden bg-navy-dark text-white/80">
       <div className="absolute inset-0 bg-dots opacity-40" aria-hidden />
       <div className="container-section relative py-14 lg:py-20">
-        <div className="grid gap-12 lg:grid-cols-[1.4fr_1fr_1.1fr]">
+        <div className="grid gap-x-10 gap-y-12 sm:grid-cols-2 lg:grid-cols-[1.6fr_1fr_1fr]">
           {/* Brand + blurb */}
-          <div>
-            <span className="flex items-baseline font-display font-bold leading-none">
-              <span className="text-3xl tracking-tight text-white">IEPS</span>
-              <span className="ml-1.5 text-xl text-gold">3.0</span>
+          <div className="sm:col-span-2 lg:col-span-1">
+            {/* Logo sits on a white card — the mark's navy lettering would
+                otherwise disappear against the dark navy footer. */}
+            <span className="inline-flex rounded-xl bg-white px-4 py-3 shadow-sm">
+              <Image
+                src="/logos/ieps.png"
+                alt="IEPS 3.0 — Ife Education Parliamentary Summit"
+                width={416}
+                height={81}
+                className="h-10 w-auto"
+              />
             </span>
-            <p className="mt-2 font-label text-sm uppercase tracking-[0.18em] text-green-400">
-              Ife Education Parliamentary Summit
-            </p>
             <p className="mt-5 max-w-sm text-pretty text-sm leading-relaxed text-white/65">
               {EVENT.tagline} The summit convenes student leaders, educators and
               parliamentarians to drive educational reform and nation building.
@@ -84,51 +113,54 @@ export function Footer() {
             </h2>
             <ul className="mt-5 space-y-4 text-sm">
               <li className="flex items-start gap-3">
-                <CalendarDays className="mt-0.5 h-5 w-5 shrink-0 text-green-400" />
+                <CalendarDays className="mt-0.5 h-5 w-5 shrink-0 text-gold" />
                 <span>{EVENT.dateLabel}</span>
               </li>
               <li className="flex items-start gap-3">
-                <MapPin className="mt-0.5 h-5 w-5 shrink-0 text-green-400" />
+                <MapPin className="mt-0.5 h-5 w-5 shrink-0 text-gold" />
                 <span>
                   {EVENT.venue.name}, {EVENT.venue.institution},{" "}
                   {EVENT.venue.city}, {EVENT.venue.state}
                 </span>
               </li>
               <li className="flex items-start gap-3">
-                <Mail className="mt-0.5 h-5 w-5 shrink-0 text-green-400" />
+                <Mail className="mt-0.5 h-5 w-5 shrink-0 text-gold" />
                 <a
-                  href={`mailto:${CONTACT.email}`}
+                  href={`mailto:${SOCIALS.email}`}
                   className="break-all transition-colors hover:text-gold"
                 >
-                  {CONTACT.email}
-                </a>
-              </li>
-              <li className="flex items-start gap-3">
-                <Phone className="mt-0.5 h-5 w-5 shrink-0 text-green-400" />
-                <a
-                  href={`tel:${CONTACT.phoneIntl}`}
-                  className="transition-colors hover:text-gold"
-                >
-                  {CONTACT.phone}
+                  {SOCIALS.email}
                 </a>
               </li>
             </ul>
-            <p className="mt-4 text-xs text-white/50">
-              {CONTACT.name} — {CONTACT.role}
-            </p>
           </div>
         </div>
 
-        <div className="mt-12 border-t border-white/10 pt-6 text-xs text-white/55">
-          <p>
+        <div className="mt-12 flex flex-col items-center gap-6 border-t border-white/10 pt-6 sm:flex-row sm:justify-between">
+          <p className="order-2 text-center text-xs text-white/55 sm:order-1 sm:text-left">
             &copy; 2026 IEPS 3.0 | Education Students&apos; Representative Council,
             OAU
           </p>
+          <div className="order-1 flex items-center gap-3 sm:order-2">
+            {SOCIAL_LINKS.map(({ label, handle, href, Icon, external }) => (
+              <a
+                key={label}
+                href={href}
+                aria-label={`${label} — ${handle}`}
+                className="grid h-10 w-10 place-items-center rounded-full border border-white/15 text-white/80 transition-colors hover:border-gold hover:text-gold"
+                {...(external
+                  ? { target: "_blank", rel: "noopener noreferrer" }
+                  : {})}
+              >
+                <Icon className="h-5 w-5" />
+              </a>
+            ))}
+          </div>
         </div>
       </div>
 
       {/* bottom gold line accent */}
-      <div className="h-1.5 w-full gradient-gold" aria-hidden />
+      <div className="h-1 w-full gradient-gold" aria-hidden />
     </footer>
   );
 }

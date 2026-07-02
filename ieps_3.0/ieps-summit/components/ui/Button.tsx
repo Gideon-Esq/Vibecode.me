@@ -7,23 +7,23 @@ type Variant = "primary" | "secondary" | "outline" | "ghost";
 type Size = "sm" | "md" | "lg";
 
 const base =
-  "btn-ripple inline-flex items-center justify-center gap-2 rounded-full font-display font-semibold tracking-tight transition-colors duration-200 disabled:cursor-not-allowed disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2";
+  "btn-ripple inline-flex items-center justify-center gap-2 rounded-none font-label font-semibold uppercase tracking-[0.14em] transition-colors duration-200 disabled:cursor-not-allowed disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-600 focus-visible:ring-offset-2";
 
 const variants: Record<Variant, string> = {
-  // gold CTA — primary conversion action
-  primary: "bg-gold text-navy hover:bg-gold-400 shadow-gold ring-offset-white",
-  secondary:
-    "bg-emerald text-white hover:bg-emerald-600 ring-offset-white",
+  // gold CTA — primary conversion action (reads on both light and dark surfaces)
+  primary:
+    "bg-gold text-navy-950 hover:bg-gold-light shadow-gold ring-offset-white",
+  secondary: "bg-navy text-white hover:bg-navy-light ring-offset-white",
   outline:
-    "border-2 border-white/70 text-white hover:bg-white hover:text-navy ring-offset-navy",
+    "border border-gold/60 text-white hover:bg-gold hover:text-navy-950 ring-offset-navy",
   ghost: "text-navy hover:bg-navy/5 ring-offset-white",
 };
 
 const sizes: Record<Size, string> = {
   // min-h keeps a comfortable >=44px touch target
-  sm: "min-h-[40px] px-4 text-sm",
-  md: "min-h-[48px] px-6 text-base",
-  lg: "min-h-[56px] px-8 text-lg",
+  sm: "min-h-[40px] px-4 text-xs",
+  md: "min-h-[48px] px-6 text-sm",
+  lg: "min-h-[56px] px-8 text-sm sm:text-base",
 };
 
 type CommonProps = {

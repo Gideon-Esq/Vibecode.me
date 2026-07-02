@@ -1,111 +1,133 @@
-import { CalendarDays, MapPin, ArrowRight, Ticket } from "lucide-react";
+import { CalendarDays, MapPin, Clock, Ticket, Handshake } from "lucide-react";
 import { EVENT } from "@/lib/constants";
 import { Button } from "@/components/ui/Button";
 import { CountdownTimer } from "@/components/ui/CountdownTimer";
+import { Sparkle } from "@/components/ui/Sparkle";
 
-/** Decorative floating geometric shapes (education / parliament motif). */
-function FloatingShapes() {
+/** Quiet architectural decoration for the navy chamber hero — hairline
+ *  column lines and a faint gold glow rising from the base. */
+function ChamberAmbient() {
   return (
     <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
-      {/* gold ring */}
-      <div className="absolute left-[8%] top-[22%] h-24 w-24 animate-float rounded-full border-2 border-gold/30" />
-      {/* green diamond */}
-      <div className="absolute right-[12%] top-[18%] h-16 w-16 animate-float-slow rotate-45 rounded-lg border-2 border-green/40" />
-      {/* gold dot */}
-      <div className="absolute right-[24%] top-[60%] h-3 w-3 animate-float rounded-full bg-gold/60" />
-      {/* mortarboard-ish square */}
-      <div className="absolute left-[18%] bottom-[18%] h-10 w-10 animate-float-slow rotate-12 rounded bg-white/5" />
-      {/* large soft blobs */}
-      <div className="absolute -left-32 top-24 h-72 w-72 rounded-full bg-green/20 blur-3xl" />
-      <div className="absolute -right-24 bottom-0 h-80 w-80 rounded-full bg-gold/15 blur-3xl" />
+      {/* vertical hairlines — portico columns */}
+      <div className="absolute inset-0 hidden justify-between px-[8%] md:flex">
+        {Array.from({ length: 5 }).map((_, i) => (
+          <span key={i} className="h-full w-px bg-white/[0.05]" />
+        ))}
+      </div>
+      {/* dotted texture */}
+      <div className="absolute inset-0 bg-dots opacity-30" />
+      {/* floating brand sparkles — quiet gold flecks catching the dais light */}
+      <Sparkle className="animate-float-slow absolute left-[8%] top-[22%] h-8 w-8 text-gold/25 sm:h-10 sm:w-10" />
+      <Sparkle className="animate-float absolute right-[10%] top-[30%] h-5 w-5 text-gold/20 [animation-delay:1.2s] sm:h-7 sm:w-7" />
+      <Sparkle className="animate-float-slow absolute bottom-[16%] right-[16%] h-4 w-4 text-white/15 [animation-delay:2s] sm:h-6 sm:w-6" />
+      {/* top sheen */}
+      <div className="absolute inset-x-0 top-0 h-64 hero-sheen" />
     </div>
+  );
+}
+
+/** Date / time / venue rendered as a ruled "order paper" strip. */
+function DocketStrip() {
+  const items = [
+    { icon: CalendarDays, label: "Date", value: EVENT.dateLabel },
+    { icon: Clock, label: "Time", value: `${EVENT.timeLabel} (WAT)` },
+    {
+      icon: MapPin,
+      label: "Venue",
+      value: `${EVENT.venue.name}, OAU, ${EVENT.venue.city}`,
+    },
+  ];
+  return (
+    <dl className="mx-auto grid max-w-3xl grid-cols-1 divide-y divide-white/10 border-y border-white/10 sm:grid-cols-3 sm:divide-x sm:divide-y-0">
+      {items.map((item) => (
+        <div
+          key={item.label}
+          className="flex items-start gap-3 px-5 py-4 text-left sm:py-5"
+        >
+          <item.icon className="mt-0.5 h-5 w-5 shrink-0 text-gold" />
+          <div>
+            <dt className="font-label text-[10px] font-semibold uppercase tracking-[0.28em] text-white/50">
+              {item.label}
+            </dt>
+            <dd className="mt-1 text-sm font-medium leading-snug text-white/90">
+              {item.value}
+            </dd>
+          </div>
+        </div>
+      ))}
+    </dl>
   );
 }
 
 export function HeroSection() {
   return (
-    <section className="relative flex min-h-[100svh] flex-col justify-center overflow-hidden bg-navy text-white">
-      {/* layered backdrops: radial glow + diagonal lines + grid dots */}
-      <div className="absolute inset-0 gradient-navy" aria-hidden />
-      <div className="absolute inset-0 bg-navy-radial" aria-hidden />
-      <div className="absolute inset-0 bg-diagonal" aria-hidden />
-      <div className="absolute inset-0 bg-dots opacity-40" aria-hidden />
-      <FloatingShapes />
+    <section className="relative flex min-h-[100svh] flex-col justify-center overflow-hidden bg-hero-aurora text-white">
+      <ChamberAmbient />
 
-      <div className="container-section relative pb-12 pt-28 lg:pb-16 lg:pt-32">
+      <div className="container-section relative pb-14 pt-28 lg:pb-16 lg:pt-32">
         <div className="mx-auto max-w-4xl text-center">
-          {/* 3.0 gold pill badge above title */}
-          <div className="flex justify-center">
-            <span className="inline-flex animate-fade-in-up items-center gap-2 rounded-full bg-gold px-5 py-1.5 font-display text-lg font-bold text-navy shadow-gold">
-              3.0
-              <span className="font-label text-xs font-semibold uppercase tracking-[0.18em] text-navy/70">
-                3rd Edition
-              </span>
+          {/* Summit name as small-caps kicker */}
+          <p className="animate-fade-in-up font-label text-xs font-semibold uppercase tracking-[0.32em] text-gold sm:text-sm">
+            {EVENT.fullName}
+            <span className="mx-3 text-white/30" aria-hidden>
+              ·
             </span>
-          </div>
-
-          {/* Big display title */}
-          <h1 className="heading-display mt-6 animate-fade-in-up text-balance text-3xl leading-[1.05] [animation-delay:80ms] sm:text-5xl lg:text-6xl xl:text-[4.5rem]">
-            IFE EDUCATION{" "}
-            <span className="text-gradient-gold">PARLIAMENTARY</span> SUMMIT
-          </h1>
-
-          {/* Theme as subheading */}
-          <p className="mx-auto mt-6 max-w-2xl animate-fade-in-up text-pretty text-base leading-relaxed text-white/80 [animation-delay:160ms] sm:text-lg">
-            {EVENT.theme}
+            Third Edition
           </p>
 
-          {/* CTAs */}
-          <div className="mt-9 flex animate-fade-in-up flex-col items-center justify-center gap-3 [animation-delay:240ms] sm:flex-row">
+          {/* gavel-strike gold rule */}
+          <div
+            className="mx-auto mt-6 h-0.5 w-16 animate-fade-in-up bg-gold [animation-delay:60ms]"
+            aria-hidden
+          />
+
+          {/* The theme IS the headline — serif, high contrast */}
+          <h1 className="heading-display mt-7 animate-fade-in-up text-balance text-4xl leading-[1.12] [animation-delay:120ms] sm:text-5xl lg:text-[3.6rem]">
+            <span className="block text-white/90">{EVENT.themeLeadIn}</span>
+            <span className="mt-3 block text-gradient-gold">
+              {EVENT.themeHighlight}
+            </span>
+          </h1>
+
+          <p className="mx-auto mt-7 max-w-xl animate-fade-in-up text-pretty text-base leading-relaxed text-white/65 [animation-delay:200ms] sm:text-lg">
+            {EVENT.tagline}
+          </p>
+
+          {/* CTAs — gold register, outlined sponsor */}
+          <div className="mt-10 flex animate-fade-in-up flex-col items-center justify-center gap-3 [animation-delay:280ms] sm:flex-row">
             <Button href="/register" size="lg" aria-label="Register for IEPS 3.0">
               <Ticket className="h-5 w-5" />
-              Register Now
+              Register to Attend
             </Button>
-            <Button href="/about" variant="outline" size="lg">
-              Learn More
-              <ArrowRight className="h-5 w-5" />
+            <Button
+              href="/contact"
+              variant="outline"
+              size="lg"
+              aria-label="Partner with IEPS 3.0 as a sponsor"
+            >
+              <Handshake className="h-5 w-5" />
+              Partner as a Sponsor
             </Button>
           </div>
 
-          {/* Event details strip — gold */}
-          <div className="mt-8 flex animate-fade-in-up flex-col items-center justify-center gap-x-6 gap-y-2 text-sm font-medium text-gold [animation-delay:320ms] sm:flex-row">
-            <span className="inline-flex items-center gap-2">
-              <CalendarDays className="h-5 w-5" />
-              {EVENT.dateLabel}
-            </span>
-            <span className="hidden text-gold/40 sm:inline" aria-hidden>
-              |
-            </span>
-            <span className="inline-flex items-center gap-2">
-              <MapPin className="h-5 w-5" />
-              {EVENT.venue.shortName}, {EVENT.venue.city}
-            </span>
+          {/* Date / time / venue docket */}
+          <div className="mt-12 animate-fade-in-up [animation-delay:360ms]">
+            <DocketStrip />
           </div>
         </div>
 
         {/* Countdown at the bottom of the hero */}
-        <div className="mt-12 flex animate-fade-in-up flex-col items-center [animation-delay:400ms]">
-          <p className="mb-4 font-label text-sm font-semibold uppercase tracking-[0.22em] text-white/60">
-            Summit begins in
+        <div className="mt-12 flex animate-fade-in-up flex-col items-center [animation-delay:440ms]">
+          <p className="mb-4 font-label text-xs font-semibold uppercase tracking-[0.28em] text-white/45">
+            The house convenes in
           </p>
           <CountdownTimer targetISO={EVENT.dateISO} tone="dark" />
         </div>
       </div>
 
-      {/* bottom wave divider into off-white */}
-      <div className="relative">
-        <svg
-          className="block h-[50px] w-full text-offwhite sm:h-[80px]"
-          viewBox="0 0 1440 90"
-          preserveAspectRatio="none"
-          aria-hidden
-        >
-          <path
-            fill="currentColor"
-            d="M0 90h1440V40c-180 36-420 50-720 28C420 47 200 38 0 60Z"
-          />
-        </svg>
-      </div>
+      {/* base gold hairline — dais edge */}
+      <div className="absolute inset-x-0 bottom-0 h-px gradient-gold opacity-70" aria-hidden />
     </section>
   );
 }

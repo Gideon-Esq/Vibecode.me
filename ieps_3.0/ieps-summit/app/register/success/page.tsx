@@ -13,6 +13,7 @@ import {
 import { Button } from "@/components/ui/Button";
 import { EVENT } from "@/lib/constants";
 import { whatsappShareUrl } from "@/lib/share";
+import { AttendanceBadge } from "@/components/register/AttendanceBadge";
 
 type StoredRegistration = {
   id: string;
@@ -68,7 +69,7 @@ export default function RegistrationSuccessPage() {
 
   return (
     <section className="relative flex min-h-[100svh] items-center justify-center overflow-hidden bg-navy px-5 py-28 text-white">
-      <div className="absolute inset-0 gradient-navy" aria-hidden />
+      <div className="absolute inset-0 bg-hero-aurora" aria-hidden />
       <div className="absolute inset-0 bg-dots opacity-40" aria-hidden />
       <div
         className="absolute -left-24 top-10 h-72 w-72 rounded-full bg-green/20 blur-3xl"
@@ -79,7 +80,7 @@ export default function RegistrationSuccessPage() {
         aria-hidden
       />
 
-      <div className="relative z-10 w-full max-w-lg text-center">
+      <div className="relative z-10 w-full max-w-xl text-center">
         <AnimatedCheck />
 
         <h1 className="heading-display mt-7 text-3xl sm:text-4xl">
@@ -149,6 +150,11 @@ export default function RegistrationSuccessPage() {
             <Home className="h-5 w-5" />
             Back to Home
           </Button>
+        </div>
+
+        {/* Personalised "I will be attending" share graphic */}
+        <div className="mt-10">
+          <AttendanceBadge defaultName={reg?.fullName ?? ""} />
         </div>
       </div>
     </section>

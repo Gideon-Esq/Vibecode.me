@@ -18,19 +18,21 @@ import {
 import type { ReactNode } from "react";
 import type { Analytics, ChartDatum } from "@/lib/analytics";
 
-/* IEPS palette for categorical series */
+/* Categorical palette for analytics — navy-led to stay on brand, then a set of
+   distinct, accessible hues so adjacent slices/bars are easy to tell apart. */
 const PALETTE = [
-  "#F5C400", // gold
-  "#1A7A3C", // green
-  "#1a2d8a", // navy light
-  "#FFD740", // gold light
-  "#22A050", // green light
-  "#0D1B5E", // navy
-  "#C49B00", // gold dark
+  "#0D1B5E", // brand navy (lead)
+  "#F5C400", // brand gold
+  "#2563C9", // blue
+  "#E2603B", // coral
+  "#7C5CBF", // violet
+  "#14A8A0", // teal
+  "#C2417F", // magenta
+  "#8FB339", // lime
 ];
 
 const NAVY = "#0D1B5E";
-const GOLD = "#F5C400";
+const GOLD = "#FFD740"; // bright gold accent — used on the dark navy line chart
 
 function ChartCard({
   title,
@@ -183,8 +185,12 @@ export function DashboardCharts({ data }: { data: Analytics }) {
               tick={{ fontSize: 10, fill: NAVY }}
               tickFormatter={(v: string) => (v.length > 18 ? `${v.slice(0, 18)}…` : v)}
             />
-            <Tooltip contentStyle={tooltipStyle} cursor={{ fill: "rgba(245,196,0,0.1)" }} />
-            <Bar dataKey="value" name="Registrants" fill={NAVY} radius={[0, 6, 6, 0]} />
+            <Tooltip contentStyle={tooltipStyle} cursor={{ fill: "rgba(13,27,94,0.08)" }} />
+            <Bar dataKey="value" name="Registrants" radius={[0, 6, 6, 0]}>
+              {data.institutions.map((_, i) => (
+                <Cell key={i} fill={PALETTE[i % PALETTE.length]} />
+              ))}
+            </Bar>
           </BarChart>
         </ResponsiveContainer>
       </ChartCard>
@@ -206,8 +212,33 @@ export function DashboardCharts({ data }: { data: Analytics }) {
               tick={{ fontSize: 10, fill: NAVY }}
               tickFormatter={(v: string) => (v.length > 18 ? `${v.slice(0, 18)}…` : v)}
             />
-            <Tooltip contentStyle={tooltipStyle} cursor={{ fill: "rgba(26,122,60,0.1)" }} />
-            <Bar dataKey="value" name="Interested" fill="#1A7A3C" radius={[0, 6, 6, 0]} />
+            <Tooltip contentStyle={tooltipStyle} cursor={{ fill: "rgba(13,27,94,0.08)" }} />
+            <Bar dataKey="value" name="Interested" radius={[0, 6, 6, 0]}>
+              {data.sessions.map((_, i) => (
+                <Cell key={i} fill={PALETTE[(i + 2) % PALETTE.length]} />
+              ))}
+            </Bar>
+          </BarChart>
+        </ResponsiveContainer>
+      </ChartCard>
+
+      {/* Level of study — vertical bars (100L → Postgraduate) */}
+      <ChartCard
+        title="Level of Study"
+        subtitle="Registrants by level, incl. postgraduate"
+        empty={isEmpty(data.levels)}
+      >
+        <ResponsiveContainer width="100%" height="100%">
+          <BarChart data={data.levels} margin={{ left: -18, right: 8, top: 8 }}>
+            <CartesianGrid strokeDasharray="3 3" stroke="rgba(13,27,94,0.08)" vertical={false} />
+            <XAxis dataKey="name" tick={{ fontSize: 11, fill: NAVY }} />
+            <YAxis allowDecimals={false} tick={{ fontSize: 11 }} />
+            <Tooltip contentStyle={tooltipStyle} cursor={{ fill: "rgba(13,27,94,0.08)" }} />
+            <Bar dataKey="value" name="Registrants" radius={[6, 6, 0, 0]}>
+              {data.levels.map((_, i) => (
+                <Cell key={i} fill={PALETTE[i % PALETTE.length]} />
+              ))}
+            </Bar>
           </BarChart>
         </ResponsiveContainer>
       </ChartCard>

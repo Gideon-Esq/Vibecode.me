@@ -35,11 +35,47 @@ export const EVENT = {
 
 export const CONTACT = {
   name: "Abdulkareem Tijani Remilekun",
-  role: "Summit Coordinator",
+  role: "Speaker, ESRC OAU",
   email: "tijaniremilekun9@gmail.com",
   phone: "08126540417",
   phoneIntl: "+2348126540417",
 } as const;
+
+/**
+ * Official ESRC/summit channels — general enquiries and social media.
+ * `facebook.url` is a name search fallback; swap in the exact Page URL if known.
+ */
+export const SOCIALS = {
+  email: "srceduoau@gmail.com",
+  instagram: {
+    label: "Instagram",
+    handle: "@src_edu",
+    url: "https://instagram.com/src_edu",
+  },
+  facebook: {
+    label: "Facebook",
+    handle: "Src Edu",
+    url: "https://www.facebook.com/src.edu.2025",
+  },
+} as const;
+
+/**
+ * Certificate signatories — shown on the Certificate of Participation PDF.
+ * `signature` points at a scanned signature PNG; when the file isn't present
+ * yet, the certificate falls back to a decorative scribble.
+ */
+export const CERTIFICATE_SIGNATORIES = [
+  {
+    name: "Rt. Hon. Abdulkareem Tijani R.",
+    role: "SPEAKER, ESRC OAU",
+    signature: "/signatures/speaker-1.png",
+  },
+  {
+    name: "Hon. Kanayo Daniel T.",
+    role: "DEPUTY SPEAKER, ESRC OAU",
+    signature: "/signatures/speaker-2.png",
+  },
+] as const;
 
 export const ORGANIZERS = [
   {
@@ -66,6 +102,44 @@ export const ORGANIZERS = [
     logo: "/logos/esan.png",
     fallback: "/logos/esan.svg",
   },
+] as const;
+
+/**
+ * Keynote speaker slots — names and portraits are NOT yet confirmed.
+ * These are deliberate placeholders; swap in real names/photos when announced.
+ */
+export const KEYNOTE_SPEAKERS = [
+  {
+    slot: "Keynote Speaker",
+    name: "To Be Announced",
+    detail: "Name and portrait to be published",
+    photo: null as string | null,
+  },
+  {
+    slot: "Keynote Speaker",
+    name: "To Be Announced",
+    detail: "Name and portrait to be published",
+    photo: null as string | null,
+  },
+  {
+    slot: "Keynote Speaker",
+    name: "To Be Announced",
+    detail: "Name and portrait to be published",
+    photo: null as string | null,
+  },
+] as const;
+
+/**
+ * Panel-discussion panelist slots — names and portraits are NOT yet
+ * confirmed. Deliberate placeholders, same policy as KEYNOTE_SPEAKERS:
+ * no fabricated faces or names; swap in real people when announced.
+ */
+export const PANELISTS = [
+  ...Array.from({ length: 4 }, () => ({
+    slot: "Panelist",
+    name: "To Be Announced",
+    photo: null as string | null,
+  })),
 ] as const;
 
 export const NAV_LINKS = [

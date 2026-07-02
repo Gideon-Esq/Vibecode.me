@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
@@ -88,11 +89,17 @@ export function Sidebar({
       onClick={() => setOpen(false)}
       className="flex items-center gap-2 px-5 py-5"
     >
-      <span className="flex items-baseline font-display font-bold leading-none">
-        <span className="text-2xl tracking-tight text-white">IEPS</span>
-        <span className="ml-1 text-base text-gold">3.0</span>
+      {/* White card keeps the navy logo legible on the dark sidebar. */}
+      <span className="inline-flex rounded-lg bg-white px-2.5 py-1.5">
+        <Image
+          src="/logos/ieps.png"
+          alt="IEPS 3.0"
+          width={416}
+          height={81}
+          className="h-6 w-auto"
+        />
       </span>
-      <span className="ml-1 rounded-md bg-white/10 px-2 py-0.5 font-label text-[10px] font-semibold uppercase tracking-wider text-white/70">
+      <span className="rounded-md bg-white/10 px-2 py-0.5 font-label text-[10px] font-semibold uppercase tracking-wider text-white/70">
         Admin
       </span>
     </Link>
@@ -102,8 +109,14 @@ export function Sidebar({
     <>
       {/* Mobile top bar */}
       <div className="sticky top-0 z-40 flex h-14 items-center justify-between border-b border-navy/10 bg-navy px-4 lg:hidden">
-        <span className="flex items-baseline font-display font-bold leading-none text-white">
-          IEPS <span className="ml-1 text-sm text-gold">3.0</span>
+        <span className="inline-flex rounded-lg bg-white px-2.5 py-1.5">
+          <Image
+            src="/logos/ieps.png"
+            alt="IEPS 3.0"
+            width={416}
+            height={81}
+            className="h-6 w-auto"
+          />
         </span>
         <button
           type="button"

@@ -4,6 +4,7 @@ import { ABOUT_FEATURES, STATS } from "@/lib/constants";
 import { Reveal } from "@/components/ui/Reveal";
 import { CountUp } from "@/components/ui/CountUp";
 import { Button } from "@/components/ui/Button";
+import { Sparkle } from "@/components/ui/Sparkle";
 
 const ICONS: Record<string, LucideIcon> = {
   graduation: GraduationCap,
@@ -13,16 +14,22 @@ const ICONS: Record<string, LucideIcon> = {
 
 export function AboutSection() {
   return (
-    <section id="about" className="bg-offwhite py-20 lg:py-28">
-      <div className="container-section">
+    <section id="about" className="relative overflow-hidden bg-white py-20 lg:py-28">
+      <div className="absolute inset-0 bg-stripes-light opacity-60" aria-hidden />
+      {/* faint corner sparkle */}
+      <Sparkle className="animate-float absolute left-[6%] top-24 h-14 w-14 text-navy/[0.05]" />
+      <div className="container-section relative">
         {/* Heading block */}
         <Reveal className="mx-auto max-w-3xl text-center">
-          <p className="eyebrow">About the Summit</p>
-          <h2 className="heading-display mt-3 text-3xl text-navy sm:text-4xl lg:text-[2.75rem] lg:leading-[1.1]">
+          <p className="eyebrow inline-flex items-center gap-2">
+            <Sparkle className="h-3 w-3 text-gold-600" />
+            About the Summit
+          </p>
+          <h2 className="heading-display mt-4 text-3xl text-navy sm:text-4xl lg:text-[2.75rem] lg:leading-[1.12]">
             Where Student Voices Shape{" "}
             <span className="gold-underline">Nigeria&apos;s Future</span>
           </h2>
-          <p className="mx-auto mt-5 max-w-prose text-pretty leading-relaxed text-ink/75">
+          <p className="mx-auto mt-6 max-w-prose text-pretty leading-relaxed text-ink/75">
             The Education Students&apos; Representative Council (ESRC), OAU, in
             collaboration with the Education Students&apos; Association of Nigeria
             (ESAN), proposes a parliamentary summit that provides a platform for
@@ -33,20 +40,24 @@ export function AboutSection() {
           </p>
         </Reveal>
 
-        {/* Feature cards */}
-        <div className="mt-12 grid gap-6 md:grid-cols-3">
+        {/* Feature cards — ruled, squared, order-paper style */}
+        <div className="mt-14 grid gap-px overflow-hidden border border-navy/10 bg-navy/10 md:grid-cols-3">
           {ABOUT_FEATURES.map((feature, i) => {
             const Icon = ICONS[feature.icon] ?? GraduationCap;
             return (
-              <Reveal key={feature.title} delay={i * 0.1} as="article">
-                <div className="group h-full rounded-2xl border-2 border-navy/10 bg-white p-7 transition-colors duration-200 hover:border-gold">
-                  <span className="grid h-14 w-14 place-items-center rounded-2xl bg-navy text-gold transition-colors duration-200 group-hover:bg-gold group-hover:text-navy">
-                    <Icon className="h-7 w-7" />
+              <Reveal key={feature.title} delay={i * 0.1} as="article" className="h-full">
+                <div className="group relative h-full bg-white p-8 transition-colors duration-200 hover:bg-offwhite">
+                  <span
+                    className="absolute inset-x-0 top-0 h-0.5 origin-left scale-x-0 bg-gold transition-transform duration-300 group-hover:scale-x-100"
+                    aria-hidden
+                  />
+                  <span className="grid h-12 w-12 place-items-center border border-navy/15 text-navy transition-colors duration-200 group-hover:border-gold group-hover:text-gold-600">
+                    <Icon className="h-6 w-6" strokeWidth={1.75} />
                   </span>
-                  <h3 className="mt-5 font-display text-xl font-bold text-navy">
+                  <h3 className="heading-display mt-6 text-xl text-navy">
                     {feature.title}
                   </h3>
-                  <p className="mt-2 text-sm leading-relaxed text-ink/70">
+                  <p className="mt-2.5 text-sm leading-relaxed text-ink/70">
                     {feature.text}
                   </p>
                 </div>
@@ -55,21 +66,23 @@ export function AboutSection() {
           })}
         </div>
 
-        {/* Animated count-up stats */}
+        {/* Animated count-up stats — navy band with gold figures */}
         <Reveal delay={0.1} className="mt-14">
-          <div className="grid grid-cols-1 gap-6 rounded-3xl gradient-navy p-8 text-center text-white shadow-card sm:grid-cols-3 sm:p-10">
+          <div className="grid grid-cols-1 gap-8 gradient-navy p-10 text-center text-white sm:grid-cols-3 sm:gap-6 sm:p-12">
             {STATS.map((stat) => (
               <div key={stat.label}>
-                <p className="font-display text-4xl font-bold text-gold sm:text-5xl">
+                <p className="heading-display text-4xl text-gold sm:text-5xl">
                   <CountUp to={stat.value} suffix={stat.suffix} />
                 </p>
-                <p className="mt-1 text-sm text-white/75">{stat.label}</p>
+                <p className="mt-2 font-label text-xs font-semibold uppercase tracking-[0.22em] text-white/60">
+                  {stat.label}
+                </p>
               </div>
             ))}
           </div>
         </Reveal>
 
-        <div className="mt-10 text-center">
+        <div className="mt-12 text-center">
           <Button href="/about" variant="secondary">
             Read the full story
           </Button>

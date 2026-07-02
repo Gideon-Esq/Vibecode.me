@@ -1,12 +1,18 @@
 import { NextResponse } from "next/server";
-import { Prisma, AttendeeRole } from "@prisma/client";
+import { Prisma, AttendeeRole, RegistrationStatus } from "@prisma/client";
 import { prisma } from "@/lib/db";
 import { registrationSchema } from "@/lib/registration";
 import { sendConfirmationEmail } from "@/lib/email";
+import { rateLimit, clientIp, tooManyRequests } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
 
 export async function POST(request: Request) {
+  // 0. Rate limit — generous enough for a shared campus network, tight
+  //    enough to blunt scripted spam.
+  const rl = rateLimit(`register:${clientIp(request)}`, 20, 10 * 60 * 1000);
+  if (!rl.ok) return tooManyRequests(rl.retryAfterSec);
+
   // 1. Parse + validate body
   let json: unknown;
   try {
@@ -52,6 +58,8 @@ export async function POST(request: Request) {
         ...rest,
         // Self-registration is always a Student; admins assign other roles.
         role: AttendeeRole.STUDENT,
+        // Registrations are confirmed immediately — no pending review step.
+        status: RegistrationStatus.CONFIRMED,
         sessionInterest: {
           create: sessionInterest.map((sessionName) => ({ sessionName })),
         },

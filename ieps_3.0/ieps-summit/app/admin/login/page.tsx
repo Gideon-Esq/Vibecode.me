@@ -2,6 +2,7 @@
 
 import { Suspense, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import Image from "next/image";
 import Link from "next/link";
 import { signIn } from "next-auth/react";
 import {
@@ -56,12 +57,19 @@ function LoginForm() {
   return (
     <div className="w-full max-w-md">
       {/* Brand */}
-      <div className="mb-8 text-center">
-        <span className="inline-flex items-baseline font-display font-bold leading-none">
-          <span className="text-3xl tracking-tight text-white">IEPS</span>
-          <span className="ml-1.5 text-xl text-gold">3.0</span>
+      <div className="mb-8 flex flex-col items-center text-center">
+        {/* White card keeps the navy logo legible on the dark backdrop. */}
+        <span className="inline-flex rounded-xl bg-white px-4 py-3 shadow-sm">
+          <Image
+            src="/logos/ieps.png"
+            alt="IEPS 3.0 — Ife Education Parliamentary Summit"
+            width={416}
+            height={81}
+            priority
+            className="h-9 w-auto"
+          />
         </span>
-        <p className="mt-2 font-label text-xs font-semibold uppercase tracking-[0.22em] text-green-400">
+        <p className="mt-3 font-label text-xs font-semibold uppercase tracking-[0.22em] text-green-400">
           Organiser Dashboard
         </p>
       </div>
@@ -184,7 +192,7 @@ function LoginForm() {
 export default function AdminLoginPage() {
   return (
     <div className="relative flex min-h-[100svh] items-center justify-center overflow-hidden bg-navy px-5 py-24">
-      <div className="absolute inset-0 gradient-navy" aria-hidden />
+      <div className="absolute inset-0 bg-hero-aurora" aria-hidden />
       <div className="absolute inset-0 bg-dots opacity-40" aria-hidden />
       <div
         className="absolute -left-24 top-10 h-72 w-72 rounded-full bg-green/20 blur-3xl"

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { sendContactEmail } from "@/lib/email";
+import { rateLimit, clientIp, tooManyRequests } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
 
@@ -16,6 +17,10 @@ const schema = z.object({
 
 /** POST /api/contact — emails a contact-form message to the organiser. */
 export async function POST(request: Request) {
+  // Rate limit — the form sends real email, so keep abuse in check.
+  const rl = rateLimit(`contact:${clientIp(request)}`, 5, 10 * 60 * 1000);
+  if (!rl.ok) return tooManyRequests(rl.retryAfterSec);
+
   let json: unknown;
   try {
     json = await request.json();

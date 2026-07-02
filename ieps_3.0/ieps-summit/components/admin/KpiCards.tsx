@@ -73,19 +73,19 @@ export function KpiCards({ kpis }: { kpis: Analytics["kpis"] }) {
         icon={BadgeCheck}
         label="Confirmed Attendees"
         value={kpis.confirmed}
-        accent="#1A7A3C"
+        accent="#806600"
       />
       <Card
         icon={Award}
         label="Certificates Issued"
         value={kpis.certificatesIssued}
-        accent="#C49B00"
+        accent="#1A2D8A"
       />
       <Card
         icon={CalendarPlus}
         label="Today's New Registrations"
         value={kpis.todayRegistrations}
-        accent="#F5C400"
+        accent="#C49B00"
         trend={todayTrend}
       />
     </div>
