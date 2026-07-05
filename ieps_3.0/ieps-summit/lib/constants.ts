@@ -5,7 +5,7 @@
 
 /** Canonical site URL (override with NEXT_PUBLIC_APP_URL in env). */
 export const SITE_URL =
-  process.env.NEXT_PUBLIC_APP_URL ?? "https://ieps.vercel.app";
+  process.env.NEXT_PUBLIC_APP_URL ?? "https://ieps3.vercel.app";
 
 export const EVENT = {
   shortName: "IEPS 3.0",

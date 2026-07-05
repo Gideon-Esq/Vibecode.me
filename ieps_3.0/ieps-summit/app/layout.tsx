@@ -44,11 +44,20 @@ export const metadata: Metadata = {
     locale: "en_NG",
     url: SITE_URL,
     siteName: "IEPS 3.0",
+    images: [
+      {
+        url: "/opengraph-image.png",
+        width: 1200,
+        height: 630,
+        alt: "IEPS 3.0 — Ife Education Parliamentary Summit",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "IEPS 3.0 | 22nd July 2026 | OAU",
     description: "July 22, 2026 | African Centre of Excellence, OAU",
+    images: ["/opengraph-image.png"],
   },
   robots: { index: true, follow: true },
 };
