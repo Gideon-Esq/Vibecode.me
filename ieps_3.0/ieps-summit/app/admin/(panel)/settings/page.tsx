@@ -1,11 +1,13 @@
-import { requireAdmin } from "@/lib/admin";
+import { redirect } from "next/navigation";
+import { requireRole } from "@/lib/admin";
 import { EVENT, CONTACT } from "@/lib/constants";
 import { BroadcastForm } from "@/components/admin/BroadcastForm";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminSettingsPage() {
-  const session = await requireAdmin();
+  const session = await requireRole("ADMIN", "SUPER_ADMIN");
+  if (!session) redirect("/admin/attendance");
 
   return (
     <div className="space-y-6">

@@ -25,20 +25,38 @@ export const authConfig = {
      */
     authorized({ auth, request: { nextUrl } }) {
       const isLoggedIn = Boolean(auth?.user);
-      const isOnLogin = nextUrl.pathname.startsWith("/admin/login");
-      const isOnAdmin = nextUrl.pathname.startsWith("/admin");
+      const path = nextUrl.pathname;
+      const isOnLogin = path.startsWith("/admin/login");
+      const isOnAdmin = path.startsWith("/admin");
 
-      // Already-authenticated users shouldn't see the login screen.
+      // Already-authenticated users shouldn't see the login screen. Send the
+      // restricted registration team to their landing page, others to /admin.
       if (isOnLogin) {
         if (isLoggedIn) {
-          return Response.redirect(new URL("/admin", nextUrl));
+          const home =
+            auth?.user?.role === "REGISTRATION" ? "/admin/attendance" : "/admin";
+          return Response.redirect(new URL(home, nextUrl));
         }
         return true;
       }
 
       // Everything else under /admin requires a session.
       if (isOnAdmin) {
-        return isLoggedIn;
+        if (!isLoggedIn) return false;
+
+        // The registration team is confined to attendance + read-only
+        // registrations. Any other /admin route bounces them to attendance.
+        if (auth?.user?.role === "REGISTRATION") {
+          const allowed =
+            path === "/admin/attendance" ||
+            path.startsWith("/admin/attendance/") ||
+            path === "/admin/registrations" ||
+            path.startsWith("/admin/registrations/");
+          if (!allowed) {
+            return Response.redirect(new URL("/admin/attendance", nextUrl));
+          }
+        }
+        return true;
       }
 
       return true;

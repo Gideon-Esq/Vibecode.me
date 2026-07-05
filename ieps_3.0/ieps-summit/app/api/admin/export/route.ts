@@ -1,7 +1,7 @@
 import * as XLSX from "xlsx";
 import { format } from "date-fns";
 import { prisma } from "@/lib/db";
-import { requireAdmin, unauthorized } from "@/lib/admin";
+import { requireRole, forbidden } from "@/lib/admin";
 import { exportToCSV, toAoa, type ExportRegistration } from "@/lib/export";
 
 export const runtime = "nodejs";
@@ -9,7 +9,7 @@ export const dynamic = "force-dynamic";
 
 /** GET /api/admin/export — CSV (default) or XLSX (?format=xlsx) of all registrations. */
 export async function GET(request: Request) {
-  if (!(await requireAdmin())) return unauthorized();
+  if (!(await requireRole("ADMIN", "SUPER_ADMIN"))) return forbidden();
 
   const rows = await prisma.registration.findMany({
     orderBy: { createdAt: "desc" },

@@ -64,7 +64,13 @@ const SORTABLE: Record<string, string> = {
 
 const columnHelper = createColumnHelper<AdminRegistration>();
 
-export function RegistrationsTable() {
+export function RegistrationsTable({
+  canManage = true,
+}: {
+  /** When false (registration team), the table is read-only: no bulk actions,
+   *  and the only row action is "View details". */
+  canManage?: boolean;
+}) {
   const [q, setQ] = useState("");
   const [debouncedQ, setDebouncedQ] = useState("");
   const [status, setStatus] = useState("");
@@ -312,38 +318,42 @@ export function RegistrationsTable() {
                   <MenuItem icon={Eye} onClick={() => { setDetail(row); setOpenMenu(null); }}>
                     View details
                   </MenuItem>
-                  {row.status !== "CONFIRMED" && (
-                    <MenuItem
-                      icon={CheckCircle2}
-                      onClick={() => patchRow(row.id, { status: "CONFIRMED" })}
-                    >
-                      Mark confirmed
-                    </MenuItem>
+                  {canManage && (
+                    <>
+                      {row.status !== "CONFIRMED" && (
+                        <MenuItem
+                          icon={CheckCircle2}
+                          onClick={() => patchRow(row.id, { status: "CONFIRMED" })}
+                        >
+                          Mark confirmed
+                        </MenuItem>
+                      )}
+                      <MenuItem
+                        icon={CheckCircle2}
+                        onClick={() => patchRow(row.id, { attended: true })}
+                      >
+                        Mark attended
+                      </MenuItem>
+                      <MenuItem icon={Award} onClick={() => generateCertificate(row.id)}>
+                        Generate certificate
+                      </MenuItem>
+                      <a
+                        href={`mailto:${row.email}`}
+                        className="flex items-center gap-2.5 px-3.5 py-2 text-ink/80 hover:bg-navy/5"
+                        onClick={() => setOpenMenu(null)}
+                      >
+                        <Mail className="h-4 w-4" />
+                        Send email
+                      </a>
+                      <MenuItem
+                        icon={Trash2}
+                        danger
+                        onClick={() => deleteRow(row.id, row.fullName)}
+                      >
+                        Delete
+                      </MenuItem>
+                    </>
                   )}
-                  <MenuItem
-                    icon={CheckCircle2}
-                    onClick={() => patchRow(row.id, { attended: true })}
-                  >
-                    Mark attended
-                  </MenuItem>
-                  <MenuItem icon={Award} onClick={() => generateCertificate(row.id)}>
-                    Generate certificate
-                  </MenuItem>
-                  <a
-                    href={`mailto:${row.email}`}
-                    className="flex items-center gap-2.5 px-3.5 py-2 text-ink/80 hover:bg-navy/5"
-                    onClick={() => setOpenMenu(null)}
-                  >
-                    <Mail className="h-4 w-4" />
-                    Send email
-                  </a>
-                  <MenuItem
-                    icon={Trash2}
-                    danger
-                    onClick={() => deleteRow(row.id, row.fullName)}
-                  >
-                    Delete
-                  </MenuItem>
                   </div>
                 </>
               )}
@@ -353,7 +363,7 @@ export function RegistrationsTable() {
       }),
     ],
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [busyId, openMenu]
+    [busyId, openMenu, canManage]
   );
 
   const table = useReactTable({
@@ -396,7 +406,8 @@ export function RegistrationsTable() {
         </div>
       </div>
 
-      {/* Bulk actions */}
+      {/* Bulk actions — hidden for the read-only registration team. */}
+      {canManage && (
       <div className="flex flex-wrap items-center gap-2">
         <a
           href="/api/admin/export"
@@ -429,6 +440,7 @@ export function RegistrationsTable() {
           Generate all certificates
         </button>
       </div>
+      )}
 
       {/* Table */}
       {loading && !data ? (

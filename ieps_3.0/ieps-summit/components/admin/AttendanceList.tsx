@@ -20,7 +20,12 @@ async function loadAll(query: string): Promise<AdminRegistration[]> {
   return rows;
 }
 
-export function AttendanceList() {
+export function AttendanceList({
+  canMarkAll = true,
+}: {
+  /** When false (registration team), the bulk "Mark all present" action is hidden. */
+  canMarkAll?: boolean;
+}) {
   const [all, setAll] = useState<AdminRegistration[]>([]);
   const [loading, setLoading] = useState(true);
   const [q, setQ] = useState("");
@@ -106,14 +111,16 @@ export function AttendanceList() {
               className="w-full rounded-xl border border-navy/15 bg-white py-2.5 pl-9 pr-3 text-sm focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/30"
             />
           </div>
-          <button
-            type="button"
-            onClick={markAllPresent}
-            className="inline-flex shrink-0 items-center gap-2 rounded-xl bg-green px-4 py-2.5 text-sm font-medium text-white hover:bg-green-dark"
-          >
-            <CheckCircle2 className="h-4 w-4" />
-            Mark all present
-          </button>
+          {canMarkAll && (
+            <button
+              type="button"
+              onClick={markAllPresent}
+              className="inline-flex shrink-0 items-center gap-2 rounded-xl bg-green px-4 py-2.5 text-sm font-medium text-white hover:bg-green-dark"
+            >
+              <CheckCircle2 className="h-4 w-4" />
+              Mark all present
+            </button>
+          )}
         </div>
       </div>
 

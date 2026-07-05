@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
-import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { getBaseUrl } from "@/lib/utils";
 import { issueCertificate, type IssueResult } from "@/lib/certificate-service";
+import { requireRole, forbidden } from "@/lib/admin";
 
 export const runtime = "nodejs";
 // Bulk generation can take a while; opt out of static optimisation.
@@ -14,10 +14,8 @@ export const maxDuration = 300;
  * Issues certificates for every registration with `attended: true`.
  */
 export async function POST(request: Request) {
-  const session = await auth();
-  if (!session?.user) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  // Certificate issuance is off-limits to the registration team.
+  if (!(await requireRole("ADMIN", "SUPER_ADMIN"))) return forbidden();
 
   const attendees = await prisma.registration.findMany({
     where: { attended: true },

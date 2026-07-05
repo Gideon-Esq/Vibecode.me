@@ -12,36 +12,42 @@ import {
   Award,
   BarChart3,
   Settings,
+  UserCog,
   LogOut,
   Menu,
   X,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
+import type { Role } from "@prisma/client";
 import { cn } from "@/lib/utils";
 
-const NAV: { label: string; href: string; icon: LucideIcon }[] = [
-  { label: "Dashboard", href: "/admin", icon: LayoutDashboard },
-  { label: "Registrations", href: "/admin/registrations", icon: Users },
-  { label: "Attendance", href: "/admin/attendance", icon: ClipboardCheck },
-  { label: "Certificates", href: "/admin/certificates", icon: Award },
-  { label: "Analytics", href: "/admin/analytics", icon: BarChart3 },
-  { label: "Settings", href: "/admin/settings", icon: Settings },
+// `roles` lists which roles may see each item. The restricted REGISTRATION
+// role only ever sees Registrations + Attendance.
+const NAV: { label: string; href: string; icon: LucideIcon; roles: Role[] }[] = [
+  { label: "Dashboard", href: "/admin", icon: LayoutDashboard, roles: ["ADMIN", "SUPER_ADMIN"] },
+  { label: "Registrations", href: "/admin/registrations", icon: Users, roles: ["ADMIN", "SUPER_ADMIN", "REGISTRATION"] },
+  { label: "Attendance", href: "/admin/attendance", icon: ClipboardCheck, roles: ["ADMIN", "SUPER_ADMIN", "REGISTRATION"] },
+  { label: "Certificates", href: "/admin/certificates", icon: Award, roles: ["ADMIN", "SUPER_ADMIN"] },
+  { label: "Analytics", href: "/admin/analytics", icon: BarChart3, roles: ["ADMIN", "SUPER_ADMIN"] },
+  { label: "Team", href: "/admin/team", icon: UserCog, roles: ["SUPER_ADMIN"] },
+  { label: "Settings", href: "/admin/settings", icon: Settings, roles: ["ADMIN", "SUPER_ADMIN"] },
 ];
 
 export function Sidebar({
   user,
 }: {
-  user: { name?: string | null; email?: string | null };
+  user: { name?: string | null; email?: string | null; role: Role };
 }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  const items = NAV.filter((item) => item.roles.includes(user.role));
 
   const isActive = (href: string) =>
     href === "/admin" ? pathname === "/admin" : pathname.startsWith(href);
 
   const nav = (
     <nav className="flex flex-1 flex-col gap-1 px-3" aria-label="Admin">
-      {NAV.map((item) => {
+      {items.map((item) => {
         const active = isActive(item.href);
         return (
           <Link
