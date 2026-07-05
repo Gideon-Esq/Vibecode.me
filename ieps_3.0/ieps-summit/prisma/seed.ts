@@ -1,12 +1,15 @@
 import { PrismaClient, Role } from "@prisma/client";
 import bcrypt from "bcryptjs";
+import dotenv from "dotenv";
+import { resolve } from "path";
 
-// Load variables from .env when run via `tsx prisma/seed.ts` (Node >= 20.12).
-// `prisma db seed` loads .env itself, so guard against double-loading.
-try {
-  (process as NodeJS.Process & { loadEnvFile?: (path?: string) => void }).loadEnvFile?.();
-} catch {
-  // .env not found — fall back to whatever is already in process.env.
+const envCandidates = [
+  resolve(process.cwd(), ".env"),
+  resolve(process.cwd(), "..", "..", ".env"),
+];
+
+for (const envPath of envCandidates) {
+  dotenv.config({ path: envPath });
 }
 
 const prisma = new PrismaClient();
