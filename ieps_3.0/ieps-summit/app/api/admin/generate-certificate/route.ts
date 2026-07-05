@@ -1,17 +1,15 @@
 import { NextResponse } from "next/server";
-import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { getBaseUrl } from "@/lib/utils";
 import { issueCertificate } from "@/lib/certificate-service";
+import { requireRole, forbidden } from "@/lib/admin";
 
 export const runtime = "nodejs";
 
 /** POST /api/admin/generate-certificate — admin-only, single registration. */
 export async function POST(request: Request) {
-  const session = await auth();
-  if (!session?.user) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  // Certificate issuance is off-limits to the registration team.
+  if (!(await requireRole("ADMIN", "SUPER_ADMIN"))) return forbidden();
 
   let body: unknown;
   try {

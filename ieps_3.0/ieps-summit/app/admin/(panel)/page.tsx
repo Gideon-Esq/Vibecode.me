@@ -1,3 +1,5 @@
+import { redirect } from "next/navigation";
+import { requireRole } from "@/lib/admin";
 import { getAnalytics } from "@/lib/analytics";
 import { KpiCards } from "@/components/admin/KpiCards";
 import { DashboardCharts } from "@/components/admin/DashboardCharts";
@@ -5,6 +7,9 @@ import { DashboardCharts } from "@/components/admin/DashboardCharts";
 export const dynamic = "force-dynamic";
 
 export default async function AdminDashboardPage() {
+  // The registration team has no dashboard access.
+  if (!(await requireRole("ADMIN", "SUPER_ADMIN"))) redirect("/admin/attendance");
+
   const analytics = await getAnalytics();
 
   return (

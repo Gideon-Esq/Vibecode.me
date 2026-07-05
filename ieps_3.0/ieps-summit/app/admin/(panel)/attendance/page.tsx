@@ -1,8 +1,14 @@
+import { requireAdmin, isPrivileged } from "@/lib/admin";
 import { AttendanceList } from "@/components/admin/AttendanceList";
 
 export const dynamic = "force-dynamic";
 
-export default function AdminAttendancePage() {
+export default async function AdminAttendancePage() {
+  const session = await requireAdmin();
+  // Only full admins get the bulk "Mark all present" action; the registration
+  // team marks attendees one by one to avoid accidental mass-marking.
+  const canMarkAll = session ? isPrivileged(session.user.role) : false;
+
   return (
     <div className="space-y-6">
       <div>
@@ -11,7 +17,7 @@ export default function AdminAttendancePage() {
           Mark confirmed attendees present on the day. Changes save instantly.
         </p>
       </div>
-      <AttendanceList />
+      <AttendanceList canMarkAll={canMarkAll} />
     </div>
   );
 }

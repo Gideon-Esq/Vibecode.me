@@ -16,7 +16,11 @@ export default async function AdminPanelLayout({
   return (
     <div className="min-h-[100svh] bg-offwhite">
       <Sidebar
-        user={{ name: session.user.name, email: session.user.email }}
+        user={{
+          name: session.user.name,
+          email: session.user.email,
+          role: session.user.role,
+        }}
       />
       <div className="lg:pl-64">
         <div className="mx-auto max-w-7xl p-5 lg:p-8">{children}</div>

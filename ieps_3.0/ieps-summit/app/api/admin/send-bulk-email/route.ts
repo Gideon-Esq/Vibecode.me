@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/db";
-import { requireAdmin, unauthorized } from "@/lib/admin";
+import { requireRole, forbidden } from "@/lib/admin";
 import { sendBulkEmail } from "@/lib/email";
 
 export const runtime = "nodejs";
@@ -17,7 +17,7 @@ const bodySchema = z.object({
 
 /** POST /api/admin/send-bulk-email — broadcast to all or filtered registrants. */
 export async function POST(request: Request) {
-  if (!(await requireAdmin())) return unauthorized();
+  if (!(await requireRole("ADMIN", "SUPER_ADMIN"))) return forbidden();
 
   let json: unknown;
   try {

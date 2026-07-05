@@ -4,7 +4,10 @@ import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/db";
 import {
   requireAdmin,
+  requireRole,
+  isPrivileged,
   unauthorized,
+  forbidden,
   serializeRegistration,
   registrationSelect,
 } from "@/lib/admin";
@@ -34,7 +37,8 @@ const patchSchema = z.object({
 
 /** PATCH /api/admin/registrations/[id] — update status / attendance. */
 export async function PATCH(request: Request, { params }: Ctx) {
-  if (!(await requireAdmin())) return unauthorized();
+  const session = await requireAdmin();
+  if (!session) return unauthorized();
 
   let body: unknown;
   try {
@@ -53,6 +57,11 @@ export async function PATCH(request: Request, { params }: Ctx) {
 
   if (Object.keys(parsed.data).length === 0) {
     return NextResponse.json({ error: "No fields to update" }, { status: 400 });
+  }
+
+  // The registration team may only mark attendance — never change status.
+  if (!isPrivileged(session.user.role) && parsed.data.status !== undefined) {
+    return forbidden();
   }
 
   try {
@@ -75,7 +84,7 @@ export async function PATCH(request: Request, { params }: Ctx) {
 
 /** DELETE /api/admin/registrations/[id] */
 export async function DELETE(_request: Request, { params }: Ctx) {
-  if (!(await requireAdmin())) return unauthorized();
+  if (!(await requireRole("ADMIN", "SUPER_ADMIN"))) return forbidden();
 
   try {
     await prisma.registration.delete({ where: { id: params.id } });

@@ -68,6 +68,7 @@ model AnalyticsEvent {
 enum Role {
   ADMIN
   SUPER_ADMIN
+  REGISTRATION // Registration team: attendance + read-only registrations only
 }
 
 enum AttendeeRole {

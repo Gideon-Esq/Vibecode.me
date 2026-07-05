@@ -1,8 +1,12 @@
+import { redirect } from "next/navigation";
+import { requireRole } from "@/lib/admin";
 import { CertificatesPanel } from "@/components/admin/CertificatesPanel";
 
 export const dynamic = "force-dynamic";
 
-export default function AdminCertificatesPage() {
+export default async function AdminCertificatesPage() {
+  if (!(await requireRole("ADMIN", "SUPER_ADMIN"))) redirect("/admin/attendance");
+
   return (
     <div className="space-y-6">
       <div>
