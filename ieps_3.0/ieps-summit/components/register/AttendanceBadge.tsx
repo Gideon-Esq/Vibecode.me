@@ -131,12 +131,20 @@ export function AttendanceBadge({ defaultName = "" }: { defaultName?: string }) 
   const [photoError, setPhotoError] = useState<string | null>(null);
   const [fontsReady, setFontsReady] = useState(false);
   const [logo, setLogo] = useState<HTMLImageElement | null>(null);
+  const [sponsorLogo, setSponsorLogo] = useState<HTMLImageElement | null>(null);
 
   // Load the official IEPS logo for the canvas header (same-origin asset).
   useEffect(() => {
     const img = new Image();
     img.onload = () => setLogo(img);
     img.src = "/logos/ieps.png";
+  }, []);
+
+  // Load the sponsor logo for the header's sponsor slot.
+  useEffect(() => {
+    const img = new Image();
+    img.onload = () => setSponsorLogo(img);
+    img.src = "/logos/sponsors/dynage.png";
   }, []);
 
   useEffect(() => {
@@ -213,21 +221,50 @@ export function AttendanceBadge({ defaultName = "" }: { defaultName?: string }) 
       ctx.fillText("3.0", 64 + wMark + 14, 108);
     }
 
-    // Sponsor slot — dashed placeholder until a sponsor logo is supplied
-    ctx.save();
-    ctx.setLineDash([9, 9]);
-    ctx.strokeStyle = "rgba(255,255,255,0.30)";
-    ctx.lineWidth = 2;
-    roundRect(ctx, 772, 58, 244, 86, 14);
-    ctx.stroke();
-    ctx.restore();
-    ctx.textAlign = "center";
-    setLetterSpacing(ctx, "4px");
-    ctx.font = `600 17px ${body}`;
-    ctx.fillStyle = "rgba(255,255,255,0.45)";
-    ctx.fillText("SPONSOR", 894, 96);
-    ctx.fillText("LOGO", 894, 122);
-    setLetterSpacing(ctx, "0px");
+    // Sponsor slot — real sponsor logo on a white plate (same treatment as
+    // the IEPS mark, since a sponsor's own colours may not read on navy),
+    // falling back to a dashed placeholder while the asset loads.
+    const slotX = 772, slotY = 58, slotW = 244, slotH = 86;
+    if (sponsorLogo) {
+      ctx.save();
+      ctx.shadowColor = "rgba(0,0,0,0.25)";
+      ctx.shadowBlur = 18;
+      ctx.shadowOffsetY = 6;
+      roundRect(ctx, slotX, slotY, slotW, slotH, 14);
+      ctx.fillStyle = "#ffffff";
+      ctx.fill();
+      ctx.restore();
+
+      // Fit the logo inside the plate (contain), centred, with padding.
+      const pad = 14;
+      const maxW = slotW - pad * 2;
+      const maxH = slotH - pad * 2;
+      const scale = Math.min(maxW / sponsorLogo.width, maxH / sponsorLogo.height);
+      const w = sponsorLogo.width * scale;
+      const h = sponsorLogo.height * scale;
+      ctx.drawImage(
+        sponsorLogo,
+        slotX + (slotW - w) / 2,
+        slotY + (slotH - h) / 2,
+        w,
+        h
+      );
+    } else {
+      ctx.save();
+      ctx.setLineDash([9, 9]);
+      ctx.strokeStyle = "rgba(255,255,255,0.30)";
+      ctx.lineWidth = 2;
+      roundRect(ctx, slotX, slotY, slotW, slotH, 14);
+      ctx.stroke();
+      ctx.restore();
+      ctx.textAlign = "center";
+      setLetterSpacing(ctx, "4px");
+      ctx.font = `600 17px ${body}`;
+      ctx.fillStyle = "rgba(255,255,255,0.45)";
+      ctx.fillText("SPONSOR", 894, 96);
+      ctx.fillText("LOGO", 894, 122);
+      setLetterSpacing(ctx, "0px");
+    }
 
     /* 3. Photo — gold ring with brand blobs */
     const cx = 300;
@@ -389,21 +426,37 @@ export function AttendanceBadge({ defaultName = "" }: { defaultName?: string }) 
     ctx.fillStyle = "rgba(255,255,255,0.4)";
     ctx.fillText("PARTNERS", 56, bandY + bandH / 2);
     setLetterSpacing(ctx, "0px");
-    ctx.save();
-    ctx.setLineDash([8, 8]);
-    ctx.strokeStyle = "rgba(255,255,255,0.22)";
-    ctx.lineWidth = 2;
     for (let i = 0; i < 4; i++) {
-      roundRect(ctx, 224 + i * 210, bandY + 20, 186, 52, 12);
-      ctx.stroke();
+      const slotX = 224 + i * 210, slotY = bandY + 20, slotW = 186, slotH = 52;
+      // First slot holds our one confirmed partner logo; the rest stay
+      // dashed placeholders until more partners are added.
+      if (i === 0 && sponsorLogo) {
+        roundRect(ctx, slotX, slotY, slotW, slotH, 12);
+        ctx.fillStyle = "#ffffff";
+        ctx.fill();
+        const pad = 8;
+        const maxW = slotW - pad * 2;
+        const maxH = slotH - pad * 2;
+        const scale = Math.min(maxW / sponsorLogo.width, maxH / sponsorLogo.height);
+        const w = sponsorLogo.width * scale;
+        const h = sponsorLogo.height * scale;
+        ctx.drawImage(sponsorLogo, slotX + (slotW - w) / 2, slotY + (slotH - h) / 2, w, h);
+      } else {
+        ctx.save();
+        ctx.setLineDash([8, 8]);
+        ctx.strokeStyle = "rgba(255,255,255,0.22)";
+        ctx.lineWidth = 2;
+        roundRect(ctx, slotX, slotY, slotW, slotH, 12);
+        ctx.stroke();
+        ctx.restore();
+      }
     }
-    ctx.restore();
     ctx.textBaseline = "alphabetic";
 
     /* 8. Gold base bar — brand anchor (no website text by design) */
     ctx.fillStyle = GOLD;
     ctx.fillRect(0, SIZE - 12, SIZE, 12);
-  }, [name, photo, logo]);
+  }, [name, photo, logo, sponsorLogo]);
 
   useEffect(() => {
     draw();

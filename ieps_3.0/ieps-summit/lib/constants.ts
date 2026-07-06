@@ -104,6 +104,14 @@ export const ORGANIZERS = [
   },
 ] as const;
 
+/** Sponsors supporting IEPS 3.0. Logos live in /public/logos/sponsors. */
+export const SPONSORS = [
+  {
+    name: "Dynage",
+    logo: "/logos/sponsors/dynage.png",
+  },
+] as const;
+
 /**
  * Keynote speaker slots — names and portraits are NOT yet confirmed.
  * These are deliberate placeholders; swap in real names/photos when announced.
