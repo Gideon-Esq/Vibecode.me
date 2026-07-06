@@ -330,3 +330,17 @@
     transform: translateY(-18px) rotate(6deg);
   }
 }
+
+/* ── Admin panel typography ──────────────────────────────────────────────
+   The admin panel uses Inter across the board (no serif Playfair display
+   face) and caps weights at semibold, so the whole UI reads in just three
+   weights: regular (400), medium (500) and semibold (600). Remapping the
+   --font-playfair variable makes every `font-display` element inside the
+   panel resolve to Inter with no per-component edits. These rules sit
+   OUTSIDE @layer so they win over Tailwind's font-weight utilities. */
+.admin-inter {
+  --font-playfair: var(--font-inter);
+}
+.admin-inter :is(.font-bold, .font-extrabold) {
+  font-weight: 600;
+}

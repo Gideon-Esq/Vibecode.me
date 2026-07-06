@@ -229,16 +229,17 @@ export function TeamAccounts({ currentUserId }: { currentUserId: string }) {
           <div className="py-16 text-center text-ink/50">No accounts yet.</div>
         ) : (
           <ul className="divide-y divide-navy/5">
-            {users.map((u) => {
+            {users.map((u, i) => {
               const isSelf = u.id === currentUserId;
               const isSuper = u.role === "SUPER_ADMIN";
               const canDelete = !isSelf && !isSuper;
               return (
                 <li
                   key={u.id}
-                  className="flex items-center justify-between gap-4 px-5 py-3.5 odd:bg-white even:bg-navy/[0.02]"
+                  className="flex items-center gap-4 px-5 py-3.5 odd:bg-white even:bg-navy/[0.02]"
                 >
-                  <div className="min-w-0">
+                  <span className="w-6 shrink-0 text-right text-xs text-ink/40">{i + 1}</span>
+                  <div className="min-w-0 flex-1">
                     <p className="flex items-center gap-2 truncate font-medium text-navy">
                       {u.name}
                       {isSelf && (

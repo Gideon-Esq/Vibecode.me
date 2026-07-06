@@ -1,4 +1,13 @@
-import { Users, BadgeCheck, Award, CalendarPlus, ArrowUp, ArrowDown, Minus } from "lucide-react";
+import {
+  Users,
+  BadgeCheck,
+  Award,
+  CalendarPlus,
+  GraduationCap,
+  ArrowUp,
+  ArrowDown,
+  Minus,
+} from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import type { Analytics } from "@/lib/analytics";
 
@@ -58,7 +67,7 @@ export function KpiCards({ kpis }: { kpis: Analytics["kpis"] }) {
   };
 
   return (
-    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-5">
       <Card
         icon={Users}
         label="Total Registrations"
@@ -87,6 +96,12 @@ export function KpiCards({ kpis }: { kpis: Analytics["kpis"] }) {
         value={kpis.todayRegistrations}
         accent="#C49B00"
         trend={todayTrend}
+      />
+      <Card
+        icon={GraduationCap}
+        label="Faculty of Education"
+        value={kpis.facultyOfEducation}
+        accent="#017E33"
       />
     </div>
   );

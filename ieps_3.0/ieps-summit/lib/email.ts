@@ -224,6 +224,125 @@ export function confirmationEmailText({ fullName }: ConfirmationData): string {
 }
 
 /* ────────────────────────────────────────────────────────────
+ * Attendance acknowledgment email
+ * ──────────────────────────────────────────────────────────── */
+
+export const ATTENDANCE_SUBJECT = "Thanks for Attending — IEPS 3.0";
+
+type AttendanceData = { fullName: string; email: string };
+
+export function attendanceEmailHtml({ fullName }: AttendanceData): string {
+  const navy = "#0D1B5E";
+  const gold = "#F5C400";
+  const green = "#017E33";
+  const firstName = fullName.split(" ")[0] || fullName;
+
+  return `<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="color-scheme" content="light only" />
+  <title>${ATTENDANCE_SUBJECT}</title>
+</head>
+<body style="margin:0;padding:0;background-color:#eef1f8;font-family:Arial,Helvetica,sans-serif;-webkit-font-smoothing:antialiased;">
+  <div style="display:none;max-height:0;overflow:hidden;opacity:0;">Your attendance at IEPS 3.0 has been recorded — thank you for joining us.</div>
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#eef1f8;padding:36px 12px;">
+    <tr>
+      <td align="center">
+        <table role="presentation" width="620" cellpadding="0" cellspacing="0" style="width:620px;max-width:100%;background-color:#ffffff;border-radius:20px;overflow:hidden;border:1px solid #e2e6f1;box-shadow:0 12px 36px rgba(13,27,94,0.10);">
+
+          <!-- Navy header with logo -->
+          <tr>
+            <td style="background-color:${navy};padding:36px 40px 30px;text-align:center;">
+              ${emailHeaderHtml(navy, gold)}
+            </td>
+          </tr>
+          <!-- gold hairline -->
+          <tr><td style="height:3px;background-color:${gold};font-size:0;line-height:0;">&nbsp;</td></tr>
+
+          <!-- Body -->
+          <tr>
+            <td style="padding:44px 44px 36px;">
+              <div style="text-align:center;">
+                <span style="display:inline-block;width:60px;height:60px;line-height:60px;border-radius:50%;background-color:${green};color:#ffffff;font-size:28px;box-shadow:0 0 0 8px rgba(1,126,51,0.10);">&#10003;</span>
+              </div>
+              <h1 style="margin:22px 0 6px;text-align:center;color:${navy};font-size:27px;letter-spacing:-0.3px;">Attendance Confirmed</h1>
+              <p style="margin:0 0 26px;text-align:center;color:#6b7280;font-size:14px;">Thanks for being here today, ${firstName}.</p>
+
+              <p style="color:#3a3a4e;font-size:15px;line-height:1.7;margin:0 0 10px;">
+                We've marked you as present at the <strong style="color:${navy};">Ife Education Parliamentary Summit 3.0</strong>.
+                It's great to have you with us for a day of dialogue, leadership and reform.
+              </p>
+
+              <p style="color:#3a3a4e;font-size:15px;line-height:1.7;margin:20px 0 0;">
+                Your certificate of participation will be sent to this email address once it's ready.
+              </p>
+              <p style="color:#1a1a2e;font-size:15px;line-height:1.7;margin:26px 0 0;">
+                Warm regards,<br/>
+                <strong style="color:${navy};">The IEPS 3.0 Organising Team</strong>
+              </p>
+            </td>
+          </tr>
+
+          ${emailFooterHtml(navy, gold)}
+
+        </table>
+        <p style="color:#9aa1b5;font-size:11px;margin:20px 0 0;">&copy; 2026 IEPS 3.0 — Education Students' Representative Council, OAU</p>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`;
+}
+
+export function attendanceEmailText({ fullName }: AttendanceData): string {
+  const firstName = fullName.split(" ")[0] || fullName;
+  return [
+    `Attendance Confirmed — IEPS 3.0`,
+    ``,
+    `Dear ${firstName},`,
+    ``,
+    `We've marked you as present at the Ife Education Parliamentary Summit 3.0. Thanks for joining us!`,
+    ``,
+    `Your certificate of participation will be sent to this email address once it's ready.`,
+    ``,
+    `— The IEPS 3.0 Organising Team`,
+    CONTACT.email,
+  ].join("\n");
+}
+
+/**
+ * Sends the attendance acknowledgment email. Never throws — a mail failure
+ * must not fail the attendance update. Returns a result the caller can log.
+ */
+export async function sendAttendanceEmail(
+  data: AttendanceData
+): Promise<SendResult> {
+  const tx = getTransporter();
+  if (!tx) {
+    return { sent: false, reason: "SMTP is not configured" };
+  }
+
+  try {
+    const info = await tx.sendMail({
+      from: FROM,
+      to: data.email,
+      subject: ATTENDANCE_SUBJECT,
+      html: attendanceEmailHtml(data),
+      text: attendanceEmailText(data),
+      attachments: logoAttachments(),
+    });
+    return { sent: true, id: info.messageId ?? null };
+  } catch (err) {
+    return {
+      sent: false,
+      reason: err instanceof Error ? err.message : "Unknown email error",
+    };
+  }
+}
+
+/* ────────────────────────────────────────────────────────────
  * Certificate delivery email
  * ──────────────────────────────────────────────────────────── */
 

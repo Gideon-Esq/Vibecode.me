@@ -29,6 +29,8 @@ export function AttendanceList({
   const [all, setAll] = useState<AdminRegistration[]>([]);
   const [loading, setLoading] = useState(true);
   const [q, setQ] = useState("");
+  // "" = all confirmed, "PRESENT" = attended, "ABSENT" = not yet marked.
+  const [attendanceFilter, setAttendanceFilter] = useState("");
   const [savingId, setSavingId] = useState<string | null>(null);
 
   const refresh = useCallback(async () => {
@@ -46,13 +48,19 @@ export function AttendanceList({
 
   const filtered = useMemo(() => {
     const term = q.trim().toLowerCase();
-    if (!term) return all;
-    return all.filter(
-      (r) =>
-        r.fullName.toLowerCase().includes(term) ||
-        r.email.toLowerCase().includes(term)
-    );
-  }, [all, q]);
+    return all.filter((r) => {
+      if (attendanceFilter === "PRESENT" && !r.attended) return false;
+      if (attendanceFilter === "ABSENT" && r.attended) return false;
+      if (
+        term &&
+        !r.fullName.toLowerCase().includes(term) &&
+        !r.email.toLowerCase().includes(term)
+      ) {
+        return false;
+      }
+      return true;
+    });
+  }, [all, q, attendanceFilter]);
 
   const presentCount = all.filter((r) => r.attended).length;
 
@@ -111,6 +119,16 @@ export function AttendanceList({
               className="w-full rounded-xl border border-navy/15 bg-white py-2.5 pl-9 pr-3 text-sm focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/30"
             />
           </div>
+          <select
+            aria-label="Attendance filter"
+            value={attendanceFilter}
+            onChange={(e) => setAttendanceFilter(e.target.value)}
+            className="shrink-0 rounded-xl border border-navy/15 bg-white px-3 py-2.5 text-sm text-navy focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/30"
+          >
+            <option value="">All confirmed</option>
+            <option value="PRESENT">Present</option>
+            <option value="ABSENT">Absent</option>
+          </select>
           {canMarkAll && (
             <button
               type="button"
@@ -131,16 +149,17 @@ export function AttendanceList({
           </div>
         ) : filtered.length === 0 ? (
           <div className="py-16 text-center text-ink/50">
-            No confirmed registrations{q ? " match your search" : ""}.
+            No confirmed registrations{q || attendanceFilter ? " match your filters" : ""}.
           </div>
         ) : (
           <ul className="divide-y divide-navy/5">
-            {filtered.map((r) => (
+            {filtered.map((r, i) => (
               <li
                 key={r.id}
-                className="flex items-center justify-between gap-4 px-4 py-3 transition-colors odd:bg-white even:bg-navy/[0.035] hover:bg-gold/10"
+                className="flex items-center gap-4 px-4 py-3 transition-colors odd:bg-white even:bg-navy/[0.035] hover:bg-gold/10"
               >
-                <div className="min-w-0">
+                <span className="w-7 shrink-0 text-right text-xs text-ink/40">{i + 1}</span>
+                <div className="min-w-0 flex-1">
                   <p className="truncate font-medium text-navy">{r.fullName}</p>
                   <p className="truncate text-xs text-ink/55">
                     {r.institution} · {r.phone}

@@ -73,7 +73,9 @@ export function RegistrationsTable({
 }) {
   const [q, setQ] = useState("");
   const [debouncedQ, setDebouncedQ] = useState("");
-  const [status, setStatus] = useState("");
+  // One combined dropdown: "" (all), "CONFIRMED" (a status), or "PRESENT" /
+  // "ABSENT" (an attendance flag) — mapped to the right query param below.
+  const [statusFilter, setStatusFilter] = useState("");
   const [role, setRole] = useState("");
   const [sortBy, setSortBy] = useState("createdAt");
   const [sortDir, setSortDir] = useState<"asc" | "desc">("desc");
@@ -116,7 +118,9 @@ export function RegistrationsTable({
       sortDir,
     });
     if (debouncedQ) params.set("q", debouncedQ);
-    if (status) params.set("status", status);
+    if (statusFilter === "PRESENT") params.set("attended", "true");
+    else if (statusFilter === "ABSENT") params.set("attended", "false");
+    else if (statusFilter) params.set("status", statusFilter);
     if (role) params.set("role", role);
 
     try {
@@ -125,7 +129,7 @@ export function RegistrationsTable({
     } finally {
       setLoading(false);
     }
-  }, [page, sortBy, sortDir, debouncedQ, status, role]);
+  }, [page, sortBy, sortDir, debouncedQ, statusFilter, role]);
 
   useEffect(() => {
     fetchData();
@@ -235,6 +239,16 @@ export function RegistrationsTable({
 
   const columns = useMemo(
     () => [
+      columnHelper.display({
+        id: "rowNumber",
+        header: "#",
+        // Continues across pages rather than resetting to 1 on each page.
+        cell: (c) => (
+          <span className="text-ink/40">
+            {(page - 1) * pageSize + c.row.index + 1}
+          </span>
+        ),
+      }),
       columnHelper.accessor("fullName", { header: "Name" }),
       columnHelper.accessor("email", { header: "Email" }),
       columnHelper.accessor("phone", { header: "Phone" }),
@@ -363,7 +377,7 @@ export function RegistrationsTable({
       }),
     ],
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [busyId, openMenu, canManage]
+    [busyId, openMenu, canManage, page, pageSize]
   );
 
   const table = useReactTable({
@@ -391,11 +405,11 @@ export function RegistrationsTable({
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
-          <FilterSelect value={status} onChange={(v) => { setStatus(v); setPage(1); }} label="Status">
+          <FilterSelect value={statusFilter} onChange={(v) => { setStatusFilter(v); setPage(1); }} label="Status">
             <option value="">All statuses</option>
-            <option value="PENDING">Pending</option>
             <option value="CONFIRMED">Confirmed</option>
-            <option value="CANCELLED">Cancelled</option>
+            <option value="PRESENT">Present</option>
+            <option value="ABSENT">Absent</option>
           </FilterSelect>
           <FilterSelect value={role} onChange={(v) => { setRole(v); setPage(1); }} label="Role">
             <option value="">All roles</option>
@@ -620,6 +634,7 @@ function DetailModal({
     ["Phone", reg.phone],
     ["Gender", reg.gender],
     ["Institution", reg.institution],
+    ["Faculty", reg.faculty ?? "—"],
     ["Department", reg.department],
     ["Level", reg.level],
     ["Role", roleLabel(reg.role)],

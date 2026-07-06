@@ -114,19 +114,7 @@ function drawLogoImage(
   }
 }
 
-/** Small gavel glyph for the header's right block — a T-shaped mallet + sound block. */
-function drawGavel(doc: PDFKit.PDFDocument, x: number, y: number) {
-  doc.save();
-  doc.translate(x, y).rotate(-35);
-  doc.roundedRect(-2.5, -4, 5, 27, 2).fill(INK); // handle
-  doc.roundedRect(-13, -17, 26, 14, 3).fill(GOLD); // mallet head
-  doc.restore();
-  doc.save();
-  doc.roundedRect(x - 15, y + 11, 30, 5, 2).fill(INK); // sound block
-  doc.restore();
-}
-
-/** Header row: convening body (left), event mark (centre), theme mark (right). */
+/** Header row: convening body (left), IEPS mark (right). */
 function drawHeader(doc: PDFKit.PDFDocument) {
   // Left — convening body: ESRC + OAU crests, set side by side (a small gap,
   // no overlap, so neither crest reads as clipped/disrupted).
@@ -146,56 +134,21 @@ function drawHeader(doc: PDFKit.PDFDocument) {
     .fillColor(MUTED)
     .text("Obafemi Awolowo University, Ile-Ife", lTextX, 68);
 
-  // Centre — official IEPS 3.0 logo (falls back to a drawn wordmark if the
-  // asset is ever missing, so generation never breaks).
-  const logoAbs = supportedImageFile("logos/ieps.png");
-  if (logoAbs) {
-    const logoW = 176;
-    const logoH = logoW * (81 / 416); // preserve the mark's aspect ratio
-    doc.image(logoAbs, W / 2 - logoW / 2, 36, { width: logoW, height: logoH });
-  } else {
-    doc.font("Times-Bold").fontSize(24).fillColor(INK);
-    const mark = "IEPS";
-    const markW = doc.widthOfString(mark);
-    doc.font("Helvetica-Bold").fontSize(12);
-    const editionW = doc.widthOfString(" 3.0") + 6;
-    const startX = W / 2 - (markW + editionW) / 2;
-    doc.font("Times-Bold").fontSize(24).fillColor(INK).text(mark, startX, 34);
-    doc.rect(startX + markW + 6, 42, editionW - 6, 16).fill(GOLD);
-    doc
-      .font("Helvetica-Bold")
-      .fontSize(11)
-      .fillColor(INK)
-      .text("3.0", startX + markW + 6, 45, { width: editionW - 6, align: "center" });
-    centered(doc, "IFE EDUCATION PARLIAMENTARY SUMMIT", 64, {
-      fontSize: 8.5,
-      color: MUTED,
-      characterSpacing: 1.2,
-    });
-  }
-  centered(doc, "THIRD EDITION", 74, {
-    fontSize: 8,
-    color: GOLD_DEEP,
-    characterSpacing: 2,
-  });
-
-  // Right — theme mark
+  // Right — IEPS 3.0 mark (falls back to a drawn wordmark if the asset is ever
+  // missing, so generation never breaks).
   const rx = W - 56;
-  drawGavel(doc, rx - 168, 54);
-  doc
-    .font("Helvetica-Bold")
-    .fontSize(13)
-    .fillColor(INK)
-    .text("PARLIAMENTARY", rx - 140, 38, { width: 140, align: "right" })
-    .text("REFORM", rx - 140, 53, { width: 140, align: "right" });
-  doc
-    .font("Helvetica-Oblique")
-    .fontSize(8)
-    .fillColor(MUTED)
-    .text("Nation Building & Educational Reform", rx - 190, 70, {
-      width: 190,
-      align: "right",
-    });
+  const rightLogoAbs = supportedImageFile("logos/ieps.png");
+  if (rightLogoAbs) {
+    const logoW = 140;
+    const logoH = logoW * (81 / 416); // preserve the mark's aspect ratio
+    doc.image(rightLogoAbs, rx - logoW, 40, { width: logoW, height: logoH });
+  } else {
+    doc
+      .font("Times-Bold")
+      .fontSize(18)
+      .fillColor(INK)
+      .text("IEPS 3.0", rx - 140, 48, { width: 140, align: "right" });
+  }
 }
 
 /** A short decorative scribble standing in for a hand signature (fallback). */
