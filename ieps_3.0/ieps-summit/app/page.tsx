@@ -5,6 +5,7 @@ import { SpeakersSection } from "@/components/home/SpeakersSection";
 import { ProgrammeHighlights } from "@/components/home/ProgrammeHighlights";
 import { EventDetailsSection } from "@/components/home/EventDetailsSection";
 import { OrganizersSection } from "@/components/home/OrganizersSection";
+import { SponsorsSection } from "@/components/home/SponsorsSection";
 import { CTASection } from "@/components/home/CTASection";
 import { EVENT, ORGANIZERS, SOCIALS, SITE_URL } from "@/lib/constants";
 
@@ -76,6 +77,7 @@ export default function HomePage() {
       <ProgrammeHighlights />
       <EventDetailsSection />
       <OrganizersSection />
+      <SponsorsSection />
       <CTASection />
     </>
   );
