@@ -1,6 +1,6 @@
 import { startOfDay, subDays, eachDayOfInterval, format } from "date-fns";
 import { prisma } from "@/lib/db";
-import { roleLabel, LEVELS } from "@/lib/registration";
+import { roleLabel, LEVELS, FACULTY_OF_EDUCATION } from "@/lib/registration";
 
 export type ChartDatum = { name: string; value: number };
 
@@ -12,6 +12,7 @@ export type Analytics = {
     certificatesIssued: number;
     todayRegistrations: number;
     yesterdayRegistrations: number;
+    facultyOfEducation: number;
   };
   registrationsOverTime: { date: string; count: number }[];
   roleBreakdown: ChartDatum[];
@@ -20,6 +21,7 @@ export type Analytics = {
   gender: ChartDatum[];
   heardAbout: ChartDatum[];
   levels: ChartDatum[];
+  educationDepartments: ChartDatum[];
 };
 
 type GroupRow = Record<string, unknown> & { _count: number };
@@ -52,6 +54,8 @@ export async function getAnalytics(now: Date = new Date()): Promise<Analytics> {
     byHeard,
     bySession,
     byLevel,
+    facultyOfEducation,
+    byEducationDept,
     recent,
   ] = await Promise.all([
     prisma.registration.count(),
@@ -68,6 +72,12 @@ export async function getAnalytics(now: Date = new Date()): Promise<Analytics> {
     prisma.registration.groupBy({ by: ["heardAboutUs"], _count: true }),
     prisma.sessionInterest.groupBy({ by: ["sessionName"], _count: true }),
     prisma.registration.groupBy({ by: ["level"], _count: true }),
+    prisma.registration.count({ where: { faculty: FACULTY_OF_EDUCATION } }),
+    prisma.registration.groupBy({
+      by: ["department"],
+      where: { faculty: FACULTY_OF_EDUCATION },
+      _count: true,
+    }),
     prisma.registration.findMany({
       where: { createdAt: { gte: windowStart } },
       select: { createdAt: true },
@@ -95,6 +105,7 @@ export async function getAnalytics(now: Date = new Date()): Promise<Analytics> {
       certificatesIssued,
       todayRegistrations,
       yesterdayRegistrations,
+      facultyOfEducation,
     },
     registrationsOverTime,
     roleBreakdown: tally(byRole as unknown as GroupRow[], "role").map((d) => ({
@@ -111,5 +122,6 @@ export async function getAnalytics(now: Date = new Date()): Promise<Analytics> {
       const ib = LEVELS.indexOf(b.name as (typeof LEVELS)[number]);
       return (ia === -1 ? LEVELS.length : ia) - (ib === -1 ? LEVELS.length : ib);
     }),
+    educationDepartments: tally(byEducationDept as unknown as GroupRow[], "department"),
   };
 }

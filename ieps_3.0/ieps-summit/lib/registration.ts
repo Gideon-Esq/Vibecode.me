@@ -5,7 +5,7 @@ import { PROGRAMME } from "@/lib/constants";
  * Option lists (shared by the form UI and server validation)
  * ──────────────────────────────────────────────────────────── */
 
-export const GENDERS = ["Male", "Female", "Prefer not to say"] as const;
+export const GENDERS = ["Male", "Female"] as const;
 
 /** Common Nigerian institutions (host first). "Other" reveals a free-text field. */
 export const INSTITUTIONS = [
@@ -40,6 +40,23 @@ export const INSTITUTIONS = [
 ] as const;
 
 export const INSTITUTION_OTHER = "Other";
+
+/** Faculty choice on the registration form. "Other" reveals a free-text department field. */
+export const FACULTIES = ["Faculty of Education", "Other"] as const;
+
+export const FACULTY_OF_EDUCATION = FACULTIES[0];
+
+/** Departments under the Faculty of Education — shown as a dropdown when it's selected. */
+export const EDUCATION_DEPARTMENTS = [
+  "Department of Adult Education and Lifelong Learning",
+  "Department of Educational Management",
+  "Department of Educational Foundations and Counselling",
+  "Department of Educational Technology and Library Studies",
+  "Department of Kinesiology, Health Education and Recreation",
+  "Department of Arts and Social Science Education",
+  "Department of Science and Technology Education",
+  "Institute of Education",
+] as const;
 
 export const LEVELS = [
   "100L",
@@ -84,8 +101,7 @@ export const SESSIONS = PROGRAMME.map((p) => p.title) as [string, ...string[]];
 
 const NIGERIAN_PHONE = /^0\d{10}$/; // 11 digits, leading 0 (e.g. 08126540417)
 
-/** Server-side schema — exactly the data persisted to the Registration table. */
-export const registrationSchema = z.object({
+const registrationObjectSchema = z.object({
   fullName: z
     .string()
     .trim()
@@ -106,6 +122,7 @@ export const registrationSchema = z.object({
     .trim()
     .min(2, "Please enter your institution")
     .max(160, "Institution name is too long"),
+  faculty: z.enum(FACULTIES, { message: "Please select an option" }),
   department: z
     .string()
     .trim()
@@ -120,12 +137,36 @@ export const registrationSchema = z.object({
   }),
 });
 
+/** Faculty of Education attendees must pick from the known department list. */
+function refineFacultyDepartment(
+  data: { faculty: string; department: string },
+  ctx: z.RefinementCtx
+) {
+  if (
+    data.faculty === FACULTY_OF_EDUCATION &&
+    !(EDUCATION_DEPARTMENTS as readonly string[]).includes(data.department)
+  ) {
+    ctx.addIssue({
+      code: "custom",
+      path: ["department"],
+      message: "Please select your department",
+    });
+  }
+}
+
+/** Server-side schema — exactly the data persisted to the Registration table. */
+export const registrationSchema = registrationObjectSchema.superRefine(
+  refineFacultyDepartment
+);
+
 /** Client form schema — adds the final confirmation checkbox. */
-export const registrationFormSchema = registrationSchema.extend({
-  confirmAttendance: z.literal(true, {
-    message: "Please confirm your details to complete registration",
-  }),
-});
+export const registrationFormSchema = registrationObjectSchema
+  .extend({
+    confirmAttendance: z.literal(true, {
+      message: "Please confirm your details to complete registration",
+    }),
+  })
+  .superRefine(refineFacultyDepartment);
 
 export type RegistrationInput = z.infer<typeof registrationSchema>;
 export type RegistrationFormValues = z.infer<typeof registrationFormSchema>;
@@ -137,6 +178,7 @@ export const registrationDefaults: RegistrationFormValues = {
   phone: "",
   gender: "" as RegistrationFormValues["gender"],
   institution: "",
+  faculty: "" as RegistrationFormValues["faculty"],
   department: "",
   level: "" as RegistrationFormValues["level"],
   sessionInterest: [],

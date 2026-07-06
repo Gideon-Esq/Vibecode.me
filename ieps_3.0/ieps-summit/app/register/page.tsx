@@ -29,6 +29,9 @@ import {
   SESSIONS,
   INSTITUTIONS,
   INSTITUTION_OTHER,
+  FACULTIES,
+  FACULTY_OF_EDUCATION,
+  EDUCATION_DEPARTMENTS,
 } from "@/lib/registration";
 
 const STEPS = [
@@ -40,7 +43,7 @@ const STEPS = [
 
 const STEP_FIELDS: (keyof RegistrationFormValues)[][] = [
   ["fullName", "email", "phone", "gender"],
-  ["institution", "department", "level"],
+  ["institution", "faculty", "department", "level"],
   ["sessionInterest", "heardAboutUs"],
   ["confirmAttendance"],
 ];
@@ -392,19 +395,65 @@ export default function RegisterPage() {
                       )}
                     </Field>
 
+                    <Field label="Faculty" htmlFor="faculty" required error={errors.faculty}>
+                      <select
+                        id="faculty"
+                        className={fieldClass(!!errors.faculty)}
+                        defaultValue=""
+                        {...register("faculty", {
+                          onChange: () =>
+                            // The department value belongs to whichever faculty
+                            // was previously selected — clear it so the user
+                            // re-enters it in the newly-shown field.
+                            setValue("department", "", { shouldValidate: false }),
+                        })}
+                      >
+                        <option value="" disabled>
+                          Select…
+                        </option>
+                        {FACULTIES.map((f) => (
+                          <option key={f} value={f}>
+                            {f === "Other" ? "Other (not Education)" : f}
+                          </option>
+                        ))}
+                      </select>
+                    </Field>
+
                     <Field
-                      label="Department / Faculty"
+                      label={
+                        values.faculty === FACULTY_OF_EDUCATION
+                          ? "Department"
+                          : "Department / Faculty"
+                      }
                       htmlFor="department"
                       required
                       error={errors.department}
                     >
-                      <input
-                        id="department"
-                        type="text"
-                        className={fieldClass(!!errors.department)}
-                        placeholder="e.g. Educational Management"
-                        {...register("department")}
-                      />
+                      {values.faculty === FACULTY_OF_EDUCATION ? (
+                        <select
+                          id="department"
+                          className={fieldClass(!!errors.department)}
+                          defaultValue=""
+                          {...register("department")}
+                        >
+                          <option value="" disabled>
+                            Select…
+                          </option>
+                          {EDUCATION_DEPARTMENTS.map((d) => (
+                            <option key={d} value={d}>
+                              {d}
+                            </option>
+                          ))}
+                        </select>
+                      ) : (
+                        <input
+                          id="department"
+                          type="text"
+                          className={fieldClass(!!errors.department)}
+                          placeholder="e.g. Educational Management"
+                          {...register("department")}
+                        />
+                      )}
                     </Field>
 
                     <Field label="Level of study" htmlFor="level" required error={errors.level}>
@@ -495,6 +544,7 @@ export default function RegisterPage() {
                       <SummaryRow label="Phone" value={values.phone} />
                       <SummaryRow label="Gender" value={values.gender} />
                       <SummaryRow label="Institution" value={values.institution} />
+                      <SummaryRow label="Faculty" value={values.faculty} />
                       <SummaryRow label="Department" value={values.department} />
                       <SummaryRow label="Level" value={values.level} />
                       <SummaryRow

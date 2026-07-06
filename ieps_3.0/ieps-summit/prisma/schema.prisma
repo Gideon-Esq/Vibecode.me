@@ -27,11 +27,12 @@ model Registration {
   email           String             @unique
   phone           String
   institution     String
+  faculty         String? // "Faculty of Education" when department is chosen from the education list; null otherwise
   department      String
   level           String // 100L, 200L, etc.
   role            AttendeeRole       @default(STUDENT)
   sessionInterest SessionInterest[]
-  gender          String
+  gender          Gender
   heardAboutUs    String
   status          RegistrationStatus @default(CONFIRMED)
   attended        Boolean            @default(false)
@@ -83,4 +84,9 @@ enum RegistrationStatus {
   PENDING
   CONFIRMED
   CANCELLED
+}
+
+enum Gender {
+  Male
+  Female
 }

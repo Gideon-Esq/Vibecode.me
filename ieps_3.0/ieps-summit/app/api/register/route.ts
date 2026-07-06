@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { Prisma, AttendeeRole, RegistrationStatus } from "@prisma/client";
 import { prisma } from "@/lib/db";
-import { registrationSchema } from "@/lib/registration";
+import { registrationSchema, FACULTY_OF_EDUCATION } from "@/lib/registration";
 import { sendConfirmationEmail } from "@/lib/email";
 import { rateLimit, clientIp, tooManyRequests } from "@/lib/rate-limit";
 
@@ -34,6 +34,9 @@ export async function POST(request: Request) {
 
   const data = parsed.data;
   const { sessionInterest, ...rest } = data;
+  // Only Faculty of Education is tracked as a distinct faculty; everyone else
+  // just typed their own department/faculty into the free-text field.
+  const faculty = data.faculty === FACULTY_OF_EDUCATION ? FACULTY_OF_EDUCATION : null;
 
   // 2. Duplicate check
   const existing = await prisma.registration.findUnique({
@@ -56,6 +59,7 @@ export async function POST(request: Request) {
     registration = await prisma.registration.create({
       data: {
         ...rest,
+        faculty,
         // Self-registration is always a Student; admins assign other roles.
         role: AttendeeRole.STUDENT,
         // Registrations are confirmed immediately — no pending review step.

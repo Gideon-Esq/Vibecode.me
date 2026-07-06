@@ -11,6 +11,7 @@ import {
   serializeRegistration,
   registrationSelect,
 } from "@/lib/admin";
+import { sendAttendanceEmail } from "@/lib/email";
 
 export const runtime = "nodejs";
 
@@ -65,11 +66,36 @@ export async function PATCH(request: Request, { params }: Ctx) {
   }
 
   try {
+    // Fetch the prior attendance state so a repeat "mark attended" (e.g. a
+    // bulk "mark page attended" pass) doesn't re-send the acknowledgment.
+    const wasAttended =
+      parsed.data.attended === true
+        ? (
+            await prisma.registration.findUnique({
+              where: { id: params.id },
+              select: { attended: true },
+            })
+          )?.attended ?? false
+        : true;
+
     const updated = await prisma.registration.update({
       where: { id: params.id },
       data: parsed.data,
       select: registrationSelect,
     });
+
+    if (parsed.data.attended === true && !wasAttended) {
+      const emailResult = await sendAttendanceEmail({
+        fullName: updated.fullName,
+        email: updated.email,
+      });
+      if (!emailResult.sent) {
+        console.warn(
+          `[admin/registrations] attendance email not sent (${emailResult.reason}) for ${updated.email}`
+        );
+      }
+    }
+
     return NextResponse.json(serializeRegistration(updated));
   } catch (err) {
     if (

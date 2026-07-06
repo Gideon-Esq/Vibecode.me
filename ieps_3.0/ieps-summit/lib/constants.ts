@@ -36,7 +36,7 @@ export const EVENT = {
 export const CONTACT = {
   name: "Abdulkareem Tijani Remilekun",
   role: "Speaker, ESRC OAU",
-  email: "tijaniremilekun9@gmail.com",
+  email: "ayooluwaoloyede71@gmail.com",
   phone: "08126540417",
   phoneIntl: "+2348126540417",
 } as const;

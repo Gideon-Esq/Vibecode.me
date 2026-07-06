@@ -85,6 +85,13 @@ function isEmpty(data: ChartDatum[]) {
   return data.length === 0 || data.every((d) => d.value === 0);
 }
 
+/** Trims a Faculty of Education label for legends: drops the leading
+ *  "Department of " and clips overly-long names. */
+function shortenDept(name: string) {
+  const s = name.replace(/^Department of /, "");
+  return s.length > 26 ? `${s.slice(0, 26)}…` : s;
+}
+
 export function DashboardCharts({ data }: { data: Analytics }) {
   const lineEmpty = data.registrationsOverTime.every((d) => d.count === 0);
 
@@ -240,6 +247,40 @@ export function DashboardCharts({ data }: { data: Analytics }) {
               ))}
             </Bar>
           </BarChart>
+        </ResponsiveContainer>
+      </ChartCard>
+
+      {/* Faculty of Education — departments, donut */}
+      <ChartCard
+        title="Faculty of Education — Departments"
+        subtitle="Registrants by department"
+        empty={isEmpty(data.educationDepartments)}
+      >
+        <ResponsiveContainer width="100%" height="100%">
+          <PieChart>
+            <Pie
+              data={data.educationDepartments}
+              dataKey="value"
+              nameKey="name"
+              innerRadius={45}
+              outerRadius={85}
+              paddingAngle={2}
+            >
+              {data.educationDepartments.map((_, i) => (
+                <Cell key={i} fill={PALETTE[(i + 4) % PALETTE.length]} />
+              ))}
+            </Pie>
+            <Tooltip contentStyle={tooltipStyle} />
+            <Legend
+              iconType="circle"
+              wrapperStyle={{ fontSize: 11 }}
+              formatter={(value: string) =>
+                // Drop the "Department of " prefix and clip so the legend
+                // stays legible with 8 long department names.
+                shortenDept(value)
+              }
+            />
+          </PieChart>
         </ResponsiveContainer>
       </ChartCard>
 

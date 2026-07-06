@@ -109,12 +109,13 @@ export function CertificatesPanel() {
           </div>
         ) : (
           <ul className="divide-y divide-navy/5">
-            {rows.map((r) => (
+            {rows.map((r, i) => (
               <li
                 key={r.id}
-                className="flex items-center justify-between gap-4 px-4 py-3 transition-colors odd:bg-white even:bg-navy/[0.035] hover:bg-gold/10"
+                className="flex items-center gap-4 px-4 py-3 transition-colors odd:bg-white even:bg-navy/[0.035] hover:bg-gold/10"
               >
-                <div className="min-w-0">
+                <span className="w-7 shrink-0 text-right text-xs text-ink/40">{i + 1}</span>
+                <div className="min-w-0 flex-1">
                   <p className="truncate font-medium text-navy">{r.fullName}</p>
                   <p className="truncate text-xs text-ink/55">{r.email}</p>
                 </div>

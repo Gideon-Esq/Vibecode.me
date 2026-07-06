@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import type { Session } from "next-auth";
 import type { Role } from "@prisma/client";
 import { auth } from "@/lib/auth";
+import { prisma } from "@/lib/db";
 
 /**
  * Roles with full admin powers (certificates, email, exports, deletes, config).
@@ -10,19 +11,38 @@ import { auth } from "@/lib/auth";
  */
 export const PRIVILEGED_ROLES = ["ADMIN", "SUPER_ADMIN"] as const satisfies Role[];
 
-/** Returns the session if the caller is an authenticated admin, else null. */
+/**
+ * Re-validates a decoded JWT session against the database. Sessions are
+ * stateless JWTs, so a token stays cryptographically valid even after its
+ * account is deleted or its role changed. This confirms the account still
+ * exists and refreshes the role from the DB, so a deleted admin loses access
+ * on their very next request instead of when the token eventually expires.
+ * Returns null when the session is missing or the account no longer exists.
+ */
+async function withFreshUser(session: Session | null): Promise<Session | null> {
+  if (!session?.user?.id) return null;
+  const user = await prisma.user.findUnique({
+    where: { id: session.user.id },
+    select: { role: true },
+  });
+  if (!user) return null; // account was deleted — token is no longer valid
+  // Reflect the current role so a demotion/promotion takes effect immediately.
+  session.user.role = user.role;
+  return session;
+}
+
+/** Returns the session if the caller is an authenticated, still-existing admin. */
 export async function requireAdmin(): Promise<Session | null> {
-  const session = await auth();
-  return session?.user ? session : null;
+  return withFreshUser(await auth());
 }
 
 /**
- * Returns the session only if the caller is authenticated AND holds one of the
- * given roles; otherwise null. Route handlers should pair this with
- * `unauthorized()` (no session) or `forbidden()` (wrong role).
+ * Returns the session only if the caller is authenticated, still exists, AND
+ * holds one of the given roles; otherwise null. Route handlers should pair this
+ * with `unauthorized()` (no session) or `forbidden()` (wrong role).
  */
 export async function requireRole(...roles: Role[]): Promise<Session | null> {
-  const session = await auth();
+  const session = await withFreshUser(await auth());
   if (!session?.user) return null;
   if (roles.length && !roles.includes(session.user.role)) return null;
   return session;
@@ -48,6 +68,7 @@ export type AdminRegistration = {
   email: string;
   phone: string;
   institution: string;
+  faculty: string | null;
   department: string;
   level: string;
   role: string;
@@ -67,6 +88,7 @@ type RawRegistration = {
   email: string;
   phone: string;
   institution: string;
+  faculty: string | null;
   department: string;
   level: string;
   role: string;
@@ -96,6 +118,7 @@ export const registrationSelect = {
   email: true,
   phone: true,
   institution: true,
+  faculty: true,
   department: true,
   level: true,
   role: true,
