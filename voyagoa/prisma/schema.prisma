@@ -1,0 +1,81 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ---------------------------------------------------------------------------
+// Users & sessions
+// ---------------------------------------------------------------------------
+
+model User {
+  id              String   @id @default(cuid())
+  email           String   @unique
+  name            String
+  passwordHash    String
+  homeCity        String?
+  passportCountry String?
+  // JSON: { interests: string[], dietary: string[], pace: "relaxed"|"balanced"|"packed" }
+  preferences     String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  sessions Session[]
+  trips    Trip[]
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  userId    String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+// ---------------------------------------------------------------------------
+// Trips
+// ---------------------------------------------------------------------------
+
+model Trip {
+  id     String @id @default(cuid())
+  userId String
+
+  // What the user asked for, verbatim
+  request String
+
+  // Status: intake -> planning -> ready | failed
+  status String @default("intake")
+
+  title              String  @default("New trip")
+  originCity         String?
+  destinationCity    String?
+  destinationCountry String?
+  startDate          String? // ISO date (yyyy-mm-dd)
+  endDate            String?
+  days               Int?
+  travelers          Int     @default(1)
+  currency           String  @default("USD")
+  totalBudget        Float?
+  passportCountry    String?
+
+  // JSON blobs produced by the planner (see src/lib/ai/schemas.ts)
+  intake     String? // parsed intake + follow-up questions
+  plan       String? // full TripPlan JSON
+  selections String? // { flightId, hotelId, removedActivityIds: [], removedRestaurantIds: [] }
+
+  shareToken String? @unique
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
