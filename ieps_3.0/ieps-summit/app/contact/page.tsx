@@ -8,7 +8,7 @@ import { EVENT, CONTACT, SOCIALS } from "@/lib/constants";
 export const metadata: Metadata = {
   title: "Contact",
   description:
-    "Get in touch with the IEPS 3.0 organising team — questions, partnerships and press enquiries.",
+    "Get in touch with the IEPS 3.0 organising team for questions, partnerships and press enquiries.",
 };
 
 export default function ContactPage() {

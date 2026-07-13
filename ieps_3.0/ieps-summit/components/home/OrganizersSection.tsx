@@ -12,16 +12,14 @@ export function OrganizersSection() {
       <div className="absolute inset-0 bg-stripes-light opacity-70" aria-hidden />
       <div className="container-section relative">
         <Reveal className="mx-auto max-w-2xl text-center">
-          <p className="eyebrow">In Collaboration</p>
+          <p className="eyebrow">Organiser</p>
           <h2 className="heading-display mt-4 text-3xl text-navy sm:text-4xl lg:text-[2.75rem]">
             Organisers &amp; Partners
           </h2>
           <div className="mx-auto mt-5 h-0.5 w-12 bg-gold" aria-hidden />
           <p className="mt-6 text-pretty leading-relaxed text-ink/75">
-            IEPS 3.0 is convened by the Education Students&apos; Representative
-            Council (ESRC), OAU, in collaboration with the Education
-            Students&apos; Association of Nigeria (ESAN), and hosted at Obafemi
-            Awolowo University.
+            IEPS 3.0 is organised by the Education Students&apos; Representative
+            Council (ESRC), OAU, and hosted at Obafemi Awolowo University.
           </p>
         </Reveal>
 

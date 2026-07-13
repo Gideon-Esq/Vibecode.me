@@ -7,78 +7,6 @@ import { EVENT } from "@/lib/constants";
 import { PREVIOUS_EDITIONS, type GalleryPhoto } from "@/lib/gallery";
 import { Lightbox } from "@/components/gallery/Lightbox";
 
-/**
- * CSS/SVG illustration of a parliament chamber for the empty state.
- * A clean elevation: gold-crowned dome over a colonnade, with tiered
- * benches below — every element in its own band so nothing overlaps.
- */
-function ParliamentArt() {
-  const NAVY = "#0D1B5E";
-  const NAVY_LIGHT = "#1A2D8A";
-  const GOLD = "#F5C400";
-  const GREEN = "#017E33";
-  return (
-    <svg
-      viewBox="0 0 400 250"
-      className="mx-auto h-auto w-full max-w-md"
-      role="img"
-      aria-label="Illustration of a parliament building"
-    >
-      {/* finial — gold orb on a stem reaching the dome apex */}
-      <circle cx="200" cy="26" r="9" fill={GOLD} />
-      <rect x="197.5" y="34" width="5" height="38" rx="2.5" fill={GOLD} />
-
-      {/* dome — navy with a gold outline, sitting on its own drum */}
-      <path d="M112 108 Q200 30 288 108 Z" fill={NAVY} />
-      <path
-        d="M112 108 Q200 30 288 108"
-        fill="none"
-        stroke={GOLD}
-        strokeWidth="2.5"
-        strokeLinecap="round"
-      />
-      {/* drum beneath the dome */}
-      <rect x="104" y="108" width="192" height="10" rx="5" fill={NAVY_LIGHT} />
-
-      {/* pediment band */}
-      <rect x="70" y="126" width="260" height="12" rx="6" fill={NAVY} />
-
-      {/* colonnade — evenly spaced columns */}
-      {Array.from({ length: 7 }).map((_, i) => (
-        <rect
-          key={i}
-          x={92 + i * 34}
-          y="144"
-          width="10"
-          height="46"
-          rx="5"
-          fill={NAVY_LIGHT}
-        />
-      ))}
-      {/* green entrance door at the centre */}
-      <rect x="188" y="158" width="24" height="32" rx="4" fill={GREEN} />
-
-      {/* steps */}
-      <rect x="76" y="196" width="248" height="9" rx="4.5" fill={NAVY_LIGHT} />
-      <rect x="58" y="209" width="284" height="9" rx="4.5" fill={NAVY} />
-
-      {/* forecourt dots — delegates gathering, alternating brand colours */}
-      {Array.from({ length: 9 }).map((_, i) => (
-        <circle
-          key={i}
-          cx={68 + i * 33}
-          cy="230"
-          r="3.5"
-          fill={i % 3 === 0 ? GOLD : i % 3 === 1 ? NAVY_LIGHT : GREEN}
-        />
-      ))}
-
-      {/* ground line */}
-      <rect x="24" y="242" width="352" height="5" rx="2.5" fill={NAVY} />
-    </svg>
-  );
-}
-
 /** A single photo tile — optimized image with a hover zoom + caption reveal. */
 function PhotoTile({
   photo,
@@ -177,7 +105,13 @@ export function GalleryTabs() {
       <div className="mt-10">
         {tab === "current" ? (
           <div className="mx-auto max-w-2xl rounded-3xl border border-navy/10 bg-white p-8 text-center shadow-card sm:p-12">
-            <ParliamentArt />
+            <Image
+              src="/signatures/assets/image.png"
+              alt="Gallery coming soon"
+              width={480}
+              height={320}
+              className="mx-auto h-auto w-full max-w-md"
+            />
             <div className="mt-6 inline-flex items-center gap-2 rounded-full bg-green/10 px-4 py-1.5 font-label text-xs font-semibold uppercase tracking-wide text-green-600">
               <CalendarClock className="h-4 w-4" />
               Coming soon

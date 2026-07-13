@@ -59,11 +59,11 @@ export function Navbar() {
         <Link
           href="/"
           className="flex items-center"
-          aria-label="IEPS 3.0 — home"
+          aria-label="IEPS 3.0 home"
         >
           <Image
             src="/logos/ieps.png"
-            alt="IEPS 3.0 — Ife Education Parliamentary Summit"
+            alt="IEPS 3.0 | Ife Education Parliamentary Summit"
             width={416}
             height={81}
             priority

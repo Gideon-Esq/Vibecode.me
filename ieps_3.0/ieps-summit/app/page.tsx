@@ -4,7 +4,6 @@ import { ThemeSection } from "@/components/home/ThemeSection";
 import { SpeakersSection } from "@/components/home/SpeakersSection";
 import { ProgrammeHighlights } from "@/components/home/ProgrammeHighlights";
 import { EventDetailsSection } from "@/components/home/EventDetailsSection";
-import { OrganizersSection } from "@/components/home/OrganizersSection";
 import { SponsorsSection } from "@/components/home/SponsorsSection";
 import { CTASection } from "@/components/home/CTASection";
 import { EVENT, ORGANIZERS, SOCIALS, SITE_URL } from "@/lib/constants";
@@ -18,7 +17,7 @@ const eventJsonLd = {
   "@type": "EducationEvent",
   name: EVENT.name,
   description: `${EVENT.theme}. ${EVENT.tagline}`,
-  startDate: "2026-07-22T09:00:00+01:00",
+  startDate: "2026-07-22T10:00:00+01:00",
   endDate: "2026-07-22T18:00:00+01:00",
   eventStatus: "https://schema.org/EventScheduled",
   eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
@@ -76,7 +75,6 @@ export default function HomePage() {
       <SpeakersSection />
       <ProgrammeHighlights />
       <EventDetailsSection />
-      <OrganizersSection />
       <SponsorsSection />
       <CTASection />
     </>

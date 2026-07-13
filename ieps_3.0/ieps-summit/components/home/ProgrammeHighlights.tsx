@@ -22,9 +22,9 @@ export function ProgrammeHighlights() {
               Seven Sessions. One Sitting Day.
             </h2>
             <p className="mt-5 max-w-prose text-pretty leading-relaxed text-ink/75">
-              A full day of keynote insight, live parliamentary simulation,
-              hands-on workshops and recognition — designed to inform, challenge
-              and inspire.
+              Keynotes, a live parliamentary simulation, hands-on workshops and
+              recognition, all in one sitting day. This isn&apos;t another
+              conference; it&apos;s where ideas become policy.
             </p>
           </div>
           <Button href="/programme" variant="ghost" className="shrink-0">

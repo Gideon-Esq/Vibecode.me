@@ -33,7 +33,7 @@ export default function Error({
           Something went wrong
         </h1>
         <p className="mx-auto mt-4 max-w-md text-pretty text-white/70">
-          An unexpected error occurred on our end. Please try again — if it keeps
+          An unexpected error occurred on our end. Please try again. If it keeps
           happening, contact the organising team.
         </p>
         {error.digest && (

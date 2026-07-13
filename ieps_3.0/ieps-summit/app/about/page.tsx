@@ -26,7 +26,7 @@ import {
 export const metadata: Metadata = {
   title: "About",
   description:
-    "About the Ife Education Parliamentary Summit 3.0 — its mission, theme, objectives and the bodies behind it.",
+    "About the Ife Education Parliamentary Summit 3.0: its mission, theme, objectives and the bodies behind it.",
 };
 
 const OBJECTIVE_ICONS: Record<string, LucideIcon> = {
@@ -72,8 +72,7 @@ export default function AboutPage() {
               <p>
                 The Ife Education Parliamentary Summit (IEPS) is the flagship
                 advocacy event of the Education Students&apos; Representative
-                Council (ESRC), Obafemi Awolowo University, in collaboration with
-                the Education Students&apos; Association of Nigeria (ESAN).
+                Council (ESRC), Obafemi Awolowo University.
               </p>
               <p>
                 Now in its <strong>third edition</strong>, IEPS has grown into a

@@ -1,5 +1,5 @@
 import { CalendarDays, Clock, MapPin, Users2, ArrowRight } from "lucide-react";
-import { EVENT, ORGANIZERS } from "@/lib/constants";
+import { EVENT } from "@/lib/constants";
 import { Reveal } from "@/components/ui/Reveal";
 import { Button } from "@/components/ui/Button";
 
@@ -22,7 +22,7 @@ const DETAILS = [
   {
     icon: Users2,
     label: "Organised by",
-    value: "ESRC, OAU & ESAN",
+    value: "ESRC, OAU",
   },
 ];
 
@@ -138,7 +138,7 @@ export function EventDetailsSection() {
           </Button>
 
           <p className="mt-6 text-sm text-ink/55">
-            Organised by {ORGANIZERS.map((o) => o.abbr).join(" · ")}
+            Organised by Education Students&apos; Representative Council, OAU
           </p>
         </Reveal>
 

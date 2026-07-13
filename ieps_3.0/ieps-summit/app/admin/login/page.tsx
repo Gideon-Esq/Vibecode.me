@@ -62,7 +62,7 @@ function LoginForm() {
         <span className="inline-flex rounded-xl bg-white px-4 py-3 shadow-sm">
           <Image
             src="/logos/ieps.png"
-            alt="IEPS 3.0 — Ife Education Parliamentary Summit"
+            alt="IEPS 3.0 | Ife Education Parliamentary Summit"
             width={416}
             height={81}
             priority

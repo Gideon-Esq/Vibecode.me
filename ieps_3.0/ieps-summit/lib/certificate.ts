@@ -324,7 +324,7 @@ export function generateCertificate(
         layout: "landscape",
         margin: 0,
         info: {
-          Title: `IEPS 3.0 Certificate — ${name}`,
+          Title: `IEPS 3.0 Certificate: ${name}`,
           Author: "Education Students' Representative Council, OAU",
           Subject: "Certificate of Participation",
         },

@@ -13,19 +13,19 @@ export const EVENT = {
   fullName: "IFE EDUCATION PARLIAMENTARY SUMMIT",
   edition: "3.0",
   theme:
-    "Nigerian Parliamentarians: A Strategic Panacea for Nation Building and Educational Reform",
-  themeLeadIn: "Nigerian Parliamentarians:",
+    "Nigerian Parliamentarian: A Strategic Panacea for Nation-Building and Education Reforms",
+  themeLeadIn: "Nigerian Parliamentarian:",
   themeHighlight:
-    "A Strategic Panacea for Nation Building and Educational Reform",
+    "A Strategic Panacea for Nation-Building and Education Reforms",
   tagline: "Where policy meets purpose for the future of Nigerian education.",
   /** Countdown target — Wed 22 July 2026, 00:00:00 WAT (UTC+1) */
   dateISO: "2026-07-22T00:00:00+01:00",
   dateLabel: "Wednesday, 22nd July 2026",
   dayLabel: "Wednesday",
-  timeLabel: "9:00 AM prompt",
+  timeLabel: "10:00 AM prompt",
   venue: {
-    name: "African Centre of Excellence (ACE)",
-    shortName: "ACE, OAU",
+    name: "EDM Board Room",
+    shortName: "EDM Board Room, OAU",
     institution: "Obafemi Awolowo University",
     city: "Ile-Ife",
     state: "Osun State",
@@ -81,7 +81,7 @@ export const ORGANIZERS = [
   {
     abbr: "OAU",
     name: "Obafemi Awolowo University",
-    detail: "Host institution — Ile-Ife",
+    detail: "Host institution, Ile-Ife",
     role: "Host",
     logo: "/logos/oau.png",
     fallback: "/logos/oau.svg",
@@ -89,18 +89,10 @@ export const ORGANIZERS = [
   {
     abbr: "ESRC, OAU",
     name: "Education Students' Representative Council",
-    detail: "Convener — Obafemi Awolowo University",
+    detail: "Convener, Obafemi Awolowo University",
     role: "Convener",
     logo: "/logos/esrc.png",
     fallback: "/logos/esrc.svg",
-  },
-  {
-    abbr: "ESAN",
-    name: "Education Students' Association of Nigeria",
-    detail: "National collaboration partner",
-    role: "Collaborator",
-    logo: "/logos/esan.png",
-    fallback: "/logos/esan.svg",
   },
 ] as const;
 
@@ -119,35 +111,67 @@ export const SPONSORS = [
 export const KEYNOTE_SPEAKERS = [
   {
     slot: "Keynote Speaker",
-    name: "To Be Announced",
-    detail: "Name and portrait to be published",
-    photo: null as string | null,
+    name: "Hon. Olujinmi Asagade",
+    detail: "Chairman, House Committee on Local Government & Chieftaincy Affairs",
+    photo: "/speakers/speaker1.png" as string | null,
+    position: "center",
+    scale: 1,
   },
   {
     slot: "Keynote Speaker",
-    name: "To Be Announced",
-    detail: "Name and portrait to be published",
-    photo: null as string | null,
+    name: "Rt. Hon. Ganiyu Yussuf (KOB)",
+    detail:
+      "National President, Nigeria Students Legislative Council (NSLC) · Erstwhile Speaker, Great Ife Students' Union",
+    photo: "/speakers/speaker2.png" as string | null,
+    position: "center",
+    scale: 1,
   },
   {
     slot: "Keynote Speaker",
-    name: "To Be Announced",
-    detail: "Name and portrait to be published",
-    photo: null as string | null,
+    name: "Mr. Dauda Abubakar Seun",
+    detail: "",
+    photo: "/speakers/speaker3.png" as string | null,
+    position: "center 18%",
+    scale: 1.7,
   },
 ] as const;
 
 /**
- * Panel-discussion panelist slots — names and portraits are NOT yet
- * confirmed. Deliberate placeholders, same policy as KEYNOTE_SPEAKERS:
- * no fabricated faces or names; swap in real people when announced.
+ * Panel-discussion panelist slots — swap in real people as announced.
  */
 export const PANELISTS = [
-  ...Array.from({ length: 4 }, () => ({
+  {
+    slot: "Panelist",
+    name: "Rt. Hon. Fakunle Habeeb",
+    detail: "Erstwhile Speaker, ESRC OAU",
+    photo: "/speakers/panelist1.png" as string | null,
+    position: "58% 20%",
+    scale: 1.5,
+  },
+  {
+    slot: "Panelist",
+    name: "Hon. Olayinka Damilare (SIBESIBE)",
+    detail: "",
+    photo: "/speakers/panelist2.png" as string | null,
+    position: "50% 12%",
+    scale: 1.55,
+  },
+  {
     slot: "Panelist",
     name: "To Be Announced",
+    detail: "",
     photo: null as string | null,
-  })),
+    position: "center",
+    scale: 1,
+  },
+  {
+    slot: "Panelist",
+    name: "To Be Announced",
+    detail: "",
+    photo: null as string | null,
+    position: "center",
+    scale: 1,
+  },
 ] as const;
 
 export const NAV_LINKS = [
@@ -193,7 +217,7 @@ export const PROGRAMME = [
   {
     title: "Summit Communiqué Presentation",
     description:
-      "The official communiqué — resolutions and recommendations carried forward from the summit floor.",
+      "The official communiqué: resolutions and recommendations carried forward from the summit floor.",
   },
 ] as const;
 

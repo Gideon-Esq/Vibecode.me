@@ -23,17 +23,18 @@ export function CTASection() {
             Ready to Shape Nigeria&apos;s Future?
           </h2>
           <p className="mx-auto mt-5 max-w-xl text-pretty text-base leading-relaxed text-white/75 sm:text-lg">
-            Join student parliamentarians from across Nigeria at IEPS 3.0.
+            Will you be in the room where the future is discussed? Join student
+            parliamentarians from across Nigeria at IEPS 3.0. Admission is free.
           </p>
 
           <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <Button
               href="/register"
               size="lg"
-              aria-label="Register for IEPS 3.0 — it is free"
+              aria-label="Register for IEPS 3.0, it is free"
             >
               <Ticket className="h-5 w-5" />
-              Register Now — It&apos;s Free
+              Register Now, It&apos;s Free
             </Button>
             <Button
               href="/contact"

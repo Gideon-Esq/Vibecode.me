@@ -48,7 +48,7 @@ export function Footer() {
             <span className="inline-flex rounded-xl bg-white px-4 py-3 shadow-sm">
               <Image
                 src="/logos/ieps.png"
-                alt="IEPS 3.0 — Ife Education Parliamentary Summit"
+                alt="IEPS 3.0 | Ife Education Parliamentary Summit"
                 width={416}
                 height={81}
                 className="h-10 w-auto"
@@ -59,7 +59,7 @@ export function Footer() {
               parliamentarians to drive educational reform and nation building.
             </p>
 
-            {/* Organiser logos row */}
+            {/* Organiser & partner logos row */}
             <div className="mt-6 flex items-center gap-3">
               {ORGANIZERS.map((org) => (
                 <span
@@ -75,6 +75,19 @@ export function Footer() {
                   />
                 </span>
               ))}
+              {/* ESAN — partner logo (kept in the footer only, not in the
+                  "Organised by" credit) */}
+              <span
+                className="grid h-12 w-12 place-items-center rounded-full bg-white/95 p-1.5"
+                title="Education Students' Association of Nigeria"
+              >
+                <OrgLogo
+                  src="/logos/esan.png"
+                  fallback="/logos/esan.svg"
+                  alt="ESAN logo"
+                  size={40}
+                />
+              </span>
             </div>
           </div>
 
@@ -146,7 +159,7 @@ export function Footer() {
               <a
                 key={label}
                 href={href}
-                aria-label={`${label} — ${handle}`}
+                aria-label={`: `}
                 className="grid h-10 w-10 place-items-center rounded-full border border-white/15 text-white/80 transition-colors hover:border-gold hover:text-gold"
                 {...(external
                   ? { target: "_blank", rel: "noopener noreferrer" }

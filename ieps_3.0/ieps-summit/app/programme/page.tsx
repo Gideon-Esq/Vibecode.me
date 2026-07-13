@@ -9,7 +9,7 @@ import { EVENT, PROGRAMME_TIMELINE } from "@/lib/constants";
 export const metadata: Metadata = {
   title: "Programme",
   description:
-    "The IEPS 3.0 programme — seven sessions across one powerful day, from keynote addresses to the summit communiqué.",
+    "The IEPS 3.0 programme: seven sessions across one powerful day, from keynote addresses to the summit communiqué.",
 };
 
 export default function ProgrammePage() {
@@ -111,7 +111,7 @@ export default function ProgrammePage() {
             {/* CTA */}
             <Reveal className="mt-10 text-center">
               <Button href="/register" size="lg">
-                Secure Your Spot — Register Now
+                Secure Your Spot, Register Now
                 <ArrowRight className="h-5 w-5" />
               </Button>
             </Reveal>

@@ -33,7 +33,7 @@ function logoAttachments() {
  */
 function emailHeaderHtml(navy: string, gold: string): string {
   const mark = HAS_LOGO
-    ? `<span style="display:inline-block;background-color:#ffffff;padding:10px 18px;border-radius:12px;line-height:0;"><img src="cid:${LOGO_CID}" alt="IEPS 3.0 — Ife Education Parliamentary Summit" width="190" style="display:block;width:190px;max-width:100%;height:auto;border:0;" /></span>`
+    ? `<span style="display:inline-block;background-color:#ffffff;padding:10px 18px;border-radius:12px;line-height:0;"><img src="cid:${LOGO_CID}" alt="IEPS 3.0 | Ife Education Parliamentary Summit" width="190" style="display:block;width:190px;max-width:100%;height:auto;border:0;" /></span>`
     : `<span style="font-size:30px;font-weight:bold;color:#ffffff;letter-spacing:-0.5px;">IEPS</span><span style="display:inline-block;background-color:${gold};color:${navy};font-size:15px;font-weight:bold;padding:3px 12px;border-radius:999px;margin-left:6px;vertical-align:middle;">3.0</span>`;
   return `${mark}
               <div style="margin-top:10px;font-size:11px;letter-spacing:3px;color:${gold};text-transform:uppercase;">Ife Education Parliamentary Summit</div>`;
@@ -103,7 +103,7 @@ const FROM =
     : "IEPS 3.0 <no-reply@ieps.local>");
 
 export const CONFIRMATION_SUBJECT =
-  "Registration Confirmed — IEPS 3.0 | 22nd July 2026";
+  "Registration Confirmed: IEPS 3.0 | 22nd July 2026";
 
 type ConfirmationData = {
   fullName: string;
@@ -129,7 +129,7 @@ export function confirmationEmailHtml({ fullName }: ConfirmationData): string {
   <title>${CONFIRMATION_SUBJECT}</title>
 </head>
 <body style="margin:0;padding:0;background-color:#eef1f8;font-family:Arial,Helvetica,sans-serif;-webkit-font-smoothing:antialiased;">
-  <div style="display:none;max-height:0;overflow:hidden;opacity:0;">You're confirmed for IEPS 3.0 — ${EVENT.dateLabel} at ${EVENT.venue.shortName}.</div>
+  <div style="display:none;max-height:0;overflow:hidden;opacity:0;">You're confirmed for IEPS 3.0:  at ${EVENT.venue.shortName}.</div>
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#eef1f8;padding:36px 12px;">
     <tr>
       <td align="center">
@@ -194,7 +194,7 @@ export function confirmationEmailHtml({ fullName }: ConfirmationData): string {
           ${emailFooterHtml(navy, gold)}
 
         </table>
-        <p style="color:#9aa1b5;font-size:11px;margin:20px 0 0;">&copy; 2026 IEPS 3.0 — Education Students' Representative Council, OAU</p>
+        <p style="color:#9aa1b5;font-size:11px;margin:20px 0 0;">&copy; 2026 IEPS 3.0 | Education Students' Representative Council, OAU</p>
       </td>
     </tr>
   </table>
@@ -206,7 +206,7 @@ export function confirmationEmailHtml({ fullName }: ConfirmationData): string {
 export function confirmationEmailText({ fullName }: ConfirmationData): string {
   const firstName = fullName.split(" ")[0] || fullName;
   return [
-    `Registration Confirmed — IEPS 3.0`,
+    `Registration Confirmed: IEPS 3.0`,
     ``,
     `Dear ${firstName},`,
     ``,
@@ -218,7 +218,7 @@ export function confirmationEmailText({ fullName }: ConfirmationData): string {
     ``,
     `We look forward to seeing you!`,
     ``,
-    `— The IEPS 3.0 Organising Team`,
+    `The IEPS 3.0 Organising Team`,
     CONTACT.email,
   ].join("\n");
 }
@@ -227,7 +227,7 @@ export function confirmationEmailText({ fullName }: ConfirmationData): string {
  * Attendance acknowledgment email
  * ──────────────────────────────────────────────────────────── */
 
-export const ATTENDANCE_SUBJECT = "Thanks for Attending — IEPS 3.0";
+export const ATTENDANCE_SUBJECT = "Thanks for Attending: IEPS 3.0";
 
 type AttendanceData = { fullName: string; email: string };
 
@@ -246,7 +246,7 @@ export function attendanceEmailHtml({ fullName }: AttendanceData): string {
   <title>${ATTENDANCE_SUBJECT}</title>
 </head>
 <body style="margin:0;padding:0;background-color:#eef1f8;font-family:Arial,Helvetica,sans-serif;-webkit-font-smoothing:antialiased;">
-  <div style="display:none;max-height:0;overflow:hidden;opacity:0;">Your attendance at IEPS 3.0 has been recorded — thank you for joining us.</div>
+  <div style="display:none;max-height:0;overflow:hidden;opacity:0;">Your attendance at IEPS 3.0 has been recorded. Thank you for joining us.</div>
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#eef1f8;padding:36px 12px;">
     <tr>
       <td align="center">
@@ -288,7 +288,7 @@ export function attendanceEmailHtml({ fullName }: AttendanceData): string {
           ${emailFooterHtml(navy, gold)}
 
         </table>
-        <p style="color:#9aa1b5;font-size:11px;margin:20px 0 0;">&copy; 2026 IEPS 3.0 — Education Students' Representative Council, OAU</p>
+        <p style="color:#9aa1b5;font-size:11px;margin:20px 0 0;">&copy; 2026 IEPS 3.0 | Education Students' Representative Council, OAU</p>
       </td>
     </tr>
   </table>
@@ -299,7 +299,7 @@ export function attendanceEmailHtml({ fullName }: AttendanceData): string {
 export function attendanceEmailText({ fullName }: AttendanceData): string {
   const firstName = fullName.split(" ")[0] || fullName;
   return [
-    `Attendance Confirmed — IEPS 3.0`,
+    `Attendance Confirmed: IEPS 3.0`,
     ``,
     `Dear ${firstName},`,
     ``,
@@ -307,7 +307,7 @@ export function attendanceEmailText({ fullName }: AttendanceData): string {
     ``,
     `Your certificate of participation will be sent to this email address once it's ready.`,
     ``,
-    `— The IEPS 3.0 Organising Team`,
+    `The IEPS 3.0 Organising Team`,
     CONTACT.email,
   ].join("\n");
 }
@@ -424,7 +424,7 @@ export function certificateEmailHtml({
           ${emailFooterHtml(navy, gold)}
 
         </table>
-        <p style="color:#9aa1b5;font-size:11px;margin:20px 0 0;">&copy; 2026 IEPS 3.0 — Education Students' Representative Council, OAU</p>
+        <p style="color:#9aa1b5;font-size:11px;margin:20px 0 0;">&copy; 2026 IEPS 3.0 | Education Students' Representative Council, OAU</p>
       </td>
     </tr>
   </table>
@@ -451,7 +451,7 @@ export function certificateEmailText({
     ``,
     `We hope to see you at IEPS 4.0!`,
     ``,
-    `— The IEPS 3.0 Organising Team`,
+    `The IEPS 3.0 Organising Team`,
   ].join("\n");
 }
 

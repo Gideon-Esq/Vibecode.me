@@ -30,13 +30,12 @@ export function AboutSection() {
             <span className="gold-underline">Nigeria&apos;s Future</span>
           </h2>
           <p className="mx-auto mt-6 max-w-prose text-pretty leading-relaxed text-ink/75">
-            The Education Students&apos; Representative Council (ESRC), OAU, in
-            collaboration with the Education Students&apos; Association of Nigeria
-            (ESAN), proposes a parliamentary summit that provides a platform for
-            student parliamentarians from across Nigeria to engage in meaningful
-            dialogue about current issues, develop critical thinking and
-            communication skills, and explore solutions through a simulated
-            parliamentary process.
+            The question isn&apos;t whether Nigeria&apos;s education system needs
+            to change. It&apos;s who will lead that change. Convened by the
+            Education Students&apos; Representative Council (ESRC), OAU, IEPS brings
+            student parliamentarians from across the country into one chamber to
+            debate the issues that matter, sharpen how they think and argue, and
+            turn ideas into real policy through a live parliamentary simulation.
           </p>
         </Reveal>
 

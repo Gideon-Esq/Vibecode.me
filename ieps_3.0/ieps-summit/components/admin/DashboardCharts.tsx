@@ -252,7 +252,7 @@ export function DashboardCharts({ data }: { data: Analytics }) {
 
       {/* Faculty of Education — departments, donut */}
       <ChartCard
-        title="Faculty of Education — Departments"
+        title="Faculty of Education: Departments"
         subtitle="Registrants by department"
         empty={isEmpty(data.educationDepartments)}
       >

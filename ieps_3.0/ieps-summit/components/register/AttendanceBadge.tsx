@@ -474,7 +474,7 @@ export function AttendanceBadge({ defaultName = "" }: { defaultName?: string }) 
     img.onerror = () => {
       URL.revokeObjectURL(url);
       setPhotoError(
-        "That photo couldn't be read — your browser may not support the format (e.g. HEIC). Please try a JPG or PNG."
+        "That photo couldn't be read. Your browser may not support the format (e.g. HEIC). Please try a JPG or PNG."
       );
     };
     img.src = url;

@@ -26,7 +26,7 @@ export default function NotFound() {
           404
         </p>
         <h1 className="mt-4 font-display text-2xl font-bold sm:text-3xl">
-          This page doesn&apos;t exist yet — but the summit does.
+          This page doesn&apos;t exist yet, but the summit does.
         </h1>
         <p className="mx-auto mt-4 max-w-md text-pretty text-white/70">
           The page you&apos;re looking for may have moved or never existed.

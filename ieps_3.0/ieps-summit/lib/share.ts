@@ -5,8 +5,8 @@ import { SITE_URL, EVENT } from "@/lib/constants";
  * and the registration success page).
  */
 export const SHARE_MESSAGE = [
-  "I just registered for IEPS 3.0 — Ife Education Parliamentary Summit! 🎓🏛️",
-  "Date: July 22, 2026 | Venue: ACE, OAU",
+  "I just registered for IEPS 3.0, the Ife Education Parliamentary Summit! 🎓🏛️",
+  `Date: July 22, 2026 | Venue: ${EVENT.venue.shortName}`,
   `Theme: ${EVENT.theme}`,
   `Register here: ${SITE_URL}/register`,
 ].join("\n");

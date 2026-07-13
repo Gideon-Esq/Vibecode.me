@@ -26,12 +26,12 @@ export function ThemeSection() {
           </h2>
 
           <p className="mx-auto mt-7 max-w-2xl text-pretty leading-relaxed text-ink/70">
-            IEPS 3.0 frames the Nigerian parliament not as a distant institution
-            but as a strategic partner in solving the nation&apos;s most pressing
-            educational challenges. By examining the legislature&apos;s capacity
-            for visionary leadership and policy reform, the summit positions
-            parliamentarians at the heart of nation building — and of a stronger,
-            more equitable education system.
+            What if the future of our education system rests on a new generation
+            of visionary parliamentarians? IEPS 3.0 treats the Nigerian parliament
+            not as a distant institution but as a strategic partner in solving the
+            country&apos;s most pressing education challenges, putting lawmakers
+            at the heart of nation-building and a stronger, fairer education
+            system.
           </p>
         </Reveal>
       </div>
