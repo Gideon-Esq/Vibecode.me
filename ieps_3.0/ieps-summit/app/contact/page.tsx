@@ -12,9 +12,9 @@ export const metadata: Metadata = {
 };
 
 export default function ContactPage() {
-  const mapQuery = encodeURIComponent(
-    `${EVENT.venue.name}, ${EVENT.venue.institution}, ${EVENT.venue.city}`
-  );
+  // Exact pin (New EDM building, OAU) rather than a text search, so the map
+  // lands on the precise venue location.
+  const mapEmbed = `https://maps.google.com/maps?q=${EVENT.venue.lat},${EVENT.venue.lng}&z=16&output=embed`;
 
   return (
     <>
@@ -119,7 +119,7 @@ export default function ContactPage() {
             <div className="overflow-hidden rounded-3xl border border-navy/10 shadow-card">
               <iframe
                 title={`Map to ${EVENT.venue.name}, ${EVENT.venue.institution}`}
-                src={`https://www.google.com/maps?q=${mapQuery}&output=embed`}
+                src={mapEmbed}
                 className="h-56 w-full border-0"
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
@@ -129,7 +129,7 @@ export default function ContactPage() {
                   {EVENT.venue.name}, OAU
                 </p>
                 <Button
-                  href={`https://www.google.com/maps/search/?api=1&query=${mapQuery}`}
+                  href={EVENT.venue.mapLink}
                   external
                   size="sm"
                 >

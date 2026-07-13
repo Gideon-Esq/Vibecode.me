@@ -32,6 +32,11 @@ const eventJsonLd = {
       addressRegion: EVENT.venue.state,
       addressCountry: "NG",
     },
+    geo: {
+      "@type": "GeoCoordinates",
+      latitude: EVENT.venue.lat,
+      longitude: EVENT.venue.lng,
+    },
   },
   organizer: ORGANIZERS.map((org) => ({
     "@type": "Organization",

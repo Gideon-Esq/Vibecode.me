@@ -92,10 +92,6 @@ function GeometricArt() {
 }
 
 export function EventDetailsSection() {
-  const mapQuery = encodeURIComponent(
-    `${EVENT.venue.name}, ${EVENT.venue.institution}, ${EVENT.venue.city}`
-  );
-
   return (
     <section
       id="details"
@@ -128,7 +124,7 @@ export function EventDetailsSection() {
           </ul>
 
           <Button
-            href={`https://www.google.com/maps/search/?api=1&query=${mapQuery}`}
+            href={EVENT.venue.mapLink}
             external
             variant="secondary"
             className="mt-10"

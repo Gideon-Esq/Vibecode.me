@@ -40,8 +40,7 @@ export type GalleryEdition = {
  */
 export const PREVIOUS_EDITIONS: GalleryEdition[] = [
   {
-    edition: "IEPS 2.0",
-    year: "2024",
+    edition: "IEPS",
     photos: [
       { src: "/gallery/ieps-1.0/1719758046035.jpg", alt: "Delegates rise for the opening of the plenary session", featured: true },
       { src: "/gallery/ieps-1.0/1719758046587.jpg", alt: "The keynote address to a full chamber", featured: true },
@@ -50,10 +49,5 @@ export const PREVIOUS_EDITIONS: GalleryEdition[] = [
       { src: "/gallery/ieps-1.0/1719758045093.jpg", alt: "Delegates networking during a break" },
       { src: "/gallery/ieps-1.0/1719758046915.jpg", alt: "parliamentary debate in progress" },
     ],
-  },
-  {
-    edition: "IEPS 1.0",
-    year: "2023",
-    photos: [],
   },
 ];

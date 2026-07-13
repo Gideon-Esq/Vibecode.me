@@ -30,6 +30,10 @@ export const EVENT = {
     city: "Ile-Ife",
     state: "Osun State",
     country: "Nigeria",
+    /** Exact map location — New EDM building, OAU (from the official pin). */
+    lat: 7.5158395,
+    lng: 4.5271551,
+    mapLink: "https://maps.app.goo.gl/cY176Be9qsuqM5x48",
   },
 } as const;
 
@@ -123,8 +127,8 @@ export const KEYNOTE_SPEAKERS = [
     detail:
       "National President, Nigeria Students Legislative Council (NSLC) · Erstwhile Speaker, Great Ife Students' Union",
     photo: "/speakers/speaker2.png" as string | null,
-    position: "center",
-    scale: 1,
+    position: "center top",
+    scale: 1.1,
   },
   {
     slot: "Keynote Speaker",
