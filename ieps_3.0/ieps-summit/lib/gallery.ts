@@ -42,12 +42,12 @@ export const PREVIOUS_EDITIONS: GalleryEdition[] = [
   {
     edition: "IEPS",
     photos: [
-      { src: "/gallery/ieps-1.0/1719758046035.jpg", alt: "Delegates rise for the opening of the plenary session", featured: true },
-      { src: "/gallery/ieps-1.0/1719758046587.jpg", alt: "The keynote address to a full chamber", featured: true },
-      { src: "/gallery/ieps-1.0/1719758046979.jpg", alt: "A delegate asks a question during the plenary" },
-      { src: "/gallery/ieps-1.0/1719758045037.jpg", alt: "Award presentation to Keynote Speaker" },
-      { src: "/gallery/ieps-1.0/1719758045093.jpg", alt: "Delegates networking during a break" },
-      { src: "/gallery/ieps-1.0/1719758046915.jpg", alt: "parliamentary debate in progress" },
+      { src: "/gallery/ieps-1.0/1719758046035.jpg", alt: "The panel of guests at the high table", featured: true },
+      { src: "/gallery/ieps-1.0/1719758046587.jpg", alt: "Delegates and organisers gather for a group photo", featured: true },
+      { src: "/gallery/ieps-1.0/1719758046979.jpg", alt: "Presenting the ESRC Innovative Leadership Award" },
+      { src: "/gallery/ieps-1.0/1719758045037.jpg", alt: "Award recipients with their ESRC plaques" },
+      { src: "/gallery/ieps-1.0/1719758045093.jpg", alt: "A full house of delegates at the summit" },
+      { src: "/gallery/ieps-1.0/1719758046915.jpg", alt: "Delegates share a moment for the camera" },
     ],
   },
 ];

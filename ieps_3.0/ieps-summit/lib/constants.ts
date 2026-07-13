@@ -120,6 +120,7 @@ export const KEYNOTE_SPEAKERS = [
     photo: "/speakers/speaker1.png" as string | null,
     position: "center",
     scale: 1,
+    fit: "cover" as "cover" | "contain",
   },
   {
     slot: "Keynote Speaker",
@@ -129,14 +130,16 @@ export const KEYNOTE_SPEAKERS = [
     photo: "/speakers/speaker2.png" as string | null,
     position: "center top",
     scale: 1.1,
+    fit: "cover" as "cover" | "contain",
   },
   {
     slot: "Keynote Speaker",
-    name: "Mr. Dauda Abubakar Seun",
-    detail: "",
+    name: "Hon. Engr. Abiola Jeremiah",
+    detail: "Honorable representing Ife Central State Constituency, Osun State House of Assembly",
     photo: "/speakers/speaker3.png" as string | null,
-    position: "center 18%",
-    scale: 1.7,
+    position: "center",
+    scale: 1,
+    fit: "contain" as "cover" | "contain",
   },
 ] as const;
 

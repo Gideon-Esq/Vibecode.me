@@ -10,6 +10,7 @@ function PortraitFrame({
   name,
   position = "center",
   scale = 1,
+  fit = "cover",
 }: {
   photo: string | null;
   name: string;
@@ -19,6 +20,9 @@ function PortraitFrame({
   /** extra zoom for full-body shots so the subject fills the frame like a
    *  head-and-shoulders portrait. Zooms around `position`. */
   scale?: number;
+  /** "cover" fills/crops the frame; "contain" shows the whole photo
+   *  uncropped (fitted inside the frame). */
+  fit?: "cover" | "contain";
 }) {
   return (
     <div className="relative aspect-[4/5] w-full border border-white/10 bg-navy-950 p-3">
@@ -31,7 +35,7 @@ function PortraitFrame({
             alt={`Portrait of ${name}`}
             fill
             sizes="(min-width: 768px) 33vw, 100vw"
-            className="object-cover"
+            className={fit === "contain" ? "object-contain" : "object-cover"}
             style={{
               objectPosition: position,
               transform: scale !== 1 ? `scale(${scale})` : undefined,
@@ -124,6 +128,7 @@ export function SpeakersSection() {
                   name={speaker.name}
                   position={speaker.position}
                   scale={speaker.scale}
+                  fit={speaker.fit}
                 />
                 <div className="border-x border-b border-white/10 px-6 py-5 text-center">
                   <p className="font-label text-[10px] font-semibold uppercase tracking-[0.28em] text-gold">

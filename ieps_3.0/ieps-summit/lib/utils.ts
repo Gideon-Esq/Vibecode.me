@@ -1,5 +1,6 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { SITE_URL } from "@/lib/constants";
 
 /** Merge Tailwind classes with conflict resolution. */
 export function cn(...inputs: ClassValue[]) {
@@ -31,11 +32,13 @@ export function pad(n: number): string {
 
 /**
  * Resolve the public base ORIGIN (scheme + host, never a path) for building
- * absolute links in API routes. Order: explicit env → forwarded host (proxies
- * such as Codespaces/Vercel) → request origin. Any path in an env value is
- * stripped, so a misconfigured `NEXTAUTH_URL=".../gallery"` can't leak in.
+ * absolute links in emails and certificates. Order: explicit env → the
+ * canonical SITE_URL. We deliberately do NOT fall back to the request host:
+ * certificates and emailed links are permanent, so they must never embed an
+ * ephemeral preview/Codespace host. Any path in an env value is stripped, so a
+ * misconfigured `NEXTAUTH_URL=".../gallery"` can't leak in.
  */
-export function getBaseUrl(request: Request): string {
+export function getBaseUrl(_request?: Request): string {
   const fromEnv =
     process.env.NEXT_PUBLIC_APP_URL ??
     process.env.NEXTAUTH_URL ??
@@ -44,18 +47,9 @@ export function getBaseUrl(request: Request): string {
     try {
       return new URL(fromEnv).origin;
     } catch {
-      /* fall through to headers */
+      /* fall through to the canonical site URL */
     }
   }
 
-  const host =
-    request.headers.get("x-forwarded-host") ?? request.headers.get("host");
-  if (host) {
-    const proto =
-      request.headers.get("x-forwarded-proto") ??
-      (host.includes("localhost") ? "http" : "https");
-    return `${proto}://${host}`;
-  }
-
-  return new URL(request.url).origin;
+  return SITE_URL;
 }
