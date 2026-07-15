@@ -133,7 +133,7 @@ export function Workspace({
       <div className="border-b border-line py-8">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wider text-coral-deep">
+            <p className="text-xs font-semibold uppercase tracking-wider text-blue-dark">
               {plan.startDate} → {plan.endDate} · {plan.days} days ·{" "}
               {plan.travelers} traveler{plan.travelers > 1 ? "s" : ""}
             </p>
@@ -162,7 +162,7 @@ export function Workspace({
           <p className="mt-3 text-xs text-ink-faint">
             Anyone with the link can view this trip (read-only):{" "}
             <span className="font-mono">/share/{shareToken.slice(0, 8)}…</span>{" "}
-            <button onClick={toggleShare} className="cursor-pointer text-coral-deep hover:underline">
+            <button onClick={toggleShare} className="cursor-pointer text-blue-dark hover:underline">
               Turn off
             </button>
           </p>
@@ -190,7 +190,7 @@ export function Workspace({
       </nav>
 
       {error && (
-        <p className="mt-4 rounded-xl bg-coral/10 px-4 py-3 text-sm text-coral-deep">{error}</p>
+        <p className="mt-4 rounded-xl bg-blue/10 px-4 py-3 text-sm text-blue-dark">{error}</p>
       )}
 
       <div className="mt-8 grid gap-8 lg:grid-cols-[1fr_320px]">
@@ -343,7 +343,7 @@ export function Workspace({
                           <div
                             className={cn(
                               "h-full rounded-full",
-                              line.estimated > line.allocated ? "bg-coral" : "bg-sea",
+                              line.estimated > line.allocated ? "bg-blue" : "bg-green",
                             )}
                             style={{ width: `${pct}%` }}
                           />
@@ -365,9 +365,9 @@ export function Workspace({
         <aside className="order-first lg:order-none">
           <BudgetTracker budget={budget} />
           <div className="mt-3 flex items-center justify-center gap-2 text-xs text-ink-faint">
-            <Badge tone="sea"><span className="size-1.5 rounded-full bg-sea" aria-hidden />live data</Badge>
+            <Badge tone="green"><span className="size-1.5 rounded-full bg-green" aria-hidden />live data</Badge>
             <span>verified</span>
-            <Badge tone="sand"><span className="size-1.5 rounded-full border border-current" aria-hidden />AI estimate</Badge>
+            <Badge tone="yellow"><span className="size-1.5 rounded-full border border-current" aria-hidden />AI estimate</Badge>
             <span>verify before booking</span>
           </div>
         </aside>

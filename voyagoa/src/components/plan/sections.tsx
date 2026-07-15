@@ -24,7 +24,7 @@ export function BudgetTracker({ budget }: { budget: BudgetBreakdown }) {
         <h3 className="text-sm font-semibold uppercase tracking-wider text-ink-faint">
           Budget tracker
         </h3>
-        <Badge tone={budget.withinBudget ? "sea" : "coral"}>
+        <Badge tone={budget.withinBudget ? "green" : "red"}>
           {budget.withinBudget ? "On budget" : "Over budget"}
         </Badge>
       </div>
@@ -40,7 +40,7 @@ export function BudgetTracker({ budget }: { budget: BudgetBreakdown }) {
         <div
           className={cn(
             "h-full rounded-full transition-all duration-500",
-            budget.withinBudget ? "bg-sea" : "bg-coral",
+            budget.withinBudget ? "bg-green" : "bg-blue",
           )}
           style={{ width: `${pct}%` }}
         />
@@ -53,7 +53,7 @@ export function BudgetTracker({ budget }: { budget: BudgetBreakdown }) {
             <span
               className={cn(
                 "font-medium tabular-nums",
-                line.estimated > line.allocated && "text-coral-deep",
+                line.estimated > line.allocated && "text-blue-dark",
               )}
             >
               {formatMoney(line.estimated, budget.currency)}
@@ -68,7 +68,7 @@ export function BudgetTracker({ budget }: { budget: BudgetBreakdown }) {
       <p
         className={cn(
           "mt-4 rounded-lg px-3 py-2 text-xs",
-          budget.withinBudget ? "bg-sea-soft text-sea" : "bg-coral/10 text-coral-deep",
+          budget.withinBudget ? "bg-green-soft text-green" : "bg-blue/10 text-blue-dark",
         )}
       >
         {budget.withinBudget
@@ -98,7 +98,7 @@ export function FlightCard({
     <Card
       className={cn(
         "transition",
-        selected && "border-sea ring-2 ring-sea/20",
+        selected && "border-green ring-2 ring-green/20",
         onSelect && "cursor-pointer hover:border-ink-faint",
       )}
     >
@@ -135,7 +135,7 @@ export function FlightCard({
           <p className="text-xs text-ink-faint">{flight.bookingHint}</p>
           <div className="flex items-center gap-2">
             <SourceBadge source={flight.dataSource} />
-            {selected && <Badge tone="sea">Selected</Badge>}
+            {selected && <Badge tone="green">Selected</Badge>}
           </div>
         </div>
       </button>
@@ -162,7 +162,7 @@ export function HotelCard({
     <Card
       className={cn(
         "transition",
-        selected && "border-sea ring-2 ring-sea/20",
+        selected && "border-green ring-2 ring-green/20",
         onSelect && "cursor-pointer hover:border-ink-faint",
       )}
     >
@@ -176,7 +176,7 @@ export function HotelCard({
           <div>
             <p className="font-semibold">{hotel.name}</p>
             <p className="text-sm text-ink-soft">
-              {hotel.area} · {hotel.style} · <Icon name="star" filled className="text-sm text-coral-deep align-[-2px]" /> {hotel.rating.toFixed(1)}
+              {hotel.area} · {hotel.style} · <Icon name="star" filled className="text-sm text-blue-dark align-[-2px]" /> {hotel.rating.toFixed(1)}
             </p>
           </div>
           <div className="text-right">
@@ -201,7 +201,7 @@ export function HotelCard({
           </p>
           <div className="flex items-center gap-2">
             <SourceBadge source={hotel.dataSource} />
-            {selected && <Badge tone="sea">Selected</Badge>}
+            {selected && <Badge tone="green">Selected</Badge>}
           </div>
         </div>
       </button>
@@ -250,7 +250,7 @@ export function ActivityCard({
         <button
           type="button"
           onClick={onToggle}
-          className="mt-3 cursor-pointer text-xs font-medium text-coral-deep hover:underline"
+          className="mt-3 cursor-pointer text-xs font-medium text-blue-dark hover:underline"
         >
           {removed ? "Add back to trip" : "Remove from trip"}
         </button>
@@ -277,7 +277,7 @@ export function RestaurantCard({
           <div className="flex flex-wrap items-center gap-2">
             <p className="font-semibold">{restaurant.name}</p>
             <Badge>{restaurant.cuisine}</Badge>
-            <Badge tone="sand">{restaurant.priceRange}</Badge>
+            <Badge tone="yellow">{restaurant.priceRange}</Badge>
           </div>
           <p className="mt-1.5 text-sm text-ink-soft">
             Try: {restaurant.recommendedDishes.join(", ")}
@@ -301,7 +301,7 @@ export function RestaurantCard({
         <button
           type="button"
           onClick={onToggle}
-          className="mt-3 cursor-pointer text-xs font-medium text-coral-deep hover:underline"
+          className="mt-3 cursor-pointer text-xs font-medium text-blue-dark hover:underline"
         >
           {removed ? "Add back to trip" : "Remove from trip"}
         </button>
@@ -334,11 +334,11 @@ export function TransportCard({ option }: { option: TransportOption }) {
   );
 }
 
-const VISA_LABELS: Record<VisaInfo["requirement"], { label: string; tone: "sea" | "coral" | "sand" | "neutral" }> = {
-  visa_free: { label: "Visa-free", tone: "sea" },
-  visa_on_arrival: { label: "Visa on arrival", tone: "sea" },
-  evisa: { label: "eVisa", tone: "sand" },
-  visa_required: { label: "Visa required", tone: "coral" },
+const VISA_LABELS: Record<VisaInfo["requirement"], { label: string; tone: "green" | "red" | "yellow" | "neutral" }> = {
+  visa_free: { label: "Visa-free", tone: "green" },
+  visa_on_arrival: { label: "Visa on arrival", tone: "green" },
+  evisa: { label: "eVisa", tone: "yellow" },
+  visa_required: { label: "Visa required", tone: "red" },
   unknown: { label: "Check requirements", tone: "neutral" },
 };
 
@@ -391,7 +391,7 @@ export function VisaPanel({ visa }: { visa: VisaInfo }) {
                     href={r.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-sea underline underline-offset-2 hover:text-ink"
+                    className="text-green underline underline-offset-2 hover:text-ink"
                   >
                     {r.label} <Icon name="open_in_new" className="text-xs align-[-1px]" />
                   </a>
@@ -402,8 +402,8 @@ export function VisaPanel({ visa }: { visa: VisaInfo }) {
         )}
       </Card>
 
-      <p className="rounded-xl border border-coral/30 bg-coral/5 px-4 py-3 text-xs leading-relaxed text-ink-soft">
-        <Icon name="warning" className="mr-1 text-sm align-[-2px] text-coral-deep" />Visa requirements change frequently and vary by individual circumstances. This
+      <p className="rounded-xl border border-blue/30 bg-blue/5 px-4 py-3 text-xs leading-relaxed text-ink-soft">
+        <Icon name="warning" className="mr-1 text-sm align-[-2px] text-blue-dark" />Visa requirements change frequently and vary by individual circumstances. This
         guidance is informational only — always verify through official government or embassy
         sources before booking travel.
       </p>
@@ -440,7 +440,7 @@ export function ItineraryDayView({
     <Card className={cn(regenerating && "opacity-60")}>
       <div className="flex flex-wrap items-start justify-between gap-2">
         <div>
-          <p className="text-xs font-semibold uppercase tracking-wider text-coral-deep">
+          <p className="text-xs font-semibold uppercase tracking-wider text-blue-dark">
             Day {day.day} · {day.date}
           </p>
           <h3 className="font-display text-lg font-semibold tracking-tight">{day.title}</h3>
@@ -449,7 +449,7 @@ export function ItineraryDayView({
           )}
         </div>
         <div className="flex items-center gap-2">
-          <Badge tone="sand">
+          <Badge tone="yellow">
             ~{formatMoney(day.dailyCostEstimate, currency)}/person
           </Badge>
           {onRegenerate && (
@@ -457,7 +457,7 @@ export function ItineraryDayView({
               type="button"
               disabled={regenerating}
               onClick={() => onRegenerate()}
-              className="cursor-pointer rounded-full border border-line px-3 py-1 text-xs font-medium text-ink-soft transition hover:border-coral hover:text-coral-deep disabled:cursor-wait"
+              className="cursor-pointer rounded-full border border-line px-3 py-1 text-xs font-medium text-ink-soft transition hover:border-blue hover:text-blue-dark disabled:cursor-wait"
               title="Regenerate this day only"
             >
               {regenerating ? "Regenerating…" : "Regenerate day"}
