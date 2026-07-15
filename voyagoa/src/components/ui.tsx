@@ -14,15 +14,15 @@ export function Button({
   return (
     <button
       className={cn(
-        "inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer",
+        "inline-flex min-h-11 items-center justify-center gap-2 rounded-lg border border-transparent px-6 text-sm font-extrabold transition-all hover:-translate-y-px disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 cursor-pointer",
         variant === "primary" &&
-          "bg-coral text-white hover:bg-coral-deep shadow-[0_2px_12px_rgba(255,90,60,0.35)]",
+          "bg-blue text-white hover:bg-blue-dark shadow-[0_12px_28px_rgba(17,103,241,0.22)]",
         variant === "secondary" &&
-          "bg-ink text-paper hover:bg-ink-soft",
+          "bg-navy text-white hover:bg-ink",
         variant === "ghost" &&
-          "bg-transparent text-ink hover:bg-paper-soft border border-line",
+          "bg-white text-blue border-blue hover:bg-blue-soft",
         variant === "danger" &&
-          "bg-transparent text-coral-deep hover:bg-red-50 border border-line",
+          "bg-white text-red border-red/40 hover:bg-red-soft",
         className,
       )}
       {...props}
@@ -34,7 +34,7 @@ export function Input({ className, ...props }: InputHTMLAttributes<HTMLInputElem
   return (
     <input
       className={cn(
-        "w-full rounded-xl border border-line bg-card px-4 py-2.5 text-sm outline-none transition focus:border-coral focus:ring-2 focus:ring-coral/20 placeholder:text-ink-faint",
+        "w-full rounded-lg border border-line bg-card px-4 py-2.5 text-sm outline-none transition focus:border-blue focus:ring-2 focus:ring-blue/20 placeholder:text-ink-faint",
         className,
       )}
       {...props}
@@ -46,7 +46,7 @@ export function Textarea({ className, ...props }: TextareaHTMLAttributes<HTMLTex
   return (
     <textarea
       className={cn(
-        "w-full rounded-xl border border-line bg-card px-4 py-3 text-sm outline-none transition focus:border-coral focus:ring-2 focus:ring-coral/20 placeholder:text-ink-faint resize-none",
+        "w-full rounded-lg border border-line bg-card px-4 py-3 text-sm outline-none transition focus:border-blue focus:ring-2 focus:ring-blue/20 placeholder:text-ink-faint resize-none",
         className,
       )}
       {...props}
@@ -56,7 +56,7 @@ export function Textarea({ className, ...props }: TextareaHTMLAttributes<HTMLTex
 
 export function Card({ className, children }: { className?: string; children: ReactNode }) {
   return (
-    <div className={cn("rounded-2xl border border-line bg-card p-5", className)}>
+    <div className={cn("rounded-lg border border-line bg-card p-5", className)}>
       {children}
     </div>
   );
@@ -67,18 +67,19 @@ export function Badge({
   children,
   className,
 }: {
-  tone?: "neutral" | "sea" | "coral" | "sand";
+  tone?: "neutral" | "green" | "blue" | "yellow" | "red";
   children: ReactNode;
   className?: string;
 }) {
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[11px] font-medium tracking-wide",
+        "inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[11px] font-semibold tracking-wide",
         tone === "neutral" && "bg-paper-soft text-ink-soft",
-        tone === "sea" && "bg-sea-soft text-sea",
-        tone === "coral" && "bg-coral/10 text-coral-deep",
-        tone === "sand" && "bg-sand text-ink-soft",
+        tone === "green" && "bg-green-soft text-green",
+        tone === "blue" && "bg-blue-soft text-blue-dark",
+        tone === "yellow" && "bg-yellow-soft text-ink-soft",
+        tone === "red" && "bg-red-soft text-red",
         className,
       )}
     >
@@ -90,9 +91,9 @@ export function Badge({
 /** Marks whether a datum is live/verified or an AI estimate. */
 export function SourceBadge({ source }: { source: "live" | "ai_estimate" }) {
   return source === "live" ? (
-    <Badge tone="sea"><span className="size-1.5 rounded-full bg-sea" aria-hidden />live data</Badge>
+    <Badge tone="green"><span className="size-1.5 rounded-full bg-green" aria-hidden />live data</Badge>
   ) : (
-    <Badge tone="sand"><span className="size-1.5 rounded-full border border-current" aria-hidden />AI estimate</Badge>
+    <Badge tone="yellow"><span className="size-1.5 rounded-full border border-current" aria-hidden />AI estimate</Badge>
   );
 }
 

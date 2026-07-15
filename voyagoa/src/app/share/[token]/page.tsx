@@ -38,7 +38,7 @@ export default async function SharedTripPage({
           <span className="font-display text-xl font-semibold">Voyagoa</span>
           <Link
             href="/"
-            className="rounded-full bg-coral px-4 py-2 text-sm font-medium text-white transition hover:bg-coral-deep"
+            className="rounded-full bg-blue px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-dark"
           >
             Plan your own trip
           </Link>
@@ -47,7 +47,7 @@ export default async function SharedTripPage({
 
       <main className="mx-auto max-w-6xl px-4 pb-20 sm:px-6">
         <div className="border-b border-line py-8">
-          <p className="text-xs font-semibold uppercase tracking-wider text-coral-deep">
+          <p className="text-xs font-semibold uppercase tracking-wider text-blue-dark">
             Shared itinerary · {plan.startDate} → {plan.endDate} · {plan.days} days
           </p>
           <h1 className="mt-1 font-display text-3xl font-semibold tracking-tight sm:text-4xl">

@@ -9,11 +9,11 @@ import { formatMoney } from "@/lib/budget";
 
 export const metadata = { title: "My trips — Voyagoa" };
 
-const STATUS_LABEL: Record<string, { label: string; tone: "sea" | "sand" | "coral" | "neutral" }> = {
-  ready: { label: "Ready", tone: "sea" },
-  planning: { label: "Planning", tone: "sand" },
-  intake: { label: "Needs details", tone: "sand" },
-  failed: { label: "Failed", tone: "coral" },
+const STATUS_LABEL: Record<string, { label: string; tone: "green" | "yellow" | "red" | "neutral" }> = {
+  ready: { label: "Ready", tone: "green" },
+  planning: { label: "Planning", tone: "yellow" },
+  intake: { label: "Needs details", tone: "yellow" },
+  failed: { label: "Failed", tone: "red" },
 };
 
 export default async function TripsPage() {
@@ -33,7 +33,7 @@ export default async function TripsPage() {
           <h1 className="font-display text-3xl font-semibold">My trips</h1>
           <Link
             href="/"
-            className="rounded-full bg-coral px-5 py-2.5 text-sm font-medium text-white transition hover:bg-coral-deep"
+            className="rounded-full bg-blue px-5 py-2.5 text-sm font-medium text-white transition hover:bg-blue-dark"
           >
             + Plan a new trip
           </Link>
