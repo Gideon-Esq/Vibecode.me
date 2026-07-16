@@ -1,5 +1,5 @@
 import { notFound, redirect } from "next/navigation";
-import { Nav } from "@/components/nav";
+import { AppHeader } from "@/components/app-header";
 import { Workspace } from "@/components/workspace";
 import { PlanRunner } from "@/components/plan-runner";
 import { getCurrentUser } from "@/lib/auth";
@@ -24,7 +24,7 @@ export default async function TripPage({
     const intake = parseIntakeJson(trip);
     return (
       <div className="flex min-h-screen flex-col">
-        <Nav />
+        <AppHeader />
         <main className="flex flex-1 items-center px-4 py-16">
           <div className="w-full">
             <PlanRunner
@@ -43,7 +43,7 @@ export default async function TripPage({
 
   return (
     <div className="flex min-h-screen flex-col">
-      <Nav />
+      <AppHeader />
       <main className="flex-1">
         <Workspace
           tripId={trip.id}
