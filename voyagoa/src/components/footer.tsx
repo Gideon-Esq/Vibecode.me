@@ -1,74 +1,65 @@
 import Link from "next/link";
+import { Brand } from "@/components/nav";
 
 const COLUMNS: Array<{ title: string; links: Array<{ label: string; href: string }> }> = [
   {
     title: "Product",
     links: [
-      { label: "Plan a trip", href: "/#composer" },
-      { label: "How it works", href: "/#how-it-works" },
-      { label: "My trips", href: "/trips" },
+      { label: "Plan a trip", href: "/#start" },
+      { label: "Features", href: "/#features" },
+      { label: "How it works", href: "/#how" },
+      { label: "Destinations", href: "/#destinations" },
     ],
   },
   {
     title: "Inside a plan",
     links: [
-      { label: "Budget engine", href: "/#budget" },
+      { label: "Budget tracker", href: "/#budget" },
       { label: "Day-by-day itinerary", href: "/#itinerary" },
-      { label: "Everything included", href: "/#features" },
+      { label: "FAQs", href: "/#faqs" },
     ],
   },
   {
-    title: "Account",
+    title: "Company",
     links: [
+      { label: "About the team", href: "/#team" },
+      { label: "My trips", href: "/trips" },
       { label: "Log in", href: "/login" },
-      { label: "Create account", href: "/register" },
+      { label: "Contact", href: "mailto:emma@voyagoa.com" },
     ],
   },
 ];
 
 export function Footer() {
   return (
-    <footer className="border-t border-line bg-paper-soft/40">
-      <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6">
-        <div className="grid gap-10 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
+    <footer className="bg-[#081328] py-10 text-[#c8d5ec]">
+      <div className="mx-auto w-[min(100%-64px,1280px)]">
+        <div className="grid gap-9 md:grid-cols-[1.4fr_repeat(3,0.7fr)]">
           <div>
-            <Link href="/" className="inline-flex items-center gap-2">
-              <span className="grid size-8 place-items-center rounded-full bg-ink text-paper">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden>
-                  <path d="M3 12c6-8 12-8 18 0-6 8-12 8-18 0Z" stroke="currentColor" strokeWidth="1.6" />
-                  <path d="M7 12h10M12 5v14" stroke="currentColor" strokeWidth="1.2" opacity="0.6" />
-                </svg>
-              </span>
-              <span className="font-display text-xl font-semibold tracking-tight">Voyagoa</span>
-            </Link>
-            <p className="mt-4 max-w-xs text-sm leading-relaxed text-ink-soft">
-              Your entire trip. Planned by AI. One sentence in — flights, hotels,
-              food, visas and a day-by-day itinerary out.
+            <Brand variant="mark" className="text-white" />
+            <p className="mt-3.5 max-w-[330px] text-[0.9rem] text-[#9fb0ca]">
+              Premium AI travel planning for people who want less spreadsheet work and
+              more adventure.
             </p>
           </div>
 
           {COLUMNS.map((col) => (
-            <nav key={col.title} aria-label={col.title}>
-              <h3 className="text-xs font-semibold uppercase tracking-[0.14em] text-ink-faint">
-                {col.title}
-              </h3>
-              <ul className="mt-4 space-y-2.5">
-                {col.links.map((link) => (
-                  <li key={link.href}>
-                    <Link
-                      href={link.href}
-                      className="text-sm text-ink-soft transition-colors hover:text-coral-deep"
-                    >
-                      {link.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
+            <nav key={col.title} className="grid content-start gap-2.5" aria-label={col.title}>
+              <h3 className="mb-1 text-[0.86rem] font-bold text-white">{col.title}</h3>
+              {col.links.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className="text-[0.86rem] text-[#a9b7ce] transition-colors hover:text-white"
+                >
+                  {link.label}
+                </Link>
+              ))}
             </nav>
           ))}
         </div>
 
-        <div className="mt-12 flex flex-col gap-3 border-t border-line pt-6 text-xs text-ink-faint sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-10 flex flex-col gap-3 border-t border-white/10 pt-6 text-xs text-[#8294b1] sm:flex-row sm:items-center sm:justify-between">
           <p>© {new Date().getFullYear()} Voyagoa. All rights reserved.</p>
           <p className="max-w-md leading-relaxed">
             AI-generated estimates are always labeled. Verify prices, availability and

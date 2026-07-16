@@ -61,7 +61,7 @@ export function AuthForm({ mode }: { mode: "login" | "register" }) {
   return (
     <form onSubmit={submit} className="space-y-4">
       {fromComposer && (
-        <p className="rounded-xl bg-sea-soft px-4 py-3 text-sm text-sea">
+        <p className="rounded-xl bg-green-soft px-4 py-3 text-sm text-green">
           Create your account and Voyagoa will pick your trip right back up.
         </p>
       )}
@@ -113,7 +113,7 @@ export function AuthForm({ mode }: { mode: "login" | "register" }) {
         </div>
       )}
 
-      {error && <p className="text-sm text-coral-deep">{error}</p>}
+      {error && <p className="text-sm text-blue-dark">{error}</p>}
 
       <Button type="submit" disabled={busy} className="w-full">
         {busy ? <Spinner /> : mode === "login" ? "Log in" : "Create account"}
@@ -123,14 +123,14 @@ export function AuthForm({ mode }: { mode: "login" | "register" }) {
         {mode === "login" ? (
           <>
             New to Voyagoa?{" "}
-            <Link href="/register" className="font-medium text-coral-deep hover:underline">
+            <Link href="/register" className="font-medium text-blue-dark hover:underline">
               Create an account
             </Link>
           </>
         ) : (
           <>
             Already have an account?{" "}
-            <Link href="/login" className="font-medium text-coral-deep hover:underline">
+            <Link href="/login" className="font-medium text-blue-dark hover:underline">
               Log in
             </Link>
           </>

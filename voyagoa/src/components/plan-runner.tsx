@@ -77,8 +77,8 @@ export function PlanRunner({
   if (running) {
     return (
       <Card className="mx-auto max-w-lg p-8 text-center">
-        <div className="mx-auto mb-5 grid size-14 place-items-center rounded-full bg-sea-soft">
-          <Spinner className="size-6 text-sea" />
+        <div className="mx-auto mb-5 grid size-14 place-items-center rounded-full bg-green-soft">
+          <Spinner className="size-6 text-green" />
         </div>
         <p className="font-display text-xl">Voyagoa is planning your journey</p>
         <p className="mt-2 text-sm text-ink-soft" aria-live="polite">
@@ -115,7 +115,7 @@ export function PlanRunner({
             </div>
           ))}
         </div>
-        {error && <p className="mt-3 text-sm text-coral-deep">{error}</p>}
+        {error && <p className="mt-3 text-sm text-blue-dark">{error}</p>}
         <Button
           className="mt-6 w-full"
           disabled={answers.filter((a) => a?.trim()).length < questions.length}
@@ -137,7 +137,7 @@ export function PlanRunner({
           ? "Something went wrong while generating this trip. Give it another go."
           : "Voyagoa has everything it needs — start the planner."}
       </p>
-      {error && <p className="mt-3 text-sm text-coral-deep">{error}</p>}
+      {error && <p className="mt-3 text-sm text-blue-dark">{error}</p>}
       <Button className="mt-6" onClick={() => run()}>
         {status === "failed" ? "Try again" : "Generate my plan"}
       </Button>

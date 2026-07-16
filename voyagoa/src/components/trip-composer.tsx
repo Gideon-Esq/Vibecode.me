@@ -121,9 +121,9 @@ export function TripComposer({ authed }: { authed: boolean }) {
 
   if (phase.name === "planning") {
     return (
-      <div className="rounded-3xl border border-line bg-card p-8 text-center shadow-xl shadow-ink/5">
-        <div className="mx-auto mb-5 grid size-14 place-items-center rounded-full bg-sea-soft">
-          <Spinner className="size-6 text-sea" />
+      <div className="rounded-lg border border-line bg-card p-8 text-center shadow-[0_20px_55px_rgba(12,43,97,0.13)]">
+        <div className="mx-auto mb-5 grid size-14 place-items-center rounded-full bg-green-soft">
+          <Spinner className="size-6 text-green" />
         </div>
         <p className="font-display text-xl">Voyagoa is planning your journey</p>
         <p className="mt-2 text-sm text-ink-soft" aria-live="polite">
@@ -138,7 +138,7 @@ export function TripComposer({ authed }: { authed: boolean }) {
 
   if (phase.name === "questions") {
     return (
-      <div className="rounded-3xl border border-line bg-card p-6 shadow-xl shadow-ink/5 sm:p-8">
+      <div className="rounded-lg border border-line bg-card p-6 shadow-[0_20px_55px_rgba(12,43,97,0.13)] sm:p-8">
         <p className="font-display text-lg">A couple of quick details</p>
         <p className="mt-1 text-sm text-ink-soft">
           Voyagoa only asks when something essential is missing.
@@ -182,7 +182,7 @@ export function TripComposer({ authed }: { authed: boolean }) {
   }
 
   return (
-    <div className="rounded-3xl border border-line bg-card p-3 shadow-xl shadow-ink/5">
+    <div className="rounded-lg border-[1.5px] border-[#6ba0ff] bg-white/92 p-3 shadow-[0_12px_34px_rgba(17,103,241,0.08)]">
       <Textarea
         rows={3}
         value={request}
@@ -200,7 +200,7 @@ export function TripComposer({ authed }: { authed: boolean }) {
             <button
               key={ex}
               onClick={() => setRequest(ex)}
-              className="cursor-pointer rounded-full border border-line px-3 py-1 text-xs text-ink-faint transition hover:border-coral hover:text-ink"
+              className="cursor-pointer rounded border border-[#74a7ff] bg-white px-2.5 py-1 text-[11px] font-bold text-blue-dark transition hover:bg-blue hover:text-white"
             >
               {ex.length > 52 ? ex.slice(0, 52) + "…" : ex}
             </button>
@@ -216,7 +216,7 @@ export function TripComposer({ authed }: { authed: boolean }) {
         </Button>
       </div>
       {phase.name === "error" && (
-        <p className="px-2 pb-2 text-sm text-coral-deep">{phase.message}</p>
+        <p className="px-2 pb-2 text-sm text-red">{phase.message}</p>
       )}
     </div>
   );
