@@ -103,8 +103,16 @@ export const ORGANIZERS = [
 /** Sponsors supporting IEPS 3.0. Logos live in /public/logos/sponsors. */
 export const SPONSORS = [
   {
+    name: "Luxora",
+    logo: "/logos/sponsors/luxora.png",
+  },
+  {
     name: "Dynage",
     logo: "/logos/sponsors/dynage.png",
+  },
+  {
+    name: "Last Born Tech",
+    logo: "/logos/sponsors/lastborntech.png",
   },
 ] as const;
 

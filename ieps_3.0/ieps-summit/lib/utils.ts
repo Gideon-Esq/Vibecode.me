@@ -32,13 +32,19 @@ export function pad(n: number): string {
 
 /**
  * Resolve the public base ORIGIN (scheme + host, never a path) for building
- * absolute links in emails and certificates. Order: explicit env → the
- * canonical SITE_URL. We deliberately do NOT fall back to the request host:
- * certificates and emailed links are permanent, so they must never embed an
- * ephemeral preview/Codespace host. Any path in an env value is stripped, so a
- * misconfigured `NEXTAUTH_URL=".../gallery"` can't leak in.
+ * absolute links in emails and certificates.
+ *
+ * Order:
+ *   1. Explicit env (NEXT_PUBLIC_APP_URL / NEXTAUTH_URL / AUTH_URL) — set this
+ *      in production to pin links to your real domain regardless of host.
+ *   2. The incoming request host (x-forwarded-host) — resolves to the real
+ *      domain on Vercel and to the Codespace URL when testing locally, so a
+ *      generated link is always clickable in the environment that made it.
+ *   3. The canonical SITE_URL, for non-request contexts.
+ * Any path in an env value is stripped, so a misconfigured
+ * `NEXTAUTH_URL=".../gallery"` can't leak in.
  */
-export function getBaseUrl(_request?: Request): string {
+export function getBaseUrl(request?: Request): string {
   const fromEnv =
     process.env.NEXT_PUBLIC_APP_URL ??
     process.env.NEXTAUTH_URL ??
@@ -47,8 +53,17 @@ export function getBaseUrl(_request?: Request): string {
     try {
       return new URL(fromEnv).origin;
     } catch {
-      /* fall through to the canonical site URL */
+      /* fall through to the request host */
     }
+  }
+
+  const host =
+    request?.headers.get("x-forwarded-host") ?? request?.headers.get("host");
+  if (host) {
+    const proto =
+      request?.headers.get("x-forwarded-proto") ??
+      (host.includes("localhost") ? "http" : "https");
+    return `${proto}://${host}`;
   }
 
   return SITE_URL;

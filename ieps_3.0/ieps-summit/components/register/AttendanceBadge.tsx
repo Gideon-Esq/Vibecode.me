@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Upload, Download, ImageOff, RefreshCw } from "lucide-react";
-import { EVENT } from "@/lib/constants";
+import { EVENT, SPONSORS } from "@/lib/constants";
 
 /* Brand colours — chamber navy + parliamentary gold + logo green */
 const NAVY = "#0D1B5E";
@@ -131,7 +131,7 @@ export function AttendanceBadge({ defaultName = "" }: { defaultName?: string }) 
   const [photoError, setPhotoError] = useState<string | null>(null);
   const [fontsReady, setFontsReady] = useState(false);
   const [logo, setLogo] = useState<HTMLImageElement | null>(null);
-  const [sponsorLogo, setSponsorLogo] = useState<HTMLImageElement | null>(null);
+  const [sponsorLogos, setSponsorLogos] = useState<HTMLImageElement[]>([]);
 
   // Load the official IEPS logo for the canvas header (same-origin asset).
   useEffect(() => {
@@ -140,11 +140,29 @@ export function AttendanceBadge({ defaultName = "" }: { defaultName?: string }) 
     img.src = "/logos/ieps.png";
   }, []);
 
-  // Load the sponsor logo for the header's sponsor slot.
+  // Load the sponsor logos for the partners band (in SPONSORS order, so
+  // Dynage sits in the middle of the three).
   useEffect(() => {
-    const img = new Image();
-    img.onload = () => setSponsorLogo(img);
-    img.src = "/logos/sponsors/dynage.png";
+    let cancelled = false;
+    Promise.all(
+      SPONSORS.map(
+        (s) =>
+          new Promise<HTMLImageElement | null>((resolve) => {
+            const img = new Image();
+            img.onload = () => resolve(img);
+            img.onerror = () => resolve(null);
+            img.src = s.logo;
+          })
+      )
+    ).then((imgs) => {
+      if (!cancelled)
+        setSponsorLogos(
+          imgs.filter((x): x is HTMLImageElement => x !== null)
+        );
+    });
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   useEffect(() => {
@@ -219,51 +237,6 @@ export function AttendanceBadge({ defaultName = "" }: { defaultName?: string }) 
       ctx.font = `700 40px ${body}`;
       ctx.fillStyle = GOLD;
       ctx.fillText("3.0", 64 + wMark + 14, 108);
-    }
-
-    // Sponsor slot — real sponsor logo on a white plate (same treatment as
-    // the IEPS mark, since a sponsor's own colours may not read on navy),
-    // falling back to a dashed placeholder while the asset loads.
-    const slotX = 772, slotY = 58, slotW = 244, slotH = 86;
-    if (sponsorLogo) {
-      ctx.save();
-      ctx.shadowColor = "rgba(0,0,0,0.25)";
-      ctx.shadowBlur = 18;
-      ctx.shadowOffsetY = 6;
-      roundRect(ctx, slotX, slotY, slotW, slotH, 14);
-      ctx.fillStyle = "#ffffff";
-      ctx.fill();
-      ctx.restore();
-
-      // Fit the logo inside the plate (contain), centred, with padding.
-      const pad = 14;
-      const maxW = slotW - pad * 2;
-      const maxH = slotH - pad * 2;
-      const scale = Math.min(maxW / sponsorLogo.width, maxH / sponsorLogo.height);
-      const w = sponsorLogo.width * scale;
-      const h = sponsorLogo.height * scale;
-      ctx.drawImage(
-        sponsorLogo,
-        slotX + (slotW - w) / 2,
-        slotY + (slotH - h) / 2,
-        w,
-        h
-      );
-    } else {
-      ctx.save();
-      ctx.setLineDash([9, 9]);
-      ctx.strokeStyle = "rgba(255,255,255,0.30)";
-      ctx.lineWidth = 2;
-      roundRect(ctx, slotX, slotY, slotW, slotH, 14);
-      ctx.stroke();
-      ctx.restore();
-      ctx.textAlign = "center";
-      setLetterSpacing(ctx, "4px");
-      ctx.font = `600 17px ${body}`;
-      ctx.fillStyle = "rgba(255,255,255,0.45)";
-      ctx.fillText("SPONSOR", 894, 96);
-      ctx.fillText("LOGO", 894, 122);
-      setLetterSpacing(ctx, "0px");
     }
 
     /* 3. Photo — gold ring with brand blobs */
@@ -345,14 +318,14 @@ export function AttendanceBadge({ defaultName = "" }: { defaultName?: string }) 
     ctx.fillStyle = "#ffffff";
     const subSize = 30;
     ctx.font = `400 ${subSize}px ${body}`;
-    const wThe = ctx.measureText("the ").width;
+    const wThe = ctx.measureText("The ").width;
     const line1Bold = "Ife Education Parliamentary";
     ctx.font = `700 ${subSize}px ${body}`;
     const wBold = ctx.measureText(line1Bold).width;
     const line1Start = rx - (wThe + wBold) / 2;
     ctx.textAlign = "left";
     ctx.font = `400 ${subSize}px ${body}`;
-    ctx.fillText("the ", line1Start, 534);
+    ctx.fillText("The ", line1Start, 534);
     ctx.font = `700 ${subSize}px ${body}`;
     ctx.fillText(line1Bold, line1Start + wThe, 534);
     ctx.textAlign = "center";
@@ -426,27 +399,32 @@ export function AttendanceBadge({ defaultName = "" }: { defaultName?: string }) 
     ctx.fillStyle = "rgba(255,255,255,0.4)";
     ctx.fillText("PARTNERS", 56, bandY + bandH / 2);
     setLetterSpacing(ctx, "0px");
-    for (let i = 0; i < 4; i++) {
-      const slotX = 224 + i * 210, slotY = bandY + 20, slotW = 186, slotH = 52;
-      // First slot holds our one confirmed partner logo; the rest stay
-      // dashed placeholders until more partners are added.
-      if (i === 0 && sponsorLogo) {
-        roundRect(ctx, slotX, slotY, slotW, slotH, 12);
+    // Three sponsor logos, evenly centred across the band so the middle one
+    // (Dynage) sits at the badge centre.
+    const pSlotW = 186, pSlotH = 52, pGap = 24, pCount = 3;
+    const pTotal = pCount * pSlotW + (pCount - 1) * pGap;
+    const pStartX = (SIZE - pTotal) / 2;
+    const pY = bandY + 20;
+    for (let i = 0; i < pCount; i++) {
+      const sx = pStartX + i * (pSlotW + pGap);
+      const img = sponsorLogos[i];
+      if (img) {
+        roundRect(ctx, sx, pY, pSlotW, pSlotH, 12);
         ctx.fillStyle = "#ffffff";
         ctx.fill();
         const pad = 8;
-        const maxW = slotW - pad * 2;
-        const maxH = slotH - pad * 2;
-        const scale = Math.min(maxW / sponsorLogo.width, maxH / sponsorLogo.height);
-        const w = sponsorLogo.width * scale;
-        const h = sponsorLogo.height * scale;
-        ctx.drawImage(sponsorLogo, slotX + (slotW - w) / 2, slotY + (slotH - h) / 2, w, h);
+        const maxW = pSlotW - pad * 2;
+        const maxH = pSlotH - pad * 2;
+        const scale = Math.min(maxW / img.width, maxH / img.height);
+        const w = img.width * scale;
+        const h = img.height * scale;
+        ctx.drawImage(img, sx + (pSlotW - w) / 2, pY + (pSlotH - h) / 2, w, h);
       } else {
         ctx.save();
         ctx.setLineDash([8, 8]);
         ctx.strokeStyle = "rgba(255,255,255,0.22)";
         ctx.lineWidth = 2;
-        roundRect(ctx, slotX, slotY, slotW, slotH, 12);
+        roundRect(ctx, sx, pY, pSlotW, pSlotH, 12);
         ctx.stroke();
         ctx.restore();
       }
@@ -456,7 +434,7 @@ export function AttendanceBadge({ defaultName = "" }: { defaultName?: string }) 
     /* 8. Gold base bar — brand anchor (no website text by design) */
     ctx.fillStyle = GOLD;
     ctx.fillRect(0, SIZE - 12, SIZE, 12);
-  }, [name, photo, logo, sponsorLogo]);
+  }, [name, photo, logo, sponsorLogos]);
 
   useEffect(() => {
     draw();
