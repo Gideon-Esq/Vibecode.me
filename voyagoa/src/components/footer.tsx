@@ -25,7 +25,7 @@ const COLUMNS: Array<{ title: string; links: Array<{ label: string; href: string
       { label: "About the team", href: "/#team" },
       { label: "My trips", href: "/trips" },
       { label: "Log in", href: "/login" },
-      { label: "Contact", href: "mailto:emma@voyagoa.com" },
+      { label: "Contact", href: "mailto:ema@voyagoa.com" },
     ],
   },
 ];

@@ -131,7 +131,7 @@ const TEAM = [
     name: "Ema Kings",
     role: "Founder",
     title: "Founder & Product Visionary",
-    email: "emma@voyagoa.com",
+    email: "ema@voyagoa.com",
     avatar: "bg-[linear-gradient(135deg,rgba(17,103,241,0.92),rgba(16,185,129,0.82))]",
     bio: "Ema founded Voyagoa with a simple mission: make world-class travel planning accessible to everyone through AI. From product vision to user experience, Ema focuses on turning one prompt into a complete travel plan.",
   },
@@ -140,7 +140,7 @@ const TEAM = [
     name: "Gideon",
     role: "Lead Developer",
     title: "Lead Software Engineer & AI Systems Developer",
-    email: "emma@voyagoa.com",
+    email: "ema@voyagoa.com",
     avatar: "bg-[linear-gradient(135deg,rgba(103,87,232,0.94),rgba(34,184,199,0.82))]",
     bio: "Gideon leads the engineering behind Voyagoa, transforming ambitious product ideas into a fast, reliable, and scalable AI platform across web and mobile experiences.",
   },
@@ -200,7 +200,7 @@ export default async function Home() {
           {/* Product mock — decorative */}
           <div className="relative hidden min-h-[505px] items-center justify-center lg:flex" aria-hidden>
             <div
-              className="absolute inset-y-0 bottom-3 left-[6%] right-0 rounded-br-[110px]"
+              className="absolute inset-y-0 bottom-3 left-[6%] right-[min(-24px,calc((1280px-100vw)/2))] rounded-br-[110px]"
               style={{
                 background:
                   "linear-gradient(90deg, rgba(255,255,255,0.75), rgba(255,255,255,0.02) 40%), url('/assets/hero-scene.jpg') center / cover no-repeat",
@@ -293,9 +293,9 @@ export default async function Home() {
         </Shell>
 
         {/* =========================== PROOF STRIP ========================== */}
-        <Shell className="grid grid-cols-2 gap-5 pb-8 pt-3 sm:grid-cols-3 lg:grid-cols-5">
+        <Shell className="grid grid-cols-2 gap-x-4 gap-y-5 pb-8 pt-3 sm:grid-cols-3 lg:grid-cols-5">
           {PROOF.map(([icon, a, b]) => (
-            <div key={a} className="flex justify-center gap-3 text-[0.76rem] font-extrabold leading-tight text-navy">
+            <div key={a} className="flex items-center justify-start gap-2.5 text-[0.76rem] font-extrabold leading-tight text-navy sm:justify-center">
               <Icon name={icon} className="shrink-0 text-2xl text-blue-dark" />
               <span>
                 {a}
@@ -452,11 +452,11 @@ export default async function Home() {
                   ))}
                 </ol>
                 <div className="grid grid-cols-3 gap-2 sm:grid-cols-1">
-                  {[1, 2, 3].map((n) => (
-                    <div key={n} className="relative h-[72px] w-full overflow-hidden rounded-[7px]">
+                  {["dest-bali.jpg", "bali-preview.jpg", "hero-scene.jpg"].map((file, i) => (
+                    <div key={file} className="relative h-[72px] w-full overflow-hidden rounded-[7px]">
                       <Image
-                        src={`/assets/itinerary-${n}.jpg`}
-                        alt={`Bali scene ${n}`}
+                        src={`/assets/${file}`}
+                        alt={`Bali scene ${i + 1}`}
                         fill
                         className="object-cover"
                         sizes="168px"
@@ -626,11 +626,11 @@ export default async function Home() {
             </div>
             <div className="grid justify-items-start gap-3 md:justify-items-end">
               <a
-                href="mailto:emma@voyagoa.com"
+                href="mailto:ema@voyagoa.com"
                 className="inline-flex items-center gap-2 text-[0.9rem] font-extrabold text-navy"
               >
                 <Icon name="mail" className="text-[17px] text-blue" />
-                emma@voyagoa.com
+                ema@voyagoa.com
               </a>
               <a
                 href="https://www.voyagoa.com"

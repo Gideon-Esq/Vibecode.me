@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { Nav } from "@/components/nav";
+import { AppHeader } from "@/components/app-header";
 import { Badge } from "@/components/ui";
 import { Icon } from "@/components/icon";
 import { getCurrentUser } from "@/lib/auth";
@@ -27,7 +27,7 @@ export default async function TripsPage() {
 
   return (
     <div className="flex min-h-screen flex-col">
-      <Nav />
+      <AppHeader />
       <main className="mx-auto w-full max-w-4xl flex-1 px-4 py-12 sm:px-6">
         <div className="flex items-center justify-between">
           <h1 className="font-display text-3xl font-semibold">My trips</h1>
