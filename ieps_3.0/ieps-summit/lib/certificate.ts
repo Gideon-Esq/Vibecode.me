@@ -1,6 +1,7 @@
 import PDFDocument from "pdfkit";
 import fs from "fs";
 import path from "path";
+import sharp from "sharp";
 import { EVENT, CERTIFICATE_SIGNATORIES } from "@/lib/constants";
 
 /* ── Brand palette (chamber navy & parliamentary gold) ───────── */
@@ -11,6 +12,12 @@ const MUTED = "#8A93A3"; // light grey-blue — captions
 const GOLD = "#F5C400"; // brass gold — seal, plate
 const GOLD_LIGHT = "#FFD740"; // pale gold — seal highlight
 const GOLD_DEEP = "#C49B00"; // deep gold — seal shading, tagline
+
+/* Abstract wave corners — sampled from the IEPS logo (navy #03034A, gold #F5C400) */
+const WAVE_DARK = "#03034A"; // exact IEPS logo navy — outer ribbon
+const WAVE_GOLD = "#F5C400"; // IEPS gold — middle ribbon stripe
+const WAVE_BRIGHT = "#3C6FD6"; // brighter blue tint — dominant corner fill
+const WAVE_LINE = "#26429E"; // ripple hairlines
 
 /* A4 landscape (points) */
 const W = 841.89;
@@ -169,24 +176,86 @@ function drawSignatureScribble(
   doc.restore();
 }
 
+type SignatureImage = {
+  buffer: Buffer;
+  width: number;
+  height: number;
+  /** Horizontal centre-of-mass of the ink, in image pixels. */
+  centroidX: number;
+};
+
 /**
- * Draws a signer's scanned signature above the rule when the PNG exists at
- * /public<signaturePath>; otherwise falls back to a decorative scribble.
+ * Loads a signer's scanned signature, trims the surrounding transparent/white
+ * margin down to the ink, and measures the ink's horizontal centre-of-mass.
+ * Placing the signature by that centroid (rather than its bounding box) makes
+ * it sit centred over the signer's name — the same way the caption is centred —
+ * even when a flourish or tail skews the bounding box to one side. Returns null
+ * (→ decorative scribble) only when no usable image exists.
+ */
+async function loadTrimmedSignature(
+  signaturePath: string | undefined
+): Promise<SignatureImage | null> {
+  if (!signaturePath) return null;
+  const abs = supportedImageFile(signaturePath.replace(/^\//, ""));
+  if (!abs) return null;
+  try {
+    const buffer = await sharp(abs).trim().png().toBuffer();
+    const { data, info } = await sharp(buffer)
+      .ensureAlpha()
+      .raw()
+      .toBuffer({ resolveWithObject: true });
+    const { width, height, channels } = info;
+    let weight = 0;
+    let weightedX = 0;
+    for (let yy = 0; yy < height; yy++) {
+      for (let xx = 0; xx < width; xx++) {
+        const i = (yy * width + xx) * channels;
+        const r = data[i], g = data[i + 1], b = data[i + 2], a = data[i + 3];
+        // Ink = opaque and not near-white; weight each pixel by its opacity.
+        if (a > 30 && !(r > 235 && g > 235 && b > 235)) {
+          weight += a;
+          weightedX += a * xx;
+        }
+      }
+    }
+    const centroidX = weight > 0 ? weightedX / weight : width / 2;
+    return { buffer, width, height, centroidX };
+  } catch {
+    // Trim/measure can fail on odd encodings — fall back to the raw file,
+    // centred by its bounding box.
+    try {
+      const buffer = fs.readFileSync(abs);
+      const meta = await sharp(buffer).metadata();
+      const width = meta.width ?? 1;
+      const height = meta.height ?? 1;
+      return { buffer, width, height, centroidX: width / 2 };
+    } catch {
+      return null;
+    }
+  }
+}
+
+/**
+ * Draws a signer's signature resting just above the rule, positioned so its ink
+ * centre-of-mass sits exactly on `cx` — so it reads as centred over the name
+ * below, matching the balance of the caption. Falls back to a decorative
+ * scribble when no image is available.
  */
 function drawSignature(
   doc: PDFKit.PDFDocument,
   cx: number,
   ruleY: number,
-  signaturePath: string
+  image: SignatureImage | null
 ) {
-  const abs = supportedImageFile(signaturePath.replace(/^\//, ""));
-  if (abs) {
-    const boxW = 130;
-    const boxH = 42;
-    doc.image(abs, cx - boxW / 2, ruleY - boxH - 2, {
-      fit: [boxW, boxH],
-      align: "center",
-      valign: "bottom",
+  if (image) {
+    const boxW = 140;
+    const boxH = 44;
+    const scale = Math.min(boxW / image.width, boxH / image.height);
+    const w = image.width * scale;
+    const h = image.height * scale;
+    doc.image(image.buffer, cx - image.centroidX * scale, ruleY - 2 - h, {
+      width: w,
+      height: h,
     });
   } else {
     drawSignatureScribble(doc, cx, ruleY - 12);
@@ -250,58 +319,57 @@ function drawWaxSeal(doc: PDFKit.PDFDocument, cx: number, cy: number) {
 }
 
 /**
- * Layered wavy ribbon flourish anchored to a bottom corner. `mirror` flips
- * it to the opposite corner.
+ * Abstract layered blue wave flourish anchored to a bottom corner: a bright
+ * azure fill hugging the corner, wrapped by slim navy/royal ribbons split by
+ * white gaps, with a faint fan of ripple hairlines sweeping outward. `mirror`
+ * flips it to the opposite corner by reflecting every x across the page.
+ *
+ * Drawn early (before the text), so any hairline that grazes a caption is
+ * overprinted by the type and never hurts legibility.
  */
 function drawCornerWaves(doc: PDFKit.PDFDocument, mirror: boolean) {
-  const m = (x: number, y: number): [number, number] => (mirror ? [W - x, y] : [x, y]);
-  const bands: { color: string; opacity: number; d: [number, number][] }[] = [
-    {
-      color: INK,
-      opacity: 0.08,
-      d: [
-        m(0, H), m(0, H - 210),
-        m(90, H - 170), m(190, H - 60),
-        m(230, H), m(0, H),
-      ],
-    },
-    {
-      color: INK,
-      opacity: 0.16,
-      d: [
-        m(0, H), m(0, H - 150),
-        m(70, H - 118), m(150, H - 35),
-        m(175, H), m(0, H),
-      ],
-    },
-    {
-      color: GOLD_DEEP,
-      opacity: 0.5,
-      d: [
-        m(0, H), m(0, H - 96),
-        m(42, H - 72), m(96, H - 18),
-        m(112, H), m(0, H),
-      ],
-    },
-  ];
+  const mx = (x: number): number => (mirror ? W - x : x);
 
-  for (const band of bands) {
-    doc.save();
-    doc.fillOpacity(band.opacity);
-    const pts = band.d;
+  // Nested ribbons, largest -> smallest. Navy is the dominant corner fill;
+  // the bright blue and gold become thin outer ribbons because each band is
+  // slightly inset and the slim gaps fall back to the white page beneath.
+  const bands: { color: string; top: number; right: number }[] = [
+    { color: WAVE_BRIGHT, top: 215, right: 205 },
+    { color: "#FFFFFF", top: 200, right: 190 },
+    { color: WAVE_GOLD, top: 190, right: 181 },
+    { color: "#FFFFFF", top: 176, right: 167 },
+    { color: WAVE_DARK, top: 167, right: 159 },
+  ];
+  for (const b of bands) {
     doc
-      .moveTo(pts[0][0], pts[0][1])
-      .lineTo(pts[1][0], pts[1][1])
+      .moveTo(mx(0), H)
+      .lineTo(mx(0), H - b.top)
       .bezierCurveTo(
-        pts[2][0], pts[2][1],
-        pts[2][0], pts[2][1],
-        pts[3][0], pts[3][1]
+        mx(b.right * 0.46), H - b.top * 1.02,
+        mx(b.right * 0.64), H - b.top * 0.1,
+        mx(b.right), H
       )
-      .lineTo(pts[4][0], pts[4][1])
       .closePath()
-      .fill(band.color);
-    doc.restore();
+      .fill(b.color);
   }
+
+  // Faint fan of ripple hairlines echoing the wave beyond the ribbons.
+  doc.save();
+  doc.lineWidth(0.8).strokeColor(WAVE_LINE);
+  for (let i = 0; i < 5; i++) {
+    const top = 230 + i * 14;
+    const right = 218 + i * 18;
+    doc.strokeOpacity(0.38 - i * 0.06);
+    doc
+      .moveTo(mx(0), H - top)
+      .bezierCurveTo(
+        mx(right * 0.46), H - top * 1.02,
+        mx(right * 0.64), H - top * 0.1,
+        mx(right), H
+      )
+      .stroke();
+  }
+  doc.restore();
 }
 
 /**
@@ -311,10 +379,17 @@ function drawCornerWaves(doc: PDFKit.PDFDocument, mirror: boolean) {
  * name + id always produce the same document, so the public stream endpoint
  * can regenerate it on demand.
  */
-export function generateCertificate(
+export async function generateCertificate(
   name: string,
   registrationId: string
 ): Promise<Buffer> {
+  // Pre-trim the signature images (async) so both signers' ink fills the box
+  // to the same height and centres on the same point — done before the
+  // synchronous PDF drawing below so the layout stays balanced.
+  const [signatureA, signatureB] = await Promise.all([
+    loadTrimmedSignature(CERTIFICATE_SIGNATORIES[0]?.signature),
+    loadTrimmedSignature(CERTIFICATE_SIGNATORIES[1]?.signature),
+  ]);
   return new Promise<Buffer>((resolve, reject) => {
     try {
       const doc = new PDFDocument({
@@ -395,9 +470,9 @@ export function generateCertificate(
       y += themeHeight + 18;
       line("Held at", { size: 9.5 });
       y += 16;
-      line(`${EVENT.venue.name}, ${EVENT.venue.institution}`, { font: "Helvetica-Bold", color: INK, size: 10.5 });
+      line(`${EVENT.venue.institution}`, { font: "Helvetica-Bold", color: INK, size: 10.5 });
       y += 16;
-      line(`${EVENT.venue.city}, ${EVENT.venue.state} · ${EVENT.dateLabel}`, {
+      line(`${EVENT.venue.city}, ${EVENT.venue.state} on ${EVENT.dateLabel}`, {
         font: "Helvetica-Bold",
         color: INK,
         size: 10.5,
@@ -421,12 +496,18 @@ export function generateCertificate(
          from the closing text needs to clear that, not just the rule line. */
       const sigRuleY = Math.max(486, y + closingHeight + 46);
       const [signerA, signerB] = CERTIFICATE_SIGNATORIES;
-      tickedRule(doc, 64, W - 64, sigRuleY);
-      drawSignature(doc, 250, sigRuleY, signerA.signature);
-      drawSignature(doc, W - 250, sigRuleY, signerB.signature);
+      // Inset the ends so the rule stops clear of the blue corner waves.
+      const sigRuleInset = 196;
+      tickedRule(doc, sigRuleInset, W - sigRuleInset, sigRuleY);
+      // Centre of each signature block. Pulled in toward the seal for a tighter
+      // grouping, but kept far enough out that the longest name (~159pt wide)
+      // still clears the wax seal (left edge ≈ 393).
+      const sigCx = 286;
+      drawSignature(doc, sigCx, sigRuleY, signatureA);
+      drawSignature(doc, W - sigCx, sigRuleY, signatureB);
       drawWaxSeal(doc, W / 2, sigRuleY);
-      signatureCaption(doc, 250, sigRuleY + 14, signerA.name, signerA.role);
-      signatureCaption(doc, W - 250, sigRuleY + 14, signerB.name, signerB.role);
+      signatureCaption(doc, sigCx, sigRuleY + 14, signerA.name, signerA.role);
+      signatureCaption(doc, W - sigCx, sigRuleY + 14, signerB.name, signerB.role);
 
       /* Verification id (bottom-centre) */
       doc

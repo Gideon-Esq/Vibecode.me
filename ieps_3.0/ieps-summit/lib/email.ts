@@ -1,7 +1,7 @@
 import nodemailer, { type Transporter } from "nodemailer";
 import fs from "fs";
 import path from "path";
-import { EVENT, CONTACT, ORGANIZERS } from "@/lib/constants";
+import { EVENT, CONTACT, ORGANIZERS, SOCIALS } from "@/lib/constants";
 import { DELEGATE_WHATSAPP_GROUP_URL } from "@/lib/share";
 
 /* ────────────────────────────────────────────────────────────
@@ -54,7 +54,7 @@ function emailFooterHtml(navy: string, gold: string): string {
               <p style="margin:0 0 3px;color:#ffffff;font-size:14px;font-weight:bold;">${CONTACT.name}</p>
               <p style="margin:0 0 14px;color:rgba(255,255,255,0.55);font-size:11px;text-transform:uppercase;letter-spacing:2px;">${CONTACT.role}</p>
               <p style="margin:0 0 16px;">
-                <a href="mailto:${CONTACT.email}" style="color:${gold};text-decoration:none;font-size:13px;">${CONTACT.email}</a>
+                <a href="mailto:${SOCIALS.email}" style="color:${gold};text-decoration:none;font-size:13px;">${SOCIALS.email}</a>
               </p>
               <p style="margin:0;color:rgba(255,255,255,0.45);font-size:11px;letter-spacing:0.5px;">Organised by ${organisers}</p>
             </td>
@@ -234,7 +234,7 @@ export function confirmationEmailText({ fullName }: ConfirmationData): string {
     `We look forward to seeing you!`,
     ``,
     `The IEPS 3.0 Organising Team`,
-    CONTACT.email,
+    SOCIALS.email,
   ].join("\n");
 }
 
@@ -323,7 +323,7 @@ export function attendanceEmailText({ fullName }: AttendanceData): string {
     `Your certificate of participation will be sent to this email address once it's ready.`,
     ``,
     `The IEPS 3.0 Organising Team`,
-    CONTACT.email,
+    SOCIALS.email,
   ].join("\n");
 }
 
@@ -608,7 +608,7 @@ export function broadcastEmailHtml(subject: string, message: string): string {
           ${body}
         </td></tr>
         <tr><td style="background:${navy};padding:18px;text-align:center;">
-          <a href="mailto:${CONTACT.email}" style="color:${gold};text-decoration:none;font-size:13px;">${CONTACT.email}</a>
+          <a href="mailto:${SOCIALS.email}" style="color:${gold};text-decoration:none;font-size:13px;">${SOCIALS.email}</a>
         </td></tr>
         <tr><td style="height:5px;background:#F5C400;"></td></tr>
       </table>

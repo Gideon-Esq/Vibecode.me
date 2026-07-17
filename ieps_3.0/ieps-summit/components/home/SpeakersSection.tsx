@@ -159,7 +159,6 @@ export function SpeakersSection() {
           <p className="mx-auto mt-5 max-w-xl text-center text-sm leading-relaxed text-white/55">
             Educators, lawmakers and student leaders in one conversation,
             trading the kind of perspectives you won&apos;t hear anywhere else.
-            More panelists to be announced.
           </p>
 
           <ul className="mt-9 flex flex-wrap items-start justify-center gap-x-8 gap-y-8 sm:gap-x-12">

@@ -16,6 +16,7 @@ import {
   AlertCircle,
   CalendarDays,
   MapPin,
+  Award,
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { EVENT } from "@/lib/constants";
@@ -298,6 +299,16 @@ export default function RegisterPage() {
                         placeholder="e.g. Adaeze Okoro"
                         {...register("fullName")}
                       />
+                      <p className="mt-2 flex items-start gap-2 rounded-lg border border-gold/25 bg-gold/10 px-3 py-2 text-xs leading-relaxed text-ink/70">
+                        <Award className="mt-0.5 h-4 w-4 shrink-0 text-gold" />
+                        <span>
+                          This name will appear on your{" "}
+                          <span className="font-semibold text-navy">certificate</span>, so
+                          enter it exactly as it should appear. You can still pick any name
+                          you like for your &ldquo;I will be attending&rdquo; flyer after you
+                          register.
+                        </span>
+                      </p>
                     </Field>
 
                     <Field label="Email address" htmlFor="email" required error={errors.email}>
