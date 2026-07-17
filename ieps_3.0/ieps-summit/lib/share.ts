@@ -15,3 +15,7 @@ export const SHARE_MESSAGE = [
 export function whatsappShareUrl(message: string = SHARE_MESSAGE): string {
   return `https://wa.me/?text=${encodeURIComponent(message)}`;
 }
+
+/** Delegate WhatsApp group for registration follow-up and updates. */
+export const DELEGATE_WHATSAPP_GROUP_URL =
+  "https://chat.whatsapp.com/J0tLcJNcbxgL822AvFKMS7?s=sw&p=a&mlu=4";

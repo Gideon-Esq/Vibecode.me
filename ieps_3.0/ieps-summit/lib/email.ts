@@ -2,6 +2,7 @@ import nodemailer, { type Transporter } from "nodemailer";
 import fs from "fs";
 import path from "path";
 import { EVENT, CONTACT, ORGANIZERS } from "@/lib/constants";
+import { DELEGATE_WHATSAPP_GROUP_URL } from "@/lib/share";
 
 /* ────────────────────────────────────────────────────────────
  * Brand logo — embedded as an inline CID attachment so it renders
@@ -159,6 +160,18 @@ export function confirmationEmailHtml({ fullName }: ConfirmationData): string {
                 for a day of dialogue, leadership and reform.
               </p>
 
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:22px 0 0;background-color:#fff8dd;border:1px solid rgba(245,196,0,0.4);border-radius:14px;">
+                <tr>
+                  <td style="padding:18px 20px;">
+                    <p style="margin:0 0 6px;color:#806600;font-size:11px;text-transform:uppercase;letter-spacing:2px;">Delegate WhatsApp Group</p>
+                    <p style="margin:0;color:#3a3a4e;font-size:14px;line-height:1.7;">Join the delegate WhatsApp group for more information and live updates about IEPS 3.0.</p>
+                    <p style="margin:12px 0 0;">
+                      <a href="${DELEGATE_WHATSAPP_GROUP_URL}" style="display:inline-block;background-color:${gold};color:${navy};font-size:14px;font-weight:bold;text-decoration:none;padding:12px 22px;border-radius:999px;">Join Delegate WhatsApp Group</a>
+                    </p>
+                  </td>
+                </tr>
+              </table>
+
               <!-- Event details docket -->
               <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:26px 0;background-color:#f9f7f0;border-left:4px solid ${gold};border-radius:0 12px 12px 0;">
                 <tr>
@@ -215,6 +228,8 @@ export function confirmationEmailText({ fullName }: ConfirmationData): string {
     `Date:  ${EVENT.dateLabel}, ${EVENT.timeLabel}`,
     `Venue: ${EVENT.venue.name}, ${EVENT.venue.institution}, ${EVENT.venue.city}, ${EVENT.venue.state}`,
     `Theme: ${EVENT.theme}`,
+    ``,
+    `Delegate WhatsApp group: ${DELEGATE_WHATSAPP_GROUP_URL}`,
     ``,
     `We look forward to seeing you!`,
     ``,

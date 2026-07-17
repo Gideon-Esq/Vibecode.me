@@ -8,11 +8,12 @@ import {
   CalendarDays,
   MapPin,
   Share2,
+  UsersRound,
   Ticket,
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { EVENT } from "@/lib/constants";
-import { whatsappShareUrl } from "@/lib/share";
+import { DELEGATE_WHATSAPP_GROUP_URL } from "@/lib/share";
 import { AttendanceBadge } from "@/components/register/AttendanceBadge";
 
 type StoredRegistration = {
@@ -65,7 +66,7 @@ export default function RegistrationSuccessPage() {
     }
   }, []);
 
-  const whatsappUrl = whatsappShareUrl();
+  const whatsappUrl = DELEGATE_WHATSAPP_GROUP_URL;
 
   return (
     <section className="relative flex min-h-[100svh] items-center justify-center overflow-hidden bg-navy px-5 py-28 text-white">
@@ -141,11 +142,32 @@ export default function RegistrationSuccessPage() {
         </div>
 
         {/* Actions */}
-        <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-          <Button href={whatsappUrl} external variant="secondary" size="lg">
-            <Share2 className="h-5 w-5" />
-            Share on WhatsApp
-          </Button>
+        <div className="mt-8 rounded-2xl border border-gold/20 bg-gold/10 p-5 text-left backdrop-blur">
+          <div className="flex items-start gap-3">
+            <UsersRound className="mt-0.5 h-5 w-5 shrink-0 text-gold" />
+            <div className="min-w-0 flex-1">
+              <p className="font-label text-[10px] font-semibold uppercase tracking-[0.28em] text-gold">
+                Delegate WhatsApp Group
+              </p>
+              <p className="mt-2 text-sm leading-relaxed text-white/75">
+                Join the delegate WhatsApp group for more information and live
+                updates about IEPS 3.0.
+              </p>
+              <Button
+                href={whatsappUrl}
+                external
+                variant="primary"
+                size="lg"
+                className="mt-4 w-full sm:w-auto"
+              >
+                <Share2 className="h-5 w-5" />
+                Join Delegate WhatsApp Group
+              </Button>
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-3 flex flex-col items-center justify-center gap-3 sm:flex-row">
           <Button href="/" variant="outline" size="lg">
             <Home className="h-5 w-5" />
             Back to Home

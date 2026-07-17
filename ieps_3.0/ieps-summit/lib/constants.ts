@@ -24,8 +24,8 @@ export const EVENT = {
   dayLabel: "Wednesday",
   timeLabel: "10:00 AM prompt",
   venue: {
-    name: "EDM Board Room",
-    shortName: "EDM Board Room, OAU",
+    name: "Bew EDM Boardroom",
+    shortName: "Bew EDM Boardroom, OAU",
     institution: "Obafemi Awolowo University",
     city: "Ile-Ife",
     state: "Osun State",
@@ -173,19 +173,19 @@ export const PANELISTS = [
   },
   {
     slot: "Panelist",
-    name: "To Be Announced",
+    name: "Hon. Boluwatife Olatunji Paul (BOP)",
     detail: "",
-    photo: null as string | null,
-    position: "center",
-    scale: 1,
+    photo: "/speakers/panelist3.png" as string | null,
+    position: "50% 14%",
+    scale: 1.05,
   },
   {
     slot: "Panelist",
-    name: "To Be Announced",
+    name: "Rt. Hon. Praise Ojo",
     detail: "",
-    photo: null as string | null,
-    position: "center",
-    scale: 1,
+    photo: "/speakers/panelist4.png" as string | null,
+    position: "50% 10%",
+    scale: 1.05,
   },
 ] as const;
 
