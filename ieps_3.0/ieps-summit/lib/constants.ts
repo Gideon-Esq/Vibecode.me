@@ -24,8 +24,8 @@ export const EVENT = {
   dayLabel: "Wednesday",
   timeLabel: "10:00 AM prompt",
   venue: {
-    name: "Bew EDM Boardroom",
-    shortName: "Bew EDM Boardroom, OAU",
+    name: "New EDM Boardroom",
+    shortName: "New EDM Boardroom, OAU",
     institution: "Obafemi Awolowo University",
     city: "Ile-Ife",
     state: "Osun State",
