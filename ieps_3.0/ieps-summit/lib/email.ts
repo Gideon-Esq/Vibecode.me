@@ -199,7 +199,7 @@ export function confirmationEmailHtml({ fullName }: ConfirmationData): string {
               </p>
               <p style="color:#1a1a2e;font-size:15px;line-height:1.7;margin:26px 0 0;">
                 Warm regards,<br/>
-                <strong style="color:${navy};">The IEPS 3.0 Organising Team</strong>
+                <strong style="color:${navy};">The IEPS 3.0 Planning Committee</strong>
               </p>
             </td>
           </tr>
@@ -233,7 +233,7 @@ export function confirmationEmailText({ fullName }: ConfirmationData): string {
     ``,
     `We look forward to seeing you!`,
     ``,
-    `The IEPS 3.0 Organising Team`,
+    `The IEPS 3.0 Planning Committee`,
     SOCIALS.email,
   ].join("\n");
 }
@@ -295,7 +295,7 @@ export function attendanceEmailHtml({ fullName }: AttendanceData): string {
               </p>
               <p style="color:#1a1a2e;font-size:15px;line-height:1.7;margin:26px 0 0;">
                 Warm regards,<br/>
-                <strong style="color:${navy};">The IEPS 3.0 Organising Team</strong>
+                <strong style="color:${navy};">The IEPS 3.0 Planning Committee</strong>
               </p>
             </td>
           </tr>
@@ -322,7 +322,7 @@ export function attendanceEmailText({ fullName }: AttendanceData): string {
     ``,
     `Your certificate of participation will be sent to this email address once it's ready.`,
     ``,
-    `The IEPS 3.0 Organising Team`,
+    `The IEPS 3.0 Planning Committee`,
     SOCIALS.email,
   ].join("\n");
 }
@@ -431,7 +431,7 @@ export function certificateEmailHtml({
               <p style="color:#1a1a2e;font-size:15px;line-height:1.7;margin:24px 0 0;">
                 We hope to see you at <strong style="color:${navy};">IEPS 4.0</strong>!<br/><br/>
                 Warm regards,<br/>
-                <strong style="color:${navy};">The IEPS 3.0 Organising Team</strong>
+                <strong style="color:${navy};">The IEPS 3.0 Planning Committee</strong>
               </p>
             </td>
           </tr>
@@ -466,7 +466,7 @@ export function certificateEmailText({
     ``,
     `We hope to see you at IEPS 4.0!`,
     ``,
-    `The IEPS 3.0 Organising Team`,
+    `The IEPS 3.0 Planning Committee`,
   ].join("\n");
 }
 

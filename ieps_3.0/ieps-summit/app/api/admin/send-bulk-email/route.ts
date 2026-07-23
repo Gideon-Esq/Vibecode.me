@@ -12,7 +12,11 @@ export const maxDuration = 120;
 const bodySchema = z.object({
   subject: z.string().trim().min(2, "Subject is required").max(160),
   message: z.string().trim().min(2, "Message is required").max(5000),
-  status: z.enum(["PENDING", "CONFIRMED", "CANCELLED", "ALL"]).default("ALL"),
+  // Registration status (PENDING/CONFIRMED/CANCELLED), everyone (ALL), or by
+  // attendance on the day (PRESENT/ABSENT).
+  status: z
+    .enum(["PENDING", "CONFIRMED", "CANCELLED", "ALL", "PRESENT", "ABSENT"])
+    .default("ALL"),
 });
 
 /** POST /api/admin/send-bulk-email — broadcast to all or filtered registrants. */
@@ -35,10 +39,20 @@ export async function POST(request: Request) {
   }
 
   const { subject, message, status } = parsed.data;
-  const where: Prisma.RegistrationWhereInput =
-    status === "ALL"
-      ? {}
-      : { status: status as Prisma.RegistrationWhereInput["status"] };
+  let where: Prisma.RegistrationWhereInput;
+  switch (status) {
+    case "ALL":
+      where = {};
+      break;
+    case "PRESENT":
+      where = { attended: true };
+      break;
+    case "ABSENT":
+      where = { attended: false };
+      break;
+    default:
+      where = { status: status as Prisma.RegistrationWhereInput["status"] };
+  }
 
   const recipients = await prisma.registration.findMany({
     where,

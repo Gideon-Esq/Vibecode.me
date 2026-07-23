@@ -23,6 +23,8 @@ import {
   Trash2,
   Loader2,
   X,
+  Send,
+  AlertCircle,
 } from "lucide-react";
 import type { AdminRegistration } from "@/lib/admin";
 import { ATTENDEE_ROLES, roleLabel } from "@/lib/registration";
@@ -90,6 +92,7 @@ export function RegistrationsTable({
   // absolutely-positioned menu would be clipped by the overflow-x container.
   const [menuPos, setMenuPos] = useState<React.CSSProperties>({});
   const [detail, setDetail] = useState<AdminRegistration | null>(null);
+  const [emailTarget, setEmailTarget] = useState<AdminRegistration | null>(null);
   const [busyId, setBusyId] = useState<string | null>(null);
   const [toast, setToast] = useState<string | null>(null);
 
@@ -351,14 +354,12 @@ export function RegistrationsTable({
                       <MenuItem icon={Award} onClick={() => generateCertificate(row.id)}>
                         Generate certificate
                       </MenuItem>
-                      <a
-                        href={`mailto:${row.email}`}
-                        className="flex items-center gap-2.5 px-3.5 py-2 text-ink/80 hover:bg-navy/5"
-                        onClick={() => setOpenMenu(null)}
+                      <MenuItem
+                        icon={Mail}
+                        onClick={() => { setEmailTarget(row); setOpenMenu(null); }}
                       >
-                        <Mail className="h-4 w-4" />
                         Send email
-                      </a>
+                      </MenuItem>
                       <MenuItem
                         icon={Trash2}
                         danger
@@ -563,6 +564,18 @@ export function RegistrationsTable({
       {/* Detail modal */}
       {detail && <DetailModal reg={detail} onClose={() => setDetail(null)} />}
 
+      {/* Individual email compose modal */}
+      {emailTarget && (
+        <EmailModal
+          reg={emailTarget}
+          onClose={() => setEmailTarget(null)}
+          onSent={(msg) => {
+            setEmailTarget(null);
+            showToast(msg);
+          }}
+        />
+      )}
+
       {/* Toast */}
       {toast && (
         <div className="fixed bottom-6 left-1/2 z-50 -translate-x-1/2 rounded-xl bg-navy px-5 py-3 text-sm font-medium text-white shadow-lg">
@@ -618,6 +631,146 @@ function FilterSelect({
     >
       {children}
     </select>
+  );
+}
+
+function EmailModal({
+  reg,
+  onClose,
+  onSent,
+}: {
+  reg: AdminRegistration;
+  onClose: () => void;
+  onSent: (message: string) => void;
+}) {
+  const [subject, setSubject] = useState("");
+  const [message, setMessage] = useState("");
+  const [sending, setSending] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const inputCls =
+    "w-full rounded-xl border border-navy/15 bg-white px-4 py-2.5 text-sm text-ink focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/30";
+
+  async function submit(e: React.FormEvent) {
+    e.preventDefault();
+    setError(null);
+    setSending(true);
+    try {
+      const res = await fetch("/api/admin/send-email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: reg.email, subject, message }),
+      });
+      const body = await res.json().catch(() => null);
+      if (res.ok) {
+        onSent(`Email sent to ${reg.fullName}.`);
+      } else {
+        setError(body?.error ?? "Failed to send email.");
+      }
+    } catch {
+      setError("Network error. Please try again.");
+    } finally {
+      setSending(false);
+    }
+  }
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+      <div className="absolute inset-0 bg-navy/40 backdrop-blur-sm" onClick={onClose} aria-hidden />
+      <form
+        onSubmit={submit}
+        className="relative z-10 w-full max-w-lg overflow-hidden rounded-2xl bg-white shadow-xl"
+      >
+        <div className="flex items-center justify-between border-b border-navy/10 bg-navy px-5 py-4 text-white">
+          <div className="min-w-0">
+            <h2 className="font-display text-lg font-bold">Send email</h2>
+            <p className="truncate text-xs text-white/70">
+              To {reg.fullName} · {reg.email}
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label="Close"
+            className="rounded-lg p-1 hover:bg-white/10"
+          >
+            <X className="h-5 w-5" />
+          </button>
+        </div>
+
+        <div className="space-y-4 p-5">
+          <p className="text-xs text-ink/55">
+            Your message is wrapped in the IEPS 3.0 branded email template
+            automatically — the same design as the broadcast emails.
+          </p>
+
+          {error && (
+            <div
+              role="alert"
+              className="flex items-start gap-2 rounded-xl border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-700"
+            >
+              <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
+              <span>{error}</span>
+            </div>
+          )}
+
+          <div>
+            <label
+              htmlFor="ind-subject"
+              className="mb-1.5 block font-label text-xs font-semibold uppercase tracking-wide text-navy/70"
+            >
+              Subject
+            </label>
+            <input
+              id="ind-subject"
+              value={subject}
+              onChange={(e) => setSubject(e.target.value)}
+              required
+              maxLength={160}
+              className={inputCls}
+              placeholder="A message about IEPS 3.0"
+            />
+          </div>
+
+          <div>
+            <label
+              htmlFor="ind-message"
+              className="mb-1.5 block font-label text-xs font-semibold uppercase tracking-wide text-navy/70"
+            >
+              Message
+            </label>
+            <textarea
+              id="ind-message"
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              required
+              rows={7}
+              maxLength={5000}
+              className={`${inputCls} resize-y`}
+              placeholder="Write your message. Blank lines start new paragraphs."
+            />
+          </div>
+        </div>
+
+        <div className="flex items-center justify-end gap-2 border-t border-navy/10 bg-offwhite px-5 py-3">
+          <button
+            type="button"
+            onClick={onClose}
+            className="rounded-lg border border-navy/15 bg-white px-4 py-2 text-sm font-medium text-navy hover:bg-navy/5"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            disabled={sending}
+            className="inline-flex items-center gap-2 rounded-lg bg-green px-5 py-2 text-sm font-semibold text-white hover:bg-green-light disabled:opacity-60"
+          >
+            {sending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
+            {sending ? "Sending…" : "Send email"}
+          </button>
+        </div>
+      </form>
+    </div>
   );
 }
 

@@ -83,6 +83,8 @@ export function BroadcastForm() {
           className={inputCls}
         >
           <option value="ALL">All registrants</option>
+          <option value="PRESENT">Present (marked attended)</option>
+          <option value="ABSENT">Absent (not attended)</option>
           <option value="CONFIRMED">Confirmed only</option>
           <option value="PENDING">Pending only</option>
           <option value="CANCELLED">Cancelled only</option>
