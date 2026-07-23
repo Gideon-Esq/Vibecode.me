@@ -604,13 +604,9 @@ export function broadcastEmailHtml(subject: string, message: string): string {
           }
         </td></tr>
         <tr><td style="padding:36px 40px;">
-          <h1 style="margin:0 0 18px;color:${navy};font-size:22px;">${subject}</h1>
           ${body}
         </td></tr>
-        <tr><td style="background:${navy};padding:18px;text-align:center;">
-          <a href="mailto:${SOCIALS.email}" style="color:${gold};text-decoration:none;font-size:13px;">${SOCIALS.email}</a>
-        </td></tr>
-        <tr><td style="height:5px;background:#F5C400;"></td></tr>
+        ${emailFooterHtml(navy, gold)}
       </table>
     </td></tr>
   </table>
