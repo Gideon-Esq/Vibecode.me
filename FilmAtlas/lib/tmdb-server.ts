@@ -41,7 +41,7 @@ interface RequestOptions {
   revalidate?: number;
 }
 
-async function request<T>(path: string, options: RequestOptions = {}): Promise<T> {
+export async function request<T>(path: string, options: RequestOptions = {}): Promise<T> {
   const { method = 'GET', params = {}, body, revalidate } = options;
 
   const url = new URL(`${BASE_URL}${path}`);

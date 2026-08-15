@@ -1,0 +1,5 @@
+[build.environment]
+  # These are non-secret, publicly-known base URLs (TMDB's API/auth hosts and
+  # image CDN), not sensitive values — the actual TMDB API key is no longer
+  # exposed to the client and does not need to be omitted here.
+  SECRETS_SCAN_OMIT_KEYS = "NEXT_PUBLIC_TMDB_API_BASE_URL,NEXT_PUBLIC_TMDB_AUTH_BASE_URL,NEXT_PUBLIC_TMDB_IMAGE_BASE_URL"
