@@ -2,17 +2,36 @@
 
 import { useQuery } from '@tanstack/react-query';
 import Image from 'next/image';
+import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { useState } from 'react';
+import { use, useState } from 'react';
 import { MovieService, tmdb } from '@/lib/tmdb';
 import { MovieCarousel } from '@/components/ui/movie-carousel';
-import { useAuthStore } from '@/store/auth';
+import { useSession } from '@/hooks/use-session';
+import { useLibrarySummary, useWatchedList } from '@/hooks/use-library';
+import { MovieLibraryActions, useWatchedRating } from '@/components/ui/library-actions';
+import { WatchedBadge } from '@/components/ui/watched-badge';
 
-export default function MovieDetailsPage({ params }: { params: { id: string } }) {
-  const movieId = parseInt(params.id);
-  const [userRating, setUserRating] = useState(0);
+export default function MovieDetailsPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = use(params);
+  const movieId = parseInt(id);
   const [hoveredRating, setHoveredRating] = useState(0);
-  const { isAuthenticated } = useAuthStore();
+  const { isAuthenticated } = useSession();
+  const { isWatched } = useLibrarySummary();
+  const { rate, isPending: isRating } = useWatchedRating(movieId);
+
+  // The stored personal rating doubles as the star value, so the rating the user
+  // sees always matches what is in their watched entry.
+  const { data: watchedData } = useWatchedList();
+  const watchedEntry = watchedData?.entries.find(
+    (entry) => entry.movie.id === movieId && entry.movie.mediaType === 'movie'
+  );
+  const userRating = watchedEntry?.rating ?? 0;
+  const watched = isWatched(movieId);
 
   const { data: movie, isLoading } = useQuery({
     queryKey: ['movie', movieId],
@@ -29,21 +48,9 @@ export default function MovieDetailsPage({ params }: { params: { id: string } })
     queryFn: () => MovieService.getSimilar(movieId),
   });
 
-  const handleRate = async (rating: number) => {
-    if (!isAuthenticated) {
-      alert('Please sign in to rate movies');
-      return;
-    }
-    
-    try {
-      await MovieService.rate(movieId, rating);
-      setUserRating(rating);
-      alert('Rating submitted successfully!');
-    } catch (error) {
-      console.error('Rating failed:', error);
-      alert('Failed to submit rating. Please try again.');
-    }
-  };
+  // Rating a movie implies you watched it, so this records both in one step —
+  // and mirrors the score to TMDB when an account is linked.
+  const handleRate = (rating: number) => rate(rating);
 
   if (isLoading || !movie) {
     return (
@@ -92,8 +99,15 @@ export default function MovieDetailsPage({ params }: { params: { id: string } })
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
           >
+            {watched && (
+              <WatchedBadge
+                rewatchCount={watchedEntry?.rewatchCount ?? 1}
+                className="mb-1"
+              />
+            )}
+
             <h1 className="text-4xl md:text-5xl font-bold">{movie.title}</h1>
-            
+
             {movie.tagline && (
               <p className="text-xl text-gray-400 italic">{movie.tagline}</p>
             )}
@@ -123,18 +137,24 @@ export default function MovieDetailsPage({ params }: { params: { id: string } })
 
             <p className="text-gray-200 leading-relaxed">{movie.overview}</p>
 
+            <MovieLibraryActions movieId={movieId} />
+
             {/* Rating */}
             {isAuthenticated && (
               <div className="space-y-2">
-                <p className="text-sm text-gray-400">Rate this movie:</p>
-                <div className="flex gap-1">
+                <p className="text-sm text-gray-400">
+                  {userRating ? `You rated this ${userRating}/10` : 'Rate this movie:'}
+                </p>
+                <div className="flex gap-1" onMouseLeave={() => setHoveredRating(0)}>
                   {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((star) => (
                     <button
                       key={star}
+                      type="button"
+                      disabled={isRating}
+                      aria-label={`Rate ${star} out of 10`}
                       onMouseEnter={() => setHoveredRating(star)}
-                      onMouseLeave={() => setHoveredRating(0)}
                       onClick={() => handleRate(star)}
-                      className="text-2xl transition-colors"
+                      className="text-2xl transition-colors disabled:opacity-60"
                     >
                       <span
                         className={
@@ -148,6 +168,9 @@ export default function MovieDetailsPage({ params }: { params: { id: string } })
                     </button>
                   ))}
                 </div>
+                <p className="text-xs text-gray-500">
+                  Rating a movie also marks it as watched.
+                </p>
               </div>
             )}
           </motion.div>
@@ -158,9 +181,13 @@ export default function MovieDetailsPage({ params }: { params: { id: string } })
           <div className="space-y-4">
             <h2 className="text-2xl font-bold">Cast</h2>
             <div className="flex gap-4 overflow-x-auto pb-4">
-              {credits.cast.slice(0, 10).map((person) => (
-                <div key={person.id} className="flex-shrink-0 w-32 text-center">
-                  <div className="relative w-32 h-32 rounded-full overflow-hidden mb-2 bg-netflix-gray-medium">
+              {credits.cast.slice(0, 20).map((person) => (
+                <Link
+                  key={person.id}
+                  href={`/person/${person.id}`}
+                  className="group flex-shrink-0 w-32 text-center"
+                >
+                  <div className="relative w-32 h-32 rounded-full overflow-hidden mb-2 bg-netflix-gray-medium ring-2 ring-transparent transition-all group-hover:ring-netflix-red">
                     {person.profile_path ? (
                       <Image
                         src={tmdb.getProfileUrl(person.profile_path)}
@@ -180,9 +207,11 @@ export default function MovieDetailsPage({ params }: { params: { id: string } })
                       </div>
                     )}
                   </div>
-                  <p className="font-semibold text-sm line-clamp-1">{person.name}</p>
+                  <p className="font-semibold text-sm line-clamp-1 transition-colors group-hover:text-netflix-red">
+                    {person.name}
+                  </p>
                   <p className="text-xs text-gray-400 line-clamp-1">{person.character}</p>
-                </div>
+                </Link>
               ))}
             </div>
           </div>

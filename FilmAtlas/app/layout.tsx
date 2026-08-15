@@ -2,10 +2,12 @@ import type { Metadata } from 'next'
 import './globals.css'
 import { Providers } from '@/components/providers'
 import { Header } from '@/components/shared/header'
+import { Footer } from '@/components/shared/footer'
 
 export const metadata: Metadata = {
-  title: 'FilmAtlas - Explore Movies',
-  description: 'A Netflix-style movie discovery platform powered by TMDB',
+  title: 'Cineast - Explore Movies & TV',
+  description:
+    'Track what you have watched, plan what is next, and keep it in sync with TMDB.',
 }
 
 export default function RootLayout({
@@ -21,6 +23,7 @@ export default function RootLayout({
           <main className="min-h-screen">
             {children}
           </main>
+          <Footer />
         </Providers>
       </body>
     </html>

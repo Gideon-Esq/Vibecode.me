@@ -1,4 +1,4 @@
-# FilmAtlas
+# Cineast
 
 A production-grade, Netflix-style movie discovery platform built with Next.js 14, TypeScript, and TMDB API.
 
@@ -27,7 +27,7 @@ A production-grade, Netflix-style movie discovery platform built with Next.js 14
 1. **Clone the repository**
    ```bash
    git clone https://github.com/Gideon-Esq/Vibecode.me.git
-   cd Vibecode.me/FilmAtlas
+   cd Vibecode.me/Cineast
    ```
 
 2. **Install dependencies**
@@ -56,7 +56,7 @@ A production-grade, Netflix-style movie discovery platform built with Next.js 14
 ## Project Structure
 
 ```
-FilmAtlas/
+Cineast/
 ├── app/                    # Next.js app directory
 │   ├── (routes)/          # Page routes
 │   ├── layout.tsx         # Root layout

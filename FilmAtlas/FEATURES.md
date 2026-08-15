@@ -1,4 +1,4 @@
-# FilmAtlas - Feature Checklist
+# Cineast - Feature Checklist
 
 This document tracks all implemented features as specified in the requirements.
 

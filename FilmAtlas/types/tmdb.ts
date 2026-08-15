@@ -35,6 +35,50 @@ export interface Genre {
   name: string;
 }
 
+/**
+ * TMDB names TV fields differently from movies: `name`/`first_air_date` rather
+ * than `title`/`release_date`. `lib/movie-shape.ts` normalises both for the UI.
+ */
+export interface TVShow {
+  id: number;
+  name: string;
+  original_name: string;
+  overview: string;
+  poster_path: string | null;
+  backdrop_path: string | null;
+  first_air_date: string;
+  vote_average: number;
+  vote_count: number;
+  popularity: number;
+  genre_ids: number[];
+  origin_country: string[];
+  original_language: string;
+}
+
+export interface TVDetails extends TVShow {
+  genres: Genre[];
+  number_of_seasons: number;
+  number_of_episodes: number;
+  episode_run_time: number[];
+  status: string;
+  tagline: string;
+  last_air_date: string | null;
+  in_production: boolean;
+  networks: { id: number; name: string; logo_path: string | null }[];
+  created_by: { id: number; name: string; profile_path: string | null }[];
+  seasons: Season[];
+}
+
+export interface Season {
+  id: number;
+  name: string;
+  season_number: number;
+  episode_count: number;
+  air_date: string | null;
+  poster_path: string | null;
+  overview: string;
+}
+
 export interface ProductionCompany {
   id: number;
   logo_path: string | null;
@@ -75,6 +119,23 @@ export interface Crew {
 export interface Credits {
   cast: Cast[];
   crew: Crew[];
+}
+
+export interface PersonDetails {
+  id: number;
+  name: string;
+  biography: string;
+  birthday: string | null;
+  deathday: string | null;
+  place_of_birth: string | null;
+  profile_path: string | null;
+  known_for_department: string;
+  popularity: number;
+}
+
+export interface PersonMovieCredits {
+  cast: (Movie & { character: string })[];
+  crew: (Movie & { job: string })[];
 }
 
 export interface AccountDetails {
@@ -130,6 +191,8 @@ export interface SearchResult {
   profile_path?: string | null;
   poster_path?: string | null;
   overview?: string;
+  release_date?: string;
+  first_air_date?: string;
 }
 
 export interface WatchlistRequest {

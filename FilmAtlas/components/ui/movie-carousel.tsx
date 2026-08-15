@@ -3,11 +3,11 @@
 import { useRef } from 'react';
 import { motion } from 'framer-motion';
 import { MovieCard } from './movie-card';
-import type { Movie } from '@/types/tmdb';
+import type { CardMovie } from '@/lib/movie-shape';
 
 interface MovieCarouselProps {
   title: string;
-  movies: Movie[];
+  movies: CardMovie[];
 }
 
 export function MovieCarousel({ title, movies }: MovieCarouselProps) {

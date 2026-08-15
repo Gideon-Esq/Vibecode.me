@@ -1,5 +1,5 @@
 ╔══════════════════════════════════════════════════════════════════════════════╗
-║                         FILMATLAS PROJECT SUMMARY                            ║
+║                         CINEAST PROJECT SUMMARY                            ║
 ║                    Netflix-Style Movie Discovery Platform                     ║
 ╚══════════════════════════════════════════════════════════════════════════════╝
 
@@ -81,7 +81,7 @@ API:                   TMDB (The Movie Database)
 📁 PROJECT STRUCTURE
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-FilmAtlas/
+Cineast/
 ├── app/                    # Next.js App Router pages
 │   ├── page.tsx           # Home page with carousels
 │   ├── login/             # Authentication

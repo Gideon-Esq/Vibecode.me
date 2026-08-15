@@ -14,7 +14,9 @@ export function HeroSkeleton() {
   return (
     <div className="relative h-[70vh] md:h-[80vh] w-full">
       <div className="absolute inset-0 bg-gradient-to-r from-netflix-gray-medium via-netflix-gray-light to-netflix-gray-medium bg-[length:1000px_100%] animate-shimmer" />
-      <div className="absolute bottom-0 left-0 right-0 p-8 md:p-16 space-y-4">
+      {/* Bottom padding mirrors HeroSection so the carousels, which are pulled
+          up over the hero, don't land on this content while loading. */}
+      <div className="absolute bottom-0 left-0 right-0 space-y-4 px-8 pb-44 md:px-16 md:pb-52">
         <div className="h-12 bg-netflix-gray-medium rounded w-1/2 animate-shimmer bg-gradient-to-r from-netflix-gray-medium via-netflix-gray-light to-netflix-gray-medium bg-[length:1000px_100%]" />
         <div className="h-6 bg-netflix-gray-medium rounded w-3/4 animate-shimmer bg-gradient-to-r from-netflix-gray-medium via-netflix-gray-light to-netflix-gray-medium bg-[length:1000px_100%]" />
         <div className="flex gap-4 mt-4">

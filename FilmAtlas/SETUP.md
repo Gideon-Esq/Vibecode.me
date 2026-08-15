@@ -1,4 +1,4 @@
-# FilmAtlas Setup Guide
+# Cineast Setup Guide
 
 ## Quick Start
 
@@ -17,9 +17,9 @@
 
 ### 3. Environment Setup
 
-1. Navigate to the FilmAtlas directory:
+1. Navigate to the Cineast directory:
    ```bash
-   cd FilmAtlas
+   cd Cineast
    ```
 
 2. Copy the environment example file:
@@ -91,7 +91,7 @@ npm start
 ## Project Structure
 
 ```
-FilmAtlas/
+Cineast/
 ├── app/                      # Next.js App Router pages
 │   ├── page.tsx             # Home page
 │   ├── login/               # Login page

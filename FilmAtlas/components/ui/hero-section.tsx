@@ -11,7 +11,9 @@ interface HeroSectionProps {
 
 export function HeroSection({ movie }: HeroSectionProps) {
   return (
-    <div className="relative h-[70vh] md:h-[80vh] w-full">
+    // min-h rather than h: on a short viewport a fixed height makes the title,
+    // overview and buttons overflow the hero and collide with the row below.
+    <div className="relative flex w-full min-h-[70vh] md:min-h-[80vh]">
       {/* Background Image */}
       <div className="absolute inset-0">
         <Image
@@ -30,8 +32,9 @@ export function HeroSection({ movie }: HeroSectionProps) {
       </div>
 
       {/* Content */}
+      {/* pb clears the carousels below, which are pulled up over the hero. */}
       <motion.div
-        className="relative h-full flex flex-col justify-end p-8 md:p-16 max-w-4xl"
+        className="relative flex w-full max-w-4xl flex-col justify-end px-8 pt-28 pb-44 md:px-16 md:pb-52"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, delay: 0.2 }}

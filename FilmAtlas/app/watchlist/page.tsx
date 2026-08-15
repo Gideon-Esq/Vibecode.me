@@ -1,51 +1,47 @@
 'use client';
 
-import { useQuery } from '@tanstack/react-query';
-import { useAuthStore } from '@/store/auth';
-import { AccountService } from '@/lib/tmdb';
+import Link from 'next/link';
+import { useRequireAuth } from '@/hooks/use-require-auth';
+import { useWatchlist } from '@/hooks/use-library';
 import { MovieCard } from '@/components/ui/movie-card';
 import { MovieCardSkeleton } from '@/components/ui/skeleton';
-import { useRouter } from 'next/navigation';
+import { toCardMovie } from '@/lib/movie-shape';
 
 export default function WatchlistPage() {
-  const { isAuthenticated, account } = useAuthStore();
-  const router = useRouter();
+  const { isReady } = useRequireAuth();
+  const { data, isLoading } = useWatchlist();
 
-  const { data: watchlist, isLoading } = useQuery({
-    queryKey: ['watchlist', account?.id],
-    queryFn: () => AccountService.getWatchlist(account!.id),
-    enabled: isAuthenticated && !!account,
-  });
+  if (!isReady) return null;
 
-  if (!isAuthenticated) {
-    router.push('/login');
-    return null;
-  }
+  const movies = data?.movies ?? [];
 
   return (
     <div className="min-h-screen pt-24 px-4 md:px-8 pb-16">
-      <h1 className="text-4xl font-bold mb-8">My Watchlist</h1>
+      <h1 className="text-4xl font-bold mb-2">My Watchlist</h1>
+      <p className="text-gray-400 mb-8">
+        Saved to your Cineast account, and mirrored to TMDB when connected.
+      </p>
 
       {isLoading ? (
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-          {[...Array(10)].map((_, i) => (
-            <MovieCardSkeleton key={i} />
+          {[...Array(10)].map((_, index) => (
+            <MovieCardSkeleton key={index} />
           ))}
         </div>
-      ) : watchlist?.results.length === 0 ? (
+      ) : movies.length === 0 ? (
         <div className="text-center py-16">
           <p className="text-xl text-gray-400 mb-4">Your watchlist is empty.</p>
-          <button
-            onClick={() => router.push('/discover')}
-            className="px-6 py-3 bg-netflix-red hover:bg-netflix-red/90 rounded-md font-semibold"
+          <Link
+            href="/discover"
+            className="inline-block px-6 py-3 bg-netflix-red hover:bg-netflix-red/90 rounded-md font-semibold"
           >
             Discover Movies
-          </button>
+          </Link>
         </div>
       ) : (
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-          {watchlist?.results.map((movie) => (
-            <MovieCard key={movie.id} movie={movie} />
+          {movies.map((movie) => (
+            <MovieCard key={`${movie.mediaType}-${movie.id}`} movie={toCardMovie(movie)} />
           ))}
         </div>
       )}

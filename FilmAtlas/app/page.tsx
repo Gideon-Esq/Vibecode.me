@@ -39,7 +39,9 @@ export default function HomePage() {
       )}
 
       {/* Movie Carousels */}
-      <div className="space-y-12 pb-16 -mt-32 relative z-10">
+      {/* Pulled up so the first row overlaps the hero's fade, Netflix-style.
+          The hero's bottom padding is sized to clear this. */}
+      <div className="relative z-10 -mt-24 space-y-12 pb-16 md:-mt-32">
         {trendingLoading ? (
           <CarouselSkeleton />
         ) : trending?.results ? (

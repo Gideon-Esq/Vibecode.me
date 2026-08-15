@@ -14,6 +14,10 @@ import type {
   ApiResponse,
   ListItem,
   Genre,
+  PersonDetails,
+  PersonMovieCredits,
+  TVShow,
+  TVDetails,
 } from '@/types/tmdb';
 
 class TMDBClient {
@@ -187,6 +191,13 @@ class TMDBClient {
     return response.data;
   }
 
+  async searchMovies(query: string, page: number = 1): Promise<PaginatedResponse<Movie>> {
+    const response = await this.client.get<PaginatedResponse<Movie>>('/search/movie', {
+      params: { query, page },
+    });
+    return response.data;
+  }
+
   async discoverMovies(params: {
     page?: number;
     with_genres?: string;
@@ -198,6 +209,78 @@ class TMDBClient {
     const response = await this.client.get<PaginatedResponse<Movie>>('/discover/movie', {
       params,
     });
+    return response.data;
+  }
+
+  // =====================================
+  // TV SERIES
+  // =====================================
+
+  async getTVDetails(tvId: number): Promise<TVDetails> {
+    const response = await this.client.get<TVDetails>(`/tv/${tvId}`);
+    return response.data;
+  }
+
+  async getTVCredits(tvId: number): Promise<Credits> {
+    const response = await this.client.get<Credits>(`/tv/${tvId}/credits`);
+    return response.data;
+  }
+
+  async getSimilarTV(tvId: number, page: number = 1): Promise<PaginatedResponse<TVShow>> {
+    const response = await this.client.get<PaginatedResponse<TVShow>>(`/tv/${tvId}/similar`, {
+      params: { page },
+    });
+    return response.data;
+  }
+
+  async getTrendingTV(timeWindow: 'day' | 'week' = 'week'): Promise<PaginatedResponse<TVShow>> {
+    const response = await this.client.get<PaginatedResponse<TVShow>>(
+      `/trending/tv/${timeWindow}`
+    );
+    return response.data;
+  }
+
+  async getPopularTV(page: number = 1): Promise<PaginatedResponse<TVShow>> {
+    const response = await this.client.get<PaginatedResponse<TVShow>>('/tv/popular', {
+      params: { page },
+    });
+    return response.data;
+  }
+
+  async getTopRatedTV(page: number = 1): Promise<PaginatedResponse<TVShow>> {
+    const response = await this.client.get<PaginatedResponse<TVShow>>('/tv/top_rated', {
+      params: { page },
+    });
+    return response.data;
+  }
+
+  async getOnTheAirTV(page: number = 1): Promise<PaginatedResponse<TVShow>> {
+    const response = await this.client.get<PaginatedResponse<TVShow>>('/tv/on_the_air', {
+      params: { page },
+    });
+    return response.data;
+  }
+
+  async getAiringTodayTV(page: number = 1): Promise<PaginatedResponse<TVShow>> {
+    const response = await this.client.get<PaginatedResponse<TVShow>>('/tv/airing_today', {
+      params: { page },
+    });
+    return response.data;
+  }
+
+  // =====================================
+  // PEOPLE
+  // =====================================
+
+  async getPersonDetails(personId: number): Promise<PersonDetails> {
+    const response = await this.client.get<PersonDetails>(`/person/${personId}`);
+    return response.data;
+  }
+
+  async getPersonMovieCredits(personId: number): Promise<PersonMovieCredits> {
+    const response = await this.client.get<PersonMovieCredits>(
+      `/person/${personId}/movie_credits`
+    );
     return response.data;
   }
 
@@ -307,8 +390,25 @@ export const MovieService = {
   deleteRating: (id: number) => tmdb.deleteMovieRating(id),
 };
 
+export const TVService = {
+  getTrending: () => tmdb.getTrendingTV(),
+  getPopular: (page?: number) => tmdb.getPopularTV(page),
+  getTopRated: (page?: number) => tmdb.getTopRatedTV(page),
+  getOnTheAir: (page?: number) => tmdb.getOnTheAirTV(page),
+  getAiringToday: (page?: number) => tmdb.getAiringTodayTV(page),
+  getDetails: (id: number) => tmdb.getTVDetails(id),
+  getCredits: (id: number) => tmdb.getTVCredits(id),
+  getSimilar: (id: number) => tmdb.getSimilarTV(id),
+};
+
+export const PersonService = {
+  getDetails: (id: number) => tmdb.getPersonDetails(id),
+  getMovieCredits: (id: number) => tmdb.getPersonMovieCredits(id),
+};
+
 export const SearchService = {
   multi: (query: string, page?: number) => tmdb.multiSearch(query, page),
+  movies: (query: string, page?: number) => tmdb.searchMovies(query, page),
   discover: (params: Parameters<typeof tmdb.discoverMovies>[0]) => tmdb.discoverMovies(params),
   getGenres: () => tmdb.getGenres(),
 };

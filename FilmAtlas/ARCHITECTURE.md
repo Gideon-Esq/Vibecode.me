@@ -1,7 +1,7 @@
-# FilmAtlas - Architecture & Implementation Details
+# Cineast - Architecture & Implementation Details
 
 ## Overview
-FilmAtlas is a production-grade, Netflix-inspired movie discovery platform built with modern web technologies following industry best practices.
+Cineast is a production-grade, Netflix-inspired movie discovery platform built with modern web technologies following industry best practices.
 
 ## Tech Stack Rationale
 
