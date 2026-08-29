@@ -22,22 +22,20 @@ import type {
 
 class TMDBClient {
   private client: AxiosInstance;
-  private apiKey: string;
   private baseURL: string;
   private imageBaseURL: string;
   private authBaseURL: string;
 
   constructor() {
-    this.apiKey = process.env.NEXT_PUBLIC_TMDB_API_KEY || '';
-    this.baseURL = process.env.NEXT_PUBLIC_TMDB_API_BASE_URL || 'https://api.themoviedb.org/3';
+    // Requests go through our own /api/tmdb proxy, which attaches the TMDB API
+    // key server-side (see app/api/tmdb/[...path]/route.ts) — the key never
+    // reaches the browser bundle.
+    this.baseURL = '/api/tmdb';
     this.imageBaseURL = process.env.NEXT_PUBLIC_TMDB_IMAGE_BASE_URL || 'https://image.tmdb.org/t/p';
     this.authBaseURL = process.env.NEXT_PUBLIC_TMDB_AUTH_BASE_URL || 'https://www.themoviedb.org';
 
     this.client = axios.create({
       baseURL: this.baseURL,
-      params: {
-        api_key: this.apiKey,
-      },
     });
   }
 
