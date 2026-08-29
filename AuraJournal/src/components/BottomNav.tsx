@@ -1,0 +1,83 @@
+type NavItem = 'timeline' | 'write' | 'settings';
+
+interface BottomNavProps {
+  activeItem: NavItem;
+  onNavigate: (item: NavItem) => void;
+}
+
+export function BottomNav({ activeItem, onNavigate }: BottomNavProps) {
+  return (
+    <nav className="fixed bottom-0 left-0 right-0 bg-paper-white dark:bg-midnight-slate border-t border-ink/5 dark:border-paper-white/5 safe-area-bottom">
+      <div className="flex items-center justify-around max-w-lg mx-auto">
+        {/* Timeline */}
+        <button
+          onClick={() => onNavigate('timeline')}
+          className={`flex flex-col items-center justify-center py-2 px-6 min-h-touch transition-colors ${
+            activeItem === 'timeline'
+              ? 'text-accent-gold'
+              : 'text-ink-muted dark:text-paper-cream/60 hover:text-ink dark:hover:text-paper-white'
+          }`}
+        >
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
+            />
+          </svg>
+          <span className="text-xs font-sans mt-1">Timeline</span>
+        </button>
+
+        {/* Write (FAB-style) */}
+        <button
+          onClick={() => onNavigate('write')}
+          className="relative -top-4"
+        >
+          <div
+            className={`flex items-center justify-center w-14 h-14 rounded-full shadow-lg transition-all ${
+              activeItem === 'write'
+                ? 'bg-accent-amber scale-110'
+                : 'bg-accent-gold hover:bg-accent-amber'
+            }`}
+          >
+            <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 4v16m8-8H4"
+              />
+            </svg>
+          </div>
+        </button>
+
+        {/* Settings */}
+        <button
+          onClick={() => onNavigate('settings')}
+          className={`flex flex-col items-center justify-center py-2 px-6 min-h-touch transition-colors ${
+            activeItem === 'settings'
+              ? 'text-accent-gold'
+              : 'text-ink-muted dark:text-paper-cream/60 hover:text-ink dark:hover:text-paper-white'
+          }`}
+        >
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+            />
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+            />
+          </svg>
+          <span className="text-xs font-sans mt-1">Settings</span>
+        </button>
+      </div>
+    </nav>
+  );
+}
